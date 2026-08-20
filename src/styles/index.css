@@ -262,17 +262,17 @@ html {
   top: 0;
   right: 0;
   bottom: 0;
-  width: min(300px, 80vw);
+  width: min(220px, 58vw);
   height: 100vh;
   background: #141414;
   border-left: 1px solid var(--border-color);
-  box-shadow: -10px 0 35px rgba(0, 0, 0, 0.9);
+  box-shadow: -8px 0 30px rgba(0, 0, 0, 0.9);
   display: flex;
   flex-direction: column;
   justify-content: space-between;
-  padding: 24px 20px;
+  padding: 20px 14px;
   transform: translateX(100%);
-  transition: transform 0.35s cubic-bezier(0.16, 1, 0.3, 1);
+  transition: transform 0.32s cubic-bezier(0.16, 1, 0.3, 1);
   z-index: 110;
 }
 
@@ -284,12 +284,12 @@ html {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding-bottom: 18px;
+  padding-bottom: 14px;
   border-bottom: 1px solid var(--border-color);
 }
 
 .drawer-titulo {
-  font-size: 1.1rem;
+  font-size: 0.95rem;
   font-weight: 800;
   color: #ffffff;
   letter-spacing: 0.05em;
@@ -301,7 +301,7 @@ html {
   border: none;
   color: var(--text-muted);
   cursor: pointer;
-  padding: 6px;
+  padding: 4px;
   border-radius: 6px;
   display: flex;
   align-items: center;
@@ -317,8 +317,8 @@ html {
 .drawer-lista-links {
   display: flex;
   flex-direction: column;
-  gap: 8px;
-  margin-top: 20px;
+  gap: 6px;
+  margin-top: 15px;
   flex: 1;
 }
 
@@ -327,14 +327,14 @@ html {
   background: transparent;
   border: none;
   color: var(--text-muted);
-  font-size: 1.05rem;
+  font-size: 0.95rem;
   font-weight: 600;
-  padding: 14px 16px;
+  padding: 12px 10px;
   text-align: left;
   cursor: pointer;
   display: flex;
   align-items: center;
-  gap: 12px;
+  gap: 10px;
   transition: color 0.3s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
@@ -342,9 +342,9 @@ html {
   content: '';
   position: absolute;
   bottom: 0;
-  left: 16px;
-  right: 16px;
-  height: 2.5px;
+  left: 10px;
+  right: 10px;
+  height: 2px;
   background-color: #ffffff;
   border-radius: 2px;
   transform: scaleX(0);
@@ -374,7 +374,7 @@ html {
 }
 
 .drawer-footer {
-  padding-top: 20px;
+  padding-top: 15px;
   border-top: 1px solid var(--border-color);
 }
 
@@ -384,9 +384,9 @@ html {
   color: #000000;
   border: none;
   font-weight: 800;
-  font-size: 1rem;
-  padding: 14px;
-  border-radius: 12px;
+  font-size: 0.92rem;
+  padding: 12px;
+  border-radius: 10px;
   cursor: pointer;
   transition: background 0.2s ease, transform 0.2s ease;
 }
