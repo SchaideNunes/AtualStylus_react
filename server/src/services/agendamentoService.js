@@ -1,4 +1,4 @@
-import { filtrarHorariosPassadosSeHoje, getDataHojeString } from '../../../src/utils/dateUtils.js';
+import { filtrarHorariosPassadosSeHoje, getDataHojeString } from '../utils/dateUtils.js';
 
 export class AgendamentoService {
   constructor(db) {
