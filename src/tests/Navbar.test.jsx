@@ -24,4 +24,19 @@ describe('Navbar Component (TDD)', () => {
     fireEvent.click(screen.getAllByText('Sobre Nós')[0]);
     expect(onNavegar).toHaveBeenCalledWith('sobre');
   });
+
+  it('deve abrir e fechar a gaveta lateral (drawer) no mobile', () => {
+    const onNavegar = vi.fn();
+    render(<Navbar paginaAtiva="inicio" onNavegar={onNavegar} />);
+
+    const botaoMenu = screen.getByLabelText(/Abrir Menu/i);
+    fireEvent.click(botaoMenu);
+
+    const gaveta = screen.getByTestId('drawer-mobile');
+    expect(gaveta).toHaveClass('aberto');
+
+    const linkMobile = screen.getAllByText('Meus Agendamentos')[1];
+    fireEvent.click(linkMobile);
+    expect(onNavegar).toHaveBeenCalledWith('meusAgendamentos');
+  });
 });
