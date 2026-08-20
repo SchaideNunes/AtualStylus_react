@@ -22,8 +22,8 @@ describe('Agendamento Component (TDD)', () => {
 
     expect(screen.getByText('Geilson')).toBeInTheDocument();
     expect(screen.getByText('Denilson')).toBeInTheDocument();
-    expect(screen.getByLabelText(/2. Data/i)).toBeInTheDocument();
-    expect(screen.getByPlaceholderText(/Seu nome/i)).toBeInTheDocument();
+    expect(screen.getByLabelText(/Data do Agendamento/i)).toBeInTheDocument();
+    expect(screen.getByPlaceholderText(/Digite seu nome completo/i)).toBeInTheDocument();
     expect(screen.getByPlaceholderText(/\(00\) 00000-0000/i)).toBeInTheDocument();
   });
 
@@ -37,7 +37,7 @@ describe('Agendamento Component (TDD)', () => {
 
   it('deve manter o botão de confirmação desabilitado enquanto o formulário estiver incompleto', () => {
     render(<Agendamento />);
-    const botao = screen.getByRole('button', { name: /Preencha tudo para confirmar/i });
+    const botao = screen.getByRole('button', { name: /1\. Escolha o profissional acima/i });
     expect(botao).toBeDisabled();
   });
 

@@ -1,12 +1,41 @@
 import React, { useState, useEffect } from 'react';
+import { 
+  Calendar, 
+  Clock, 
+  Scissors, 
+  User, 
+  Phone, 
+  CheckCircle2, 
+  AlertCircle,
+  Sparkles 
+} from 'lucide-react';
 import { api } from '../services/api';
 import { formatarTelefone, isTelefoneValido } from '../utils/phoneMask';
 import { isDomingo, getDataHojeString } from '../utils/dateUtils';
 import { gerarLinkWhatsAppAgendamento } from '../utils/whatsapp';
 
 export const BARBEIROS_DEFAULT = [
-  { id: 1, nome: 'Geilson', foto: '/assets/Geilson.jpg' },
-  { id: 2, nome: 'Denilson', foto: '/assets/Denilson.jpg' }
+  { 
+    id: 1, 
+    nome: 'Geilson', 
+    especialidade: 'Fade, Barba & Social',
+    foto: '/assets/Geilson.jpg' 
+  },
+  { 
+    id: 2, 
+    nome: 'Denilson', 
+    especialidade: 'Degradê, Navalhado & Barba',
+    foto: '/assets/Denilson.jpg' 
+  }
+];
+
+export const OPCOES_SERVICOS = [
+  { id: 1, nome: 'Corte e Barba', valor: 35 },
+  { id: 2, nome: 'Corte Social', valor: 25 },
+  { id: 3, nome: 'Degradê', valor: 25 },
+  { id: 4, nome: 'Navalhado', valor: 25 },
+  { id: 5, nome: 'Corte Raspado', valor: 20 },
+  { id: 6, nome: 'Barba e Pezinho', valor: 15 }
 ];
 
 export function Agendamento({ servicoPreSelecionado, onAgendamentoConcluido }) {
@@ -62,7 +91,7 @@ export function Agendamento({ servicoPreSelecionado, onAgendamentoConcluido }) {
       try {
         setCarregandoHorarios(true);
         const slots = await api.getHorariosDisponiveis(data, barbeiroId);
-        setHorariosDisponiveis(slots);
+        setHorariosDisponiveis(slots || []);
         setHorario('');
       } catch (err) {
         console.error('Erro ao carregar horários:', err);
@@ -100,7 +129,12 @@ export function Agendamento({ servicoPreSelecionado, onAgendamentoConcluido }) {
 
   const getTextoBotao = () => {
     if (salvando) return 'Confirmando agendamento...';
-    if (isFormValido) return 'Confirmar Agendamento';
+    if (isFormValido) return '✂️ Confirmar Agendamento';
+    if (!barbeiroId) return '1. Escolha o profissional acima';
+    if (!data) return '2. Selecione a data';
+    if (!horario) return '3. Escolha o horário de atendimento';
+    if (!servico) return '4. Selecione o serviço desejado';
+    if (!nome.trim()) return '5. Digite seu nome completo';
     if (telefone && telefone.length > 0 && !isTelefoneValido(telefone)) {
       return 'Digite o WhatsApp completo com DDD';
     }
@@ -122,7 +156,6 @@ export function Agendamento({ servicoPreSelecionado, onAgendamentoConcluido }) {
     try {
       setSalvando(true);
 
-      // Re-validação atômica e inserção no banco SQL
       const novoAgendamento = await api.criarAgendamento({
         nome: nome.trim(),
         telefone,
@@ -134,10 +167,8 @@ export function Agendamento({ servicoPreSelecionado, onAgendamentoConcluido }) {
         horario
       });
 
-      // Salva dados no localStorage para agilizar próximas reservas
       localStorage.setItem('dadosClienteBarbearia', JSON.stringify({ nome, telefone }));
 
-      // Abre link do WhatsApp com a mensagem formatada
       const urlWhats = gerarLinkWhatsAppAgendamento({
         nome,
         telefone,
@@ -156,10 +187,9 @@ export function Agendamento({ servicoPreSelecionado, onAgendamentoConcluido }) {
       }
     } catch (err) {
       alert('Erro ao agendar: ' + err.message);
-      // Recarrega horários caso tenha havido concorrência
       try {
         const slots = await api.getHorariosDisponiveis(data, barbeiroId);
-        setHorariosDisponiveis(slots);
+        setHorariosDisponiveis(slots || []);
       } catch (e) {}
     } finally {
       setSalvando(false);
@@ -167,129 +197,229 @@ export function Agendamento({ servicoPreSelecionado, onAgendamentoConcluido }) {
   };
 
   return (
-    <div className="container-agendamento fade-in">
-      <div className="header-agendamento-sticky">
-        <h2 className="titulo-agendamento">Agende seu Horário</h2>
+    <div className="container-agendamento-revamp fade-in">
+      {/* Header da Página de Agendamento */}
+      <div className="header-agendamento-card scale-in">
+        <div className="icone-header-agendamento">
+          <Sparkles size={24} color="#ffffff" />
+        </div>
+        <h2 className="titulo-agendamento-revamp">Agende seu Atendimento</h2>
+        <p className="subtitulo-agendamento-revamp">
+          Escolha o profissional, selecione o melhor horário e garanta sua vaga em poucos segundos.
+        </p>
       </div>
 
-      <div className="formulario-agendamento">
-        {/* 1. Barbeiro */}
-        <div className="campo-formulario slide-up">
-          <label className="label-campo">1. Escolha seu Barbeiro</label>
-          <div className="grid-barbeiros">
-            {BARBEIROS_DEFAULT.map((b) => (
-              <label 
-                key={b.id} 
-                className={`cartao-barbeiro ${barbeiroId === b.id ? 'selecionado' : ''}`}
-              >
-                <input 
-                  type="radio" 
-                  name="barbeiro" 
-                  value={b.id} 
-                  checked={barbeiroId === b.id}
-                  onChange={() => setBarbeiroId(b.id)}
-                  className="input-radio-barbeiro"
-                />
-                <img src={b.foto} alt={b.nome} className="foto-barbeiro" />
-                <span className="nome-barbeiro-card">{b.nome}</span>
-              </label>
-            ))}
+      <div className="formulario-agendamento-revamp">
+        {/* ========================================================================= */}
+        {/* 1. SELEÇÃO VISUAL DE BARBEIRO (CARDS RETRATO COM FOTOS) */}
+        {/* ========================================================================= */}
+        <div className="bloco-etapa-agendamento slide-up">
+          <div className="cabecalho-etapa-interna">
+            <span className="badge-numero-etapa">ETAPA 1</span>
+            <span className="titulo-etapa-texto">Escolha seu Barbeiro</span>
+          </div>
+
+          <div className="grid-barbeiros-visual">
+            {BARBEIROS_DEFAULT.map((b) => {
+              const selecionado = barbeiroId === b.id;
+              return (
+                <label 
+                  key={b.id} 
+                  className={`card-barbeiro-visual ${selecionado ? 'selecionado' : ''}`}
+                >
+                  <input 
+                    type="radio" 
+                    name="barbeiro" 
+                    value={b.id} 
+                    checked={selecionado}
+                    onChange={() => setBarbeiroId(b.id)}
+                    className="radio-barbeiro-escondido"
+                    aria-label={b.nome}
+                  />
+
+                  <div className="container-foto-barbeiro">
+                    <img 
+                      src={b.foto} 
+                      alt={b.nome} 
+                      className="foto-barbeiro-retrato"
+                      onError={(e) => { e.target.src = '/assets/Logo.jpg'; }}
+                    />
+                    <div className="overlay-gradiente-barbeiro" />
+                    
+                    {/* Badge de Seleção com Checkmark */}
+                    <div className={`indicador-selecao-barbeiro ${selecionado ? 'ativo' : ''}`}>
+                      {selecionado ? (
+                        <CheckCircle2 size={20} color="#000000" />
+                      ) : (
+                        <span className="ponto-vazio-selecao" />
+                      )}
+                    </div>
+                  </div>
+
+                  <div className="info-barbeiro-card">
+                    <h3 className="nome-barbeiro-destaque">{b.nome}</h3>
+                    <span className="especialidade-barbeiro">{b.especialidade}</span>
+                  </div>
+                </label>
+              );
+            })}
           </div>
         </div>
 
-        {/* 2. Data */}
-        <div className="campo-formulario slide-up">
-          <label htmlFor="campoData" className="label-campo">2. Data</label>
-          <input 
-            type="date" 
-            id="campoData"
-            min={getDataHojeString()}
-            value={data}
-            onChange={handleDataChange}
-            className="input-campo"
-          />
+        {/* ========================================================================= */}
+        {/* 2. DATA (CAIXA COM TÍTULO INTERNO) */}
+        {/* ========================================================================= */}
+        <div className="bloco-etapa-agendamento slide-up">
+          <div className="caixa-campo-interna">
+            <div className="cabecalho-campo-interno">
+              <span className="tag-etapa-interna">ETAPA 2 • DATA DO AGENDAMENTO</span>
+              <span className="dica-campo-interna">Segunda a Sábado</span>
+            </div>
+            
+            <div className="conteudo-input-com-icone">
+              <Calendar size={20} className="icone-campo-interno" />
+              <input 
+                type="date" 
+                id="campoData"
+                aria-label="Data do Agendamento"
+                min={getDataHojeString()}
+                value={data}
+                onChange={handleDataChange}
+                className="input-campo-interno"
+              />
+            </div>
+          </div>
         </div>
 
-        {/* 3. Horário */}
-        <div className="campo-formulario slide-up">
-          <label htmlFor="campoHorario" className="label-campo">
-            3. Horário <span style={{ fontSize: '0.8rem', color: '#9ca3af', fontWeight: 'normal', marginLeft: '8px' }}>*Variam por barbeiro</span>
-          </label>
-          <select 
-            id="campoHorario"
-            value={horario}
-            onChange={(e) => setHorario(e.target.value)}
-            disabled={!data || !barbeiroId || carregandoHorarios}
-            className="select-campo"
-          >
-            {!barbeiroId || !data ? (
-              <option value="">Primeiro selecione data e barbeiro</option>
-            ) : carregandoHorarios ? (
-              <option value="">Carregando horários...</option>
-            ) : horariosDisponiveis.length === 0 ? (
-              <option value="">Dia cheio! Sem horários disponíveis</option>
-            ) : (
-              <>
-                <option value="">Selecione um horário</option>
-                {horariosDisponiveis.map((h) => (
-                  <option key={h} value={h}>{h}</option>
+        {/* ========================================================================= */}
+        {/* 3. HORÁRIO REATIVO (CAIXA COM TÍTULO INTERNO) */}
+        {/* ========================================================================= */}
+        <div className="bloco-etapa-agendamento slide-up">
+          <div className="caixa-campo-interna">
+            <div className="cabecalho-campo-interno">
+              <span className="tag-etapa-interna">ETAPA 3 • HORÁRIO DISPONÍVEL</span>
+              <span className="dica-campo-interna">
+                {carregandoHorarios ? 'Carregando vagas...' : 'Horários livres hoje/amanhã'}
+              </span>
+            </div>
+
+            <div className="conteudo-input-com-icone">
+              <Clock size={20} className="icone-campo-interno" />
+              <select 
+                id="campoHorario"
+                aria-label="Horário de Atendimento"
+                value={horario}
+                onChange={(e) => setHorario(e.target.value)}
+                disabled={!data || !barbeiroId || carregandoHorarios}
+                className="select-campo-interno"
+              >
+                {!barbeiroId || !data ? (
+                  <option value="">Primeiro selecione o barbeiro e a data</option>
+                ) : carregandoHorarios ? (
+                  <option value="">Consultando horários no banco...</option>
+                ) : horariosDisponiveis.length === 0 ? (
+                  <option value="">Dia cheio! Sem horários disponíveis</option>
+                ) : (
+                  <>
+                    <option value="">Selecione um horário livre</option>
+                    {horariosDisponiveis.map((h) => (
+                      <option key={h} value={h}>{h} - Disponível</option>
+                    ))}
+                  </>
+                )}
+              </select>
+            </div>
+          </div>
+        </div>
+
+        {/* ========================================================================= */}
+        {/* 4. SERVIÇO (CAIXA COM TÍTULO INTERNO) */}
+        {/* ========================================================================= */}
+        <div className="bloco-etapa-agendamento slide-up">
+          <div className="caixa-campo-interna">
+            <div className="cabecalho-campo-interno">
+              <span className="tag-etapa-interna">ETAPA 4 • SERVIÇO DESEJADO</span>
+              <span className="dica-campo-interna">Tabela de valores</span>
+            </div>
+
+            <div className="conteudo-input-com-icone">
+              <Scissors size={20} className="icone-campo-interno" />
+              <select 
+                id="campoServico"
+                aria-label="Serviço Desejado"
+                value={servico}
+                onChange={(e) => setServico(e.target.value)}
+                className="select-campo-interno"
+              >
+                <option value="">Selecione o serviço...</option>
+                {OPCOES_SERVICOS.map((s) => (
+                  <option key={s.id} value={`${s.nome} - R$ ${s.valor}`}>
+                    {s.nome} - R$ {s.valor},00
+                  </option>
                 ))}
-              </>
-            )}
-          </select>
+              </select>
+            </div>
+          </div>
         </div>
 
-        {/* 4. Serviço */}
-        <div className="campo-formulario slide-up">
-          <label htmlFor="campoServico" className="label-campo">4. Serviço</label>
-          <select 
-            id="campoServico"
-            value={servico}
-            onChange={(e) => setServico(e.target.value)}
-            className="select-campo"
-          >
-            <option value="">Selecione o serviço...</option>
-            <option value="Corte e Barba - R$ 35">Corte e Barba - R$ 35,00</option>
-            <option value="Corte Social - R$ 25">Corte Social - R$ 25,00</option>
-            <option value="Degradê - R$ 25">Degradê - R$ 25,00</option>
-            <option value="Navalhado - R$ 25">Navalhado - R$ 25,00</option>
-            <option value="Corte Raspado - R$ 20">Corte Raspado - R$ 20,00</option>
-            <option value="Barba e Pezinho - R$ 15">Barba e Pezinho - R$ 15,00</option>
-          </select>
+        {/* ========================================================================= */}
+        {/* 5. NOME COMPLETO (CAIXA COM TÍTULO INTERNO) */}
+        {/* ========================================================================= */}
+        <div className="bloco-etapa-agendamento slide-up">
+          <div className="caixa-campo-interna">
+            <div className="cabecalho-campo-interno">
+              <span className="tag-etapa-interna">ETAPA 5 • SEU NOME COMPLETO</span>
+              <span className="dica-campo-interna">Identificação na barbearia</span>
+            </div>
+
+            <div className="conteudo-input-com-icone">
+              <User size={20} className="icone-campo-interno" />
+              <input 
+                type="text" 
+                id="campoNome"
+                aria-label="Seu Nome Completo"
+                value={nome}
+                onChange={(e) => setNome(e.target.value)}
+                placeholder="Digite seu nome completo"
+                className="input-campo-interno"
+              />
+            </div>
+          </div>
         </div>
 
-        {/* 5. Nome */}
-        <div className="campo-formulario slide-up">
-          <label htmlFor="campoNome" className="label-campo">5. Nome Completo</label>
-          <input 
-            type="text" 
-            id="campoNome"
-            placeholder="Seu nome"
-            value={nome}
-            onChange={(e) => setNome(e.target.value)}
-            className="input-campo"
-          />
+        {/* ========================================================================= */}
+        {/* 6. WHATSAPP (CAIXA COM TÍTULO INTERNO) */}
+        {/* ========================================================================= */}
+        <div className="bloco-etapa-agendamento slide-up">
+          <div className="caixa-campo-interna">
+            <div className="cabecalho-campo-interno">
+              <span className="tag-etapa-interna">ETAPA 6 • SEU WHATSAPP</span>
+              <span className="dica-campo-interna">Com DDD (Ex: 75 99999-9999)</span>
+            </div>
+
+            <div className="conteudo-input-com-icone">
+              <Phone size={20} className="icone-campo-interno" />
+              <input 
+                type="tel" 
+                id="campoTelefone"
+                aria-label="WhatsApp com DDD"
+                value={telefone}
+                onChange={handleTelefoneChange}
+                placeholder="(00) 00000-0000"
+                maxLength={15}
+                className="input-campo-interno"
+              />
+            </div>
+          </div>
         </div>
 
-        {/* 6. WhatsApp */}
-        <div className="campo-formulario slide-up">
-          <label htmlFor="campoTelefone" className="label-campo">6. WhatsApp</label>
-          <input 
-            type="tel" 
-            id="campoTelefone"
-            placeholder="(00) 00000-0000"
-            maxLength={15}
-            value={telefone}
-            onChange={handleTelefoneChange}
-            className="input-campo"
-          />
-        </div>
-
-        {/* Botão de Confirmação */}
+        {/* ========================================================================= */}
+        {/* BOTÃO DE CONFIRMAÇÃO */}
+        {/* ========================================================================= */}
         <button 
-          disabled={!isFormValido || salvando}
           onClick={handleConfirmar}
-          className="botao-confirmar slide-up"
+          disabled={!isFormValido || salvando}
+          className={`botao-confirmar-revamp ${isFormValido ? 'ativo pulse' : ''}`}
         >
           {getTextoBotao()}
         </button>

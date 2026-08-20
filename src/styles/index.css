@@ -880,146 +880,341 @@ html {
   transform: scale(1.03);
 }
 
-/* Booking Form Container */
-.container-agendamento {
-  max-width: 680px;
-  margin: 30px auto;
-  padding: 0 15px;
+/* ========================================================================= */
+/* REVAMP: FORMULÁRIO DE AGENDAMENTO */
+/* ========================================================================= */
+.container-agendamento-revamp {
+  max-width: 720px;
+  margin: 25px auto 50px;
+  padding: 0 16px;
 }
 
-.header-agendamento-sticky {
-  background: rgba(20, 20, 20, 0.95);
-  backdrop-filter: blur(10px);
+.header-agendamento-card {
+  background: linear-gradient(180deg, #181818 0%, #0f0f0f 100%);
   border: 1px solid var(--border-color);
-  border-radius: 16px;
-  padding: 20px;
+  border-radius: 22px;
+  padding: 30px 20px;
   text-align: center;
-  margin-bottom: 25px;
-  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.7);
-}
-
-.titulo-agendamento {
-  font-size: 1.8rem;
-  font-weight: 800;
-  color: #ffffff;
-}
-
-.formulario-agendamento {
-  background: var(--bg-card);
-  border: 1px solid var(--border-color);
-  border-radius: 20px;
-  padding: 30px 25px;
-  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.8);
+  margin-bottom: 22px;
+  box-shadow: 0 12px 35px rgba(0, 0, 0, 0.8), inset 0 1px 0 rgba(255, 255, 255, 0.08);
   display: flex;
   flex-direction: column;
-  gap: 22px;
-}
-
-.campo-formulario {
-  display: flex;
-  flex-direction: column;
-  gap: 8px;
-}
-
-.label-campo {
-  font-size: 0.95rem;
-  font-weight: 700;
-  color: #e5e7eb;
-  display: flex;
   align-items: center;
 }
 
-.grid-barbeiros {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 15px;
+.icone-header-agendamento {
+  width: 48px;
+  height: 48px;
+  background: #202020;
+  border: 1px solid #333333;
+  border-radius: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 12px;
 }
 
-.cartao-barbeiro {
+.titulo-agendamento-revamp {
+  font-size: 1.8rem;
+  font-weight: 900;
+  color: #ffffff;
+  letter-spacing: -0.02em;
+  margin-bottom: 6px;
+  text-transform: uppercase;
+}
+
+@media (min-width: 600px) {
+  .titulo-agendamento-revamp {
+    font-size: 2.2rem;
+  }
+}
+
+.subtitulo-agendamento-revamp {
+  color: var(--text-muted);
+  font-size: 0.95rem;
+  max-width: 500px;
+  line-height: 1.5;
+}
+
+.formulario-agendamento-revamp {
+  background: #121212;
+  border: 1px solid var(--border-color);
+  border-radius: 24px;
+  padding: 24px 16px;
+  box-shadow: 0 20px 50px rgba(0, 0, 0, 0.9);
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+}
+
+@media (min-width: 600px) {
+  .formulario-agendamento-revamp {
+    padding: 32px 28px;
+    gap: 22px;
+  }
+}
+
+.bloco-etapa-agendamento {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+/* 1. SELEÇÃO DE BARBEIRO VISUAL */
+.cabecalho-etapa-interna {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding-left: 4px;
+}
+
+.badge-numero-etapa {
+  background: #242424;
+  border: 1px solid #3a3a3a;
+  color: #ffffff;
+  font-size: 0.72rem;
+  font-weight: 800;
+  padding: 4px 10px;
+  border-radius: 6px;
+  letter-spacing: 0.05em;
+}
+
+.titulo-etapa-texto {
+  font-size: 0.95rem;
+  font-weight: 700;
+  color: #ffffff;
+}
+
+.grid-barbeiros-visual {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 14px;
+}
+
+.card-barbeiro-visual {
   position: relative;
-  border: 2px solid var(--border-color);
-  border-radius: 14px;
-  padding: 15px;
+  border: 2px solid #242424;
+  border-radius: 18px;
+  overflow: hidden;
+  background: #181818;
   cursor: pointer;
-  background: #1c1c1c;
+  display: flex;
+  flex-direction: column;
+  transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.6);
+}
+
+.card-barbeiro-visual:hover {
+  border-color: rgba(255, 255, 255, 0.4);
+  transform: translateY(-3px);
+  box-shadow: 0 12px 30px rgba(0, 0, 0, 0.8);
+}
+
+.card-barbeiro-visual.selecionado {
+  border-color: #ffffff;
+  background: #1f1f1f;
+  transform: translateY(-4px);
+  box-shadow: 0 0 25px rgba(255, 255, 255, 0.25), 0 15px 35px rgba(0, 0, 0, 0.9);
+}
+
+.radio-barbeiro-escondido {
+  position: absolute;
+  opacity: 0;
+  pointer-events: none;
+}
+
+.container-foto-barbeiro {
+  position: relative;
+  width: 100%;
+  height: 160px;
+  overflow: hidden;
+  background: #0a0a0a;
+}
+
+@media (min-width: 600px) {
+  .container-foto-barbeiro {
+    height: 190px;
+  }
+}
+
+.foto-barbeiro-retrato {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center top;
+  transition: transform 0.4s ease;
+}
+
+.card-barbeiro-visual:hover .foto-barbeiro-retrato {
+  transform: scale(1.05);
+}
+
+.overlay-gradiente-barbeiro {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(180deg, rgba(0, 0, 0, 0.05) 0%, rgba(0, 0, 0, 0.75) 100%);
+  pointer-events: none;
+}
+
+.indicador-selecao-barbeiro {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  background: rgba(0, 0, 0, 0.6);
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  display: flex;
+  align-items: center;
+  justify-content: center;
   transition: all 0.2s ease;
+  backdrop-filter: blur(4px);
+}
+
+.indicador-selecao-barbeiro.ativo {
+  background: #ffffff;
+  border-color: #ffffff;
+  box-shadow: 0 0 12px rgba(255, 255, 255, 0.6);
+}
+
+.ponto-vazio-selecao {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: transparent;
+}
+
+.info-barbeiro-card {
+  padding: 12px 14px;
+  text-align: center;
+  background: #181818;
+}
+
+.nome-barbeiro-destaque {
+  font-size: 1.15rem;
+  font-weight: 800;
+  color: #ffffff;
+  margin-bottom: 2px;
+}
+
+.especialidade-barbeiro {
+  font-size: 0.78rem;
+  color: var(--text-muted);
+  display: block;
+}
+
+/* ========================================================================= */
+/* CAIXAS COM TÍTULOS DENTRO (INSIDE-THE-BOX LABELS) */
+/* ========================================================================= */
+.caixa-campo-interna {
+  background: #181818;
+  border: 1px solid var(--border-color);
+  border-radius: 16px;
+  padding: 14px 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.4);
+}
+
+.caixa-campo-interna:focus-within {
+  border-color: #ffffff;
+  background: #1d1d1d;
+  box-shadow: 0 0 0 3px rgba(255, 255, 255, 0.15), 0 8px 25px rgba(0, 0, 0, 0.7);
+  transform: translateY(-1px);
+}
+
+.cabecalho-campo-interno {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.tag-etapa-interna {
+  font-size: 0.74rem;
+  font-weight: 800;
+  color: #ffffff;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+}
+
+.dica-campo-interna {
+  font-size: 0.74rem;
+  color: var(--text-muted);
+}
+
+.conteudo-input-com-icone {
   display: flex;
   align-items: center;
   gap: 12px;
 }
 
-.cartao-barbeiro:hover {
-  border-color: #ffffff;
-  background: #242424;
+.icone-campo-interno {
+  color: var(--text-muted);
+  flex-shrink: 0;
+  transition: color 0.2s ease;
 }
 
-.cartao-barbeiro.selecionado {
-  border-color: #ffffff;
-  background: rgba(255, 255, 255, 0.12);
-  box-shadow: 0 0 15px rgba(255, 255, 255, 0.15);
-}
-
-.input-radio-barbeiro {
-  display: none;
-}
-
-.foto-barbeiro {
-  width: 50px;
-  height: 50px;
-  border-radius: 50%;
-  object-fit: cover;
-  border: 2px solid #ffffff;
-}
-
-.nome-barbeiro-card {
-  font-size: 1.1rem;
-  font-weight: 700;
+.caixa-campo-interna:focus-within .icone-campo-interno {
   color: #ffffff;
 }
 
-.input-campo, .select-campo {
+.input-campo-interno, .select-campo-interno {
   width: 100%;
-  background: #1c1c1c;
-  border: 1px solid var(--border-color);
-  border-radius: 10px;
-  padding: 12px 16px;
+  background: transparent;
+  border: none;
   color: #ffffff;
-  font-size: 1rem;
+  font-size: 1.05rem;
+  font-weight: 600;
   font-family: inherit;
   outline: none;
-  transition: border-color 0.2s, box-shadow 0.2s;
+  padding: 6px 0;
 }
 
-.input-campo:focus, .select-campo:focus {
-  border-color: #ffffff;
-  box-shadow: 0 0 0 3px rgba(255, 255, 255, 0.2);
+.input-campo-interno::placeholder {
+  color: #555555;
+  font-weight: 400;
 }
 
-.botao-confirmar {
-  background: #ffffff;
-  color: #000000;
-  border: none;
+.select-campo-interno {
+  cursor: pointer;
+}
+
+.select-campo-interno option {
+  background-color: #1a1a1a;
+  color: #ffffff;
+  padding: 10px;
+}
+
+/* Botão de Confirmação Revamp */
+.botao-confirmar-revamp {
+  width: 100%;
+  background: #252525;
+  color: #777777;
+  border: 1px solid #333333;
   font-size: 1.1rem;
   font-weight: 800;
-  padding: 16px;
-  border-radius: 12px;
-  cursor: pointer;
-  transition: all 0.3s;
-  box-shadow: 0 4px 15px rgba(255, 255, 255, 0.2);
+  padding: 18px 24px;
+  border-radius: 14px;
+  cursor: not-allowed;
+  transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
   margin-top: 10px;
 }
 
-.botao-confirmar:hover:not(:disabled) {
-  background: #e5e5e5;
-  transform: translateY(-2px);
+.botao-confirmar-revamp.ativo {
+  background: #ffffff;
+  color: #000000;
+  border-color: #ffffff;
+  cursor: pointer;
+  box-shadow: 0 6px 25px rgba(255, 255, 255, 0.25);
 }
 
-.botao-confirmar:disabled {
-  opacity: 0.4;
-  cursor: not-allowed;
-  box-shadow: none;
-  background: #2a2a2a;
-  color: #888888;
+.botao-confirmar-revamp.ativo:hover {
+  background: #e5e5e5;
+  transform: translateY(-2px) scale(1.01);
+  box-shadow: 0 10px 35px rgba(255, 255, 255, 0.4);
 }
 
 /* About Us Section */
