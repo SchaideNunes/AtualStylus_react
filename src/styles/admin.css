@@ -1,0 +1,250 @@
+/* Admin Dashboard Specific Styles */
+.admin-container {
+  max-width: 1000px;
+  margin: 20px auto;
+  padding: 0 15px;
+}
+
+.admin-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 25px;
+  border-bottom: 1px solid var(--border-color);
+  padding-bottom: 16px;
+}
+
+.admin-title {
+  font-size: 1.8rem;
+  font-weight: 800;
+  color: #ffffff;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.btn-sair {
+  background: #dc2626;
+  color: #ffffff;
+  border: none;
+  padding: 8px 18px;
+  border-radius: 8px;
+  font-weight: 700;
+  font-size: 0.9rem;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+.btn-sair:hover {
+  background: #b91c1c;
+}
+
+.admin-tabs {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin-bottom: 25px;
+}
+
+.tab-btn {
+  flex: 1;
+  min-width: 130px;
+  padding: 12px;
+  border-radius: 10px;
+  font-weight: 700;
+  font-size: 0.95rem;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  border: 1px solid var(--border-color);
+  background: #1f2937;
+  color: var(--text-muted);
+  text-align: center;
+}
+
+.tab-btn:hover {
+  background: #374151;
+  color: #ffffff;
+}
+
+.tab-btn.ativo-pendentes {
+  background: rgba(251, 191, 36, 0.15);
+  border-color: var(--gold-primary);
+  color: var(--gold-primary);
+}
+
+.tab-btn.ativo-concluidos {
+  background: rgba(34, 197, 94, 0.15);
+  border-color: #22c55e;
+  color: #22c55e;
+}
+
+.tab-btn.ativo-bloqueios {
+  background: rgba(239, 68, 68, 0.15);
+  border-color: #ef4444;
+  color: #ef4444;
+}
+
+.tab-btn.ativo-config {
+  background: rgba(251, 191, 36, 0.15);
+  border-color: var(--gold-primary);
+  color: var(--gold-primary);
+}
+
+.painel-box {
+  background: var(--bg-card);
+  border: 1px solid var(--border-color);
+  border-radius: 16px;
+  padding: 22px;
+  margin-bottom: 25px;
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.5);
+}
+
+.painel-title {
+  font-size: 1.15rem;
+  font-weight: 700;
+  color: #ffffff;
+  margin-bottom: 16px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.grid-acoes-rapidas {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 12px;
+}
+
+@media (min-width: 768px) {
+  .grid-acoes-rapidas {
+    grid-template-columns: 1fr 1fr;
+  }
+}
+
+.grid-filtros {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 12px;
+}
+
+@media (min-width: 768px) {
+  .grid-filtros {
+    grid-template-columns: 2fr 1.5fr 1.5fr 1fr;
+  }
+}
+
+.card-dia-agrupado {
+  background: #111827;
+  border: 1px solid var(--border-color);
+  border-radius: 16px;
+  overflow: hidden;
+  margin-bottom: 25px;
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.6);
+}
+
+.header-dia-agrupado {
+  background: #1f2937;
+  padding: 14px 20px;
+  border-bottom: 1px solid var(--border-color);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
+.item-agendamento-row {
+  padding: 16px 20px;
+  border-bottom: 1px solid rgba(55, 65, 81, 0.5);
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  transition: background 0.2s;
+}
+
+@media (min-width: 768px) {
+  .item-agendamento-row {
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+  }
+}
+
+.item-agendamento-row:hover {
+  background: rgba(31, 41, 55, 0.4);
+}
+
+.item-agendamento-row.bloqueado {
+  background: rgba(127, 29, 29, 0.15);
+  border-left: 4px solid #ef4444;
+}
+
+.item-agendamento-row.confirmado {
+  border-left: 4px solid var(--gold-primary);
+}
+
+.hora-badge {
+  background: #000000;
+  border: 1px solid var(--border-color);
+  border-radius: 8px;
+  padding: 8px 14px;
+  font-size: 1.2rem;
+  font-weight: 900;
+  color: #ffffff;
+  font-family: monospace;
+  text-align: center;
+  min-width: 80px;
+}
+
+.btn-acao-admin {
+  padding: 8px 14px;
+  border-radius: 8px;
+  font-weight: 700;
+  font-size: 0.85rem;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  transition: all 0.2s;
+  border: 1px solid transparent;
+}
+
+.btn-concluir {
+  background: rgba(34, 197, 94, 0.15);
+  color: #4ade80;
+  border-color: #166534;
+}
+.btn-concluir:hover {
+  background: #22c55e;
+  color: #000000;
+}
+
+.btn-liberar {
+  background: rgba(239, 68, 68, 0.15);
+  color: #fca5a5;
+  border-color: #991b1b;
+}
+.btn-liberar:hover {
+  background: #ef4444;
+  color: #ffffff;
+}
+
+.chip-horario-config {
+  background: #1f2937;
+  border: 1px solid var(--border-color);
+  color: #ffffff;
+  padding: 8px 14px;
+  border-radius: 8px;
+  font-family: monospace;
+  font-size: 0.95rem;
+  cursor: pointer;
+  transition: all 0.2s;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.chip-horario-config:hover {
+  background: #7f1d1d;
+  border-color: #ef4444;
+  color: #fca5a5;
+}
