@@ -181,20 +181,15 @@ export function Agendamento({ servicoPreSelecionado, onAgendamentoConcluido }) {
             {BARBEIROS_DEFAULT.map((b) => {
               const selecionado = barbeiroId === b.id;
               return (
-                <label 
+                <div 
                   key={b.id} 
+                  role="button"
+                  tabIndex={0}
+                  aria-label={b.nome}
+                  onClick={() => setBarbeiroId(b.id)}
+                  onKeyDown={(e) => { if (e.key === 'Enter' || e.key === ' ') setBarbeiroId(b.id); }}
                   className={`card-barbeiro-limpo ${selecionado ? 'selecionado' : ''}`}
                 >
-                  <input 
-                    type="radio" 
-                    name="barbeiro" 
-                    value={b.id} 
-                    checked={selecionado}
-                    onChange={() => setBarbeiroId(b.id)}
-                    className="radio-barbeiro-escondido"
-                    aria-label={b.nome}
-                  />
-
                   <div className="container-foto-barbeiro-limpa">
                     <img 
                       src={b.foto} 
@@ -210,7 +205,7 @@ export function Agendamento({ servicoPreSelecionado, onAgendamentoConcluido }) {
                   </div>
 
                   <span className="nome-barbeiro-limpo">{b.nome}</span>
-                </label>
+                </div>
               );
             })}
           </div>
