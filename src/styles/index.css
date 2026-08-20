@@ -8,9 +8,11 @@
 
 :root {
   --bg-primary: #000000;
-  --bg-card: #111827;
-  --bg-card-hover: #1f2937;
-  --border-color: #374151;
+  --bg-card: #141414;
+  --bg-card-inner: #1c1c1c;
+  --bg-card-hover: #262626;
+  --border-color: #2e2e2e;
+  --border-color-light: #3d3d3d;
   --gold-primary: #fbbf24;
   --gold-dark: #ca8a04;
   --gold-hover: #d97706;
@@ -66,7 +68,7 @@ html {
 }
 .hover-lift:hover {
   transform: translateY(-4px);
-  box-shadow: 0 12px 30px rgba(0, 0, 0, 0.6), 0 0 15px rgba(251, 191, 36, 0.15);
+  box-shadow: 0 12px 30px rgba(0, 0, 0, 0.8), 0 0 15px rgba(251, 191, 36, 0.15);
 }
 
 /* Layout Elements */
@@ -83,10 +85,10 @@ html {
 
 /* Header & Navbar */
 .cabecalho {
-  background: rgba(10, 10, 10, 0.85);
+  background: rgba(10, 10, 10, 0.95);
   backdrop-filter: blur(12px);
   -webkit-backdrop-filter: blur(12px);
-  border-bottom: 1px solid rgba(55, 65, 81, 0.6);
+  border-bottom: 1px solid #222222;
   position: sticky;
   top: 0;
   z-index: 100;
@@ -174,7 +176,7 @@ html {
   flex-direction: column;
   gap: 8px;
   padding: 16px 0;
-  border-top: 1px solid rgba(55, 65, 81, 0.5);
+  border-top: 1px solid #222222;
   animation: slideUp 0.3s ease-out;
 }
 
@@ -214,11 +216,12 @@ html {
 }
 
 .coluna-hero-texto {
-  background: linear-gradient(145deg, #111827 0%, #0d1117 100%);
+  background: linear-gradient(145deg, #181818 0%, #101010 100%);
   border: 1px solid var(--border-color);
   border-radius: 20px;
   padding: 40px 30px;
   text-align: center;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.7);
 }
 
 .imagem-logo-hero {
@@ -237,14 +240,15 @@ html {
 }
 
 .coluna-hero-horario {
-  background: linear-gradient(145deg, #18202f 0%, #111827 100%);
-  border: 1px solid rgba(251, 191, 36, 0.3);
+  background: linear-gradient(145deg, #181818 0%, #101010 100%);
+  border: 1px solid rgba(251, 191, 36, 0.35);
   border-radius: 20px;
   padding: 35px 25px;
   text-align: center;
   display: flex;
   flex-direction: column;
   align-items: center;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.7);
 }
 
 .icone-relogio-hero {
@@ -273,10 +277,10 @@ html {
 .item-horario-hero {
   display: flex;
   justify-content: space-between;
-  padding: 10px 15px;
-  background: rgba(0, 0, 0, 0.4);
-  border-radius: 8px;
-  border: 1px solid rgba(255, 255, 255, 0.05);
+  padding: 12px 16px;
+  background: #222222;
+  border-radius: 10px;
+  border: 1px solid #333333;
 }
 
 .dia-semana-hero {
@@ -300,6 +304,8 @@ html {
   cursor: pointer;
   transition: all 0.3s ease;
   box-shadow: 0 4px 20px rgba(202, 138, 4, 0.4);
+  width: 100%;
+  max-width: 320px;
 }
 
 .botao-agendar-hero:hover {
@@ -311,7 +317,11 @@ html {
 .secao-servicos {
   max-width: 1200px;
   margin: 50px auto;
-  padding: 0 20px;
+  padding: 40px 25px;
+  background: var(--bg-card);
+  border: 1px solid var(--border-color);
+  border-radius: 20px;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.7);
 }
 
 .titulo-secao {
@@ -340,7 +350,7 @@ html {
 }
 
 .cartao-servico {
-  background: var(--bg-card);
+  background: var(--bg-card-inner);
   border: 1px solid var(--border-color);
   border-radius: 16px;
   overflow: hidden;
@@ -351,9 +361,10 @@ html {
 }
 
 .cartao-servico:hover {
+  background: var(--bg-card-hover);
   transform: translateY(-6px);
   border-color: var(--gold-primary);
-  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.7), 0 0 15px rgba(251, 191, 36, 0.2);
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.9), 0 0 15px rgba(251, 191, 36, 0.25);
 }
 
 .imagem-servico {
@@ -399,7 +410,7 @@ html {
   background: rgba(251, 191, 36, 0.1);
   border: 1px solid rgba(251, 191, 36, 0.4);
   color: var(--gold-primary);
-  padding: 8px 16px;
+  padding: 10px 16px;
   border-radius: 8px;
   font-weight: 700;
   font-size: 0.9rem;
@@ -437,14 +448,14 @@ html {
 }
 
 .header-agendamento-sticky {
-  background: rgba(17, 24, 39, 0.95);
+  background: rgba(20, 20, 20, 0.95);
   backdrop-filter: blur(10px);
   border: 1px solid var(--border-color);
   border-radius: 16px;
   padding: 20px;
   text-align: center;
   margin-bottom: 25px;
-  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.5);
+  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.7);
 }
 
 .titulo-agendamento {
@@ -458,7 +469,7 @@ html {
   border: 1px solid var(--border-color);
   border-radius: 20px;
   padding: 30px 25px;
-  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.6);
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.8);
   display: flex;
   flex-direction: column;
   gap: 22px;
@@ -490,7 +501,7 @@ html {
   border-radius: 14px;
   padding: 15px;
   cursor: pointer;
-  background: #1f2937;
+  background: #1c1c1c;
   transition: all 0.2s ease;
   display: flex;
   align-items: center;
@@ -498,8 +509,8 @@ html {
 }
 
 .cartao-barbeiro:hover {
-  border-color: rgba(251, 191, 36, 0.5);
-  background: #283548;
+  border-color: var(--gold-primary);
+  background: #242424;
 }
 
 .cartao-barbeiro.selecionado {
@@ -528,7 +539,7 @@ html {
 
 .input-campo, .select-campo {
   width: 100%;
-  background: #1f2937;
+  background: #1c1c1c;
   border: 1px solid var(--border-color);
   border-radius: 10px;
   padding: 12px 16px;
@@ -562,8 +573,8 @@ html {
   opacity: 0.5;
   cursor: not-allowed;
   box-shadow: none;
-  background: #374151;
-  color: #9ca3af;
+  background: #2a2a2a;
+  color: #888888;
 }
 
 /* About Us Section */
@@ -580,6 +591,7 @@ html {
   padding: 40px 30px;
   margin-bottom: 30px;
   text-align: center;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.7);
 }
 
 .titulo-sobre {
@@ -621,7 +633,7 @@ html {
   border-radius: 50%;
   object-fit: cover;
   border: 3px solid var(--gold-primary);
-  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.6);
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.8);
 }
 
 .foto-sobre-card span {
@@ -648,6 +660,7 @@ html {
   border-radius: 16px;
   padding: 25px;
   text-align: center;
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.6);
 }
 
 .titulo-valor {
@@ -664,8 +677,8 @@ html {
 
 /* Footer */
 .rodape {
-  background: #090d16;
-  border-top: 1px solid var(--border-color);
+  background: #0a0a0a;
+  border-top: 1px solid #222222;
   padding: 50px 20px 25px;
   margin-top: auto;
 }
@@ -744,7 +757,7 @@ html {
 }
 
 .divisoria-rodape {
-  border-top: 1px solid rgba(55, 65, 81, 0.5);
+  border-top: 1px solid #222222;
   padding-top: 25px;
 }
 
@@ -788,7 +801,7 @@ html {
 .modal-overlay {
   position: fixed;
   inset: 0;
-  background: rgba(0, 0, 0, 0.85);
+  background: rgba(0, 0, 0, 0.88);
   backdrop-filter: blur(8px);
   display: flex;
   align-items: center;
@@ -798,13 +811,13 @@ html {
 }
 
 .modal-card {
-  background: #1f2937;
+  background: #181818;
   border: 1px solid var(--border-color);
   border-radius: 16px;
   width: 100%;
   max-width: 650px;
   padding: 25px;
-  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.8);
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.9);
 }
 
 .slot-btn {
@@ -814,7 +827,7 @@ html {
   font-size: 0.95rem;
   font-weight: 600;
   border: 1px solid var(--border-color);
-  background: #111827;
+  background: #101010;
   color: var(--text-muted);
   cursor: pointer;
   transition: all 0.15s ease;

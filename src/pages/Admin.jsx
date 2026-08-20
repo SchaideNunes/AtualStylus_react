@@ -348,7 +348,7 @@ export function Admin({ onLogout }) {
             <option value="2">Denilson</option>
           </select>
 
-          <div style={{ background: '#111827', padding: '16px', borderRadius: '12px', border: '1px solid #374151', marginBottom: '20px', display: 'flex', gap: '12px', alignItems: 'center', flexWrap: 'wrap' }}>
+          <div style={{ background: '#141414', padding: '16px', borderRadius: '12px', border: '1px solid #2e2e2e', marginBottom: '20px', display: 'flex', gap: '12px', alignItems: 'center', flexWrap: 'wrap' }}>
             <span style={{ fontWeight: 'bold', color: '#e5e7eb' }}>Novo Horário:</span>
             <input 
               type="time" 
@@ -381,7 +381,7 @@ export function Admin({ onLogout }) {
             ))}
           </div>
 
-          <div style={{ borderTop: '1px solid #374151', paddingTop: '16px', display: 'flex', justifyContent: 'flex-end' }}>
+          <div style={{ borderTop: '1px solid #2e2e2e', paddingTop: '16px', display: 'flex', justifyContent: 'flex-end' }}>
             <button 
               onClick={handleSalvarConfig}
               style={{ background: '#ca8a04', border: 'none', color: '#ffffff', padding: '12px 24px', borderRadius: '10px', fontWeight: 'bold', cursor: 'pointer', fontSize: '1rem' }}
@@ -455,7 +455,7 @@ export function Admin({ onLogout }) {
               </div>
             </div>
 
-            <div style={{ marginTop: '16px', display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: '12px', borderTop: '1px solid #374151', paddingTop: '14px' }}>
+            <div style={{ marginTop: '16px', display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: '12px', borderTop: '1px solid #2e2e2e', paddingTop: '14px' }}>
               <label style={{ display: 'flex', alignItems: 'center', gap: '8px', cursor: 'pointer', color: '#d1d5db', fontSize: '0.9rem' }}>
                 <input 
                   type="checkbox" 
@@ -524,7 +524,7 @@ export function Admin({ onLogout }) {
               </select>
               <button 
                 onClick={() => { setBuscaTexto(''); setBuscaData(''); setBuscaBarbeiro(''); }}
-                style={{ background: '#374151', border: 'none', color: '#ffffff', borderRadius: '8px', cursor: 'pointer', fontWeight: '600' }}
+                style={{ background: '#262626', border: '1px solid #333333', color: '#ffffff', borderRadius: '8px', cursor: 'pointer', fontWeight: '600' }}
               >
                 Limpar
               </button>
@@ -538,7 +538,7 @@ export function Admin({ onLogout }) {
                 <p style={{ color: '#9ca3af' }}>Carregando dados...</p>
               </div>
             ) : Object.keys(agendamentosAgrupados).length === 0 ? (
-              <div style={{ textAlign: 'center', padding: '40px', background: '#111827', borderRadius: '16px', border: '1px solid #374151' }}>
+              <div style={{ textAlign: 'center', padding: '40px', background: '#141414', borderRadius: '16px', border: '1px solid #2e2e2e' }}>
                 <p style={{ color: '#9ca3af', fontSize: '1.1rem' }}>Nenhum agendamento encontrado.</p>
               </div>
             ) : (
@@ -557,7 +557,7 @@ export function Admin({ onLogout }) {
                         </h3>
                         <p style={{ color: '#9ca3af', fontSize: '0.85rem' }}>{dataExtenso}</p>
                       </div>
-                      <span style={{ background: '#374151', color: '#e5e7eb', fontSize: '0.8rem', padding: '4px 12px', borderRadius: '20px', fontWeight: 'bold' }}>
+                      <span style={{ background: '#262626', border: '1px solid #333333', color: '#e5e7eb', fontSize: '0.8rem', padding: '4px 12px', borderRadius: '20px', fontWeight: 'bold' }}>
                         {lista.length} agendamento(s)
                       </span>
                     </div>

@@ -84,7 +84,7 @@ export function MeusAgendamentos() {
 
         <div style={{ marginTop: '20px' }}>
           {jaBuscou && !buscando && agendamentos.length === 0 && (
-            <div style={{ textAlign: 'center', padding: '25px', background: '#1f2937', borderRadius: '12px', border: '1px solid #374151' }}>
+            <div style={{ textAlign: 'center', padding: '25px', background: '#1c1c1c', borderRadius: '12px', border: '1px solid #2e2e2e' }}>
               <p style={{ color: '#fca5a5', fontWeight: '500' }}>
                 Nenhum agendamento pendente encontrado para este número.
               </p>
@@ -95,12 +95,12 @@ export function MeusAgendamentos() {
             <div 
               key={ag.id} 
               style={{
-                background: '#1f2937',
-                border: '1px solid #374151',
+                background: '#1c1c1c',
+                border: '1px solid #2e2e2e',
                 borderRadius: '12px',
                 padding: '20px',
                 marginBottom: '15px',
-                boxShadow: '0 4px 15px rgba(0,0,0,0.4)'
+                boxShadow: '0 4px 15px rgba(0,0,0,0.6)'
               }}
               className="hover-lift"
             >

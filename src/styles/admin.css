@@ -55,13 +55,13 @@
   cursor: pointer;
   transition: all 0.2s ease;
   border: 1px solid var(--border-color);
-  background: #1f2937;
+  background: #1c1c1c;
   color: var(--text-muted);
   text-align: center;
 }
 
 .tab-btn:hover {
-  background: #374151;
+  background: #282828;
   color: #ffffff;
 }
 
@@ -95,7 +95,7 @@
   border-radius: 16px;
   padding: 22px;
   margin-bottom: 25px;
-  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.5);
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.7);
 }
 
 .painel-title {
@@ -133,16 +133,16 @@
 }
 
 .card-dia-agrupado {
-  background: #111827;
+  background: #141414;
   border: 1px solid var(--border-color);
   border-radius: 16px;
   overflow: hidden;
   margin-bottom: 25px;
-  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.6);
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.7);
 }
 
 .header-dia-agrupado {
-  background: #1f2937;
+  background: #1c1c1c;
   padding: 14px 20px;
   border-bottom: 1px solid var(--border-color);
   display: flex;
@@ -154,7 +154,7 @@
 
 .item-agendamento-row {
   padding: 16px 20px;
-  border-bottom: 1px solid rgba(55, 65, 81, 0.5);
+  border-bottom: 1px solid #242424;
   display: flex;
   flex-direction: column;
   gap: 12px;
@@ -170,7 +170,7 @@
 }
 
 .item-agendamento-row:hover {
-  background: rgba(31, 41, 55, 0.4);
+  background: #1c1c1c;
 }
 
 .item-agendamento-row.bloqueado {
@@ -183,7 +183,7 @@
 }
 
 .hora-badge {
-  background: #000000;
+  background: #0a0a0a;
   border: 1px solid var(--border-color);
   border-radius: 8px;
   padding: 8px 14px;
@@ -229,7 +229,7 @@
 }
 
 .chip-horario-config {
-  background: #1f2937;
+  background: #1c1c1c;
   border: 1px solid var(--border-color);
   color: #ffffff;
   padding: 8px 14px;

@@ -34,10 +34,10 @@ export function Login({ onLoginSucesso }) {
   return (
     <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', minHeight: '75vh', padding: '20px' }} className="fade-in">
       <div style={{
-        background: '#111827',
+        background: '#141414',
         padding: '35px 30px',
         borderRadius: '16px',
-        border: '1px solid #374151',
+        border: '1px solid #2e2e2e',
         width: '100%',
         maxWidth: '400px',
         boxShadow: '0 20px 40px rgba(0,0,0,0.8)'

@@ -51,7 +51,7 @@ export function ModalBloqueio({ isOpen, onClose, data, barbeiroId, barbeiroNome,
   return (
     <div className="modal-overlay" onClick={onClose}>
       <div className="modal-card scale-in" onClick={e => e.stopPropagation()}>
-        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '15px', borderBottom: '1px solid #374151', paddingBottom: '12px' }}>
+        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '15px', borderBottom: '1px solid #2e2e2e', paddingBottom: '12px' }}>
           <h3 style={{ color: '#ffffff', fontSize: '1.3rem', fontWeight: 'bold', display: 'flex', alignItems: 'center', gap: '8px' }}>
             <ShieldAlert color="#ef4444" size={24} /> Bloqueio Múltiplo
           </h3>
@@ -85,14 +85,14 @@ export function ModalBloqueio({ isOpen, onClose, data, barbeiroId, barbeiroNome,
           })}
         </div>
 
-        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', borderTop: '1px solid #374151', paddingTop: '16px' }}>
+        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', borderTop: '1px solid #2e2e2e', paddingTop: '16px' }}>
           <span style={{ color: '#9ca3af', fontSize: '0.95rem' }}>
             {slotsSelecionados.length} selecionado(s)
           </span>
           <div style={{ display: 'flex', gap: '10px' }}>
             <button
               onClick={onClose}
-              style={{ background: '#374151', border: 'none', color: '#e5e7eb', padding: '10px 18px', borderRadius: '8px', cursor: 'pointer', fontWeight: '600' }}
+              style={{ background: '#262626', border: '1px solid #333333', color: '#e5e7eb', padding: '10px 18px', borderRadius: '8px', cursor: 'pointer', fontWeight: '600' }}
             >
               Cancelar
             </button>
