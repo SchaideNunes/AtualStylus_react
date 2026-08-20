@@ -86,17 +86,19 @@ Todas as funcionalidades do site original foram mapeadas e devem ser preservadas
 
 ---
 
-## 🎨 Diretrizes de Design & UI/UX
+## 🎨 Diretrizes de Design & UI/UX (Preto e Branco)
 
-1. **Paleta de Cores Premium:**
-   - Fundo principal: `#000000` (Preto puro) e `#111827` (Cinza muito escuro).
-   - Destaques / Acentos: Dourado / Amarelo `#fbbf24` e `#ca8a04`.
-   - Textos: `#f3f4f6` (Branco suave) e `#9ca3af` (Cinza médio).
-   - Ações positivas: `#16a34a` / `#22c55e` (Verde esmeralda).
-   - Ações de perigo / Bloqueio: `#dc2626` / `#ef4444` / `#7f1d1d` (Vermelho carmesim).
-2. **Tipografia:** Fonte moderna e legível (`Segoe UI`, `Inter`, `Roboto`).
+1. **Paleta de Cores Monocromática Premium (Black & White):**
+   - Fundo principal: `#000000` (Preto puro) e `#141414` / `#1c1c1c` (Carvão escuro fosco).
+   - Destaques / Acentos: `#ffffff` (Branco puro) e `#e5e7eb` / `#cccccc` (Prata / Cinza claro).
+   - Textos: `#ffffff` (Títulos e destaques), `#f3f4f6` (Branco suave) e `#9ca3af` (Cinza médio).
+   - Botões Principais: Fundo `#ffffff` com texto `#000000` e hover suave.
+   - Ações de perigo / Cancelamento: `#ef4444` / `#7f1d1d` (Vermelho carmesim para alertas).
+   - Ações de conclusão: `#22c55e` (Verde esmeralda para confirmações no admin).
+2. **Tipografia:** Fonte moderna e legível (`Outfit`, `Inter`, `Segoe UI`).
 3. **Micro-Animações:** Efeitos suaves de `fade-in`, `slide-up`, `scale-in`, `hover-lift` e `pulse` nos botões de ação e cards.
-4. **Responsividade:** Layout 100% fluido em celulares de 320px até telas ultrawide.
+4. **Navegação em Páginas Dedicadas:** Cada seção (`Início`, `Agendar`, `Sobre Nós`, `Meus Agendamentos`, `Login`, `Admin`) é uma página completa e isolada.
+5. **Responsividade:** Layout 100% fluido em celulares de 320px até telas ultrawide.
 
 ---
 

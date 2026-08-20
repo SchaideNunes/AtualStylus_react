@@ -1,4 +1,4 @@
-/* Admin Dashboard Specific Styles */
+/* Admin Dashboard Specific Styles - Black & White Theme */
 .admin-container {
   max-width: 1000px;
   margin: 20px auto;
@@ -66,9 +66,9 @@
 }
 
 .tab-btn.ativo-pendentes {
-  background: rgba(251, 191, 36, 0.15);
-  border-color: var(--gold-primary);
-  color: var(--gold-primary);
+  background: rgba(255, 255, 255, 0.15);
+  border-color: #ffffff;
+  color: #ffffff;
 }
 
 .tab-btn.ativo-concluidos {
@@ -84,9 +84,9 @@
 }
 
 .tab-btn.ativo-config {
-  background: rgba(251, 191, 36, 0.15);
-  border-color: var(--gold-primary);
-  color: var(--gold-primary);
+  background: rgba(255, 255, 255, 0.15);
+  border-color: #ffffff;
+  color: #ffffff;
 }
 
 .painel-box {
@@ -179,7 +179,7 @@
 }
 
 .item-agendamento-row.confirmado {
-  border-left: 4px solid var(--gold-primary);
+  border-left: 4px solid #ffffff;
 }
 
 .hora-badge {

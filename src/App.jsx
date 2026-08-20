@@ -15,20 +15,26 @@ export function App() {
   const [servicoPreSelecionado, setServicoPreSelecionado] = useState('');
   const [usuarioAdmin, setUsuarioAdmin] = useState(null);
 
-  // Lê hash inicial da URL (ex: #meusAgendamentos, #admin, #login)
+  // Lê hash inicial da URL (ex: #agendamento, #agendar, #sobre, #meusAgendamentos, #admin, #login)
   useEffect(() => {
     const handleHash = () => {
-      const hash = window.location.hash.replace('#', '');
-      if (hash === 'meusAgendamentos') setPaginaAtiva('meusAgendamentos');
-      else if (hash === 'agendamento') setPaginaAtiva('agendamento');
-      else if (hash === 'sobre') setPaginaAtiva('sobre');
-      else if (hash === 'admin') {
+      const hash = window.location.hash.replace('#', '').toLowerCase();
+      if (hash === 'meusagendamentos' || hash === 'meus-agendamentos') {
+        setPaginaAtiva('meusAgendamentos');
+      } else if (hash === 'agendamento' || hash === 'agendar') {
+        setPaginaAtiva('agendamento');
+      } else if (hash === 'sobre' || hash === 'sobre-nos') {
+        setPaginaAtiva('sobre');
+      } else if (hash === 'admin') {
         const token = localStorage.getItem('token_admin_atualestilo');
         if (token) setPaginaAtiva('admin');
         else setPaginaAtiva('login');
       } else if (hash === 'login') {
         setPaginaAtiva('login');
+      } else if (hash === 'inicio' || hash === 'home' || hash === '') {
+        setPaginaAtiva('inicio');
       }
+      window.scrollTo(0, 0);
     };
 
     handleHash();
@@ -39,6 +45,7 @@ export function App() {
   const handleNavegar = (pagina) => {
     setPaginaAtiva(pagina);
     window.location.hash = pagina === 'inicio' ? '' : pagina;
+    window.scrollTo({ top: 0, behavior: 'instant' });
   };
 
   const handleSelecionarServico = (servicoStr) => {

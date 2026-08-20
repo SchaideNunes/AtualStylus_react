@@ -63,7 +63,7 @@ export function ModalBloqueio({ isOpen, onClose, data, barbeiroId, barbeiroNome,
           </button>
         </div>
 
-        <p style={{ color: '#fbbf24', fontSize: '0.95rem', marginBottom: '18px', fontFamily: 'monospace' }}>
+        <p style={{ color: '#e5e7eb', fontSize: '0.95rem', marginBottom: '18px', fontFamily: 'monospace' }}>
           Bloqueando agenda de <b>{barbeiroNome}</b> para <b>{formatarDataBR(data)}</b>
         </p>
 

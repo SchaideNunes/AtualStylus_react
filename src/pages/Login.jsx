@@ -46,15 +46,15 @@ export function Login({ onLoginSucesso }) {
           <div style={{
             width: '60px',
             height: '60px',
-            background: 'rgba(251, 191, 36, 0.15)',
-            border: '1px solid rgba(251, 191, 36, 0.4)',
+            background: 'rgba(255, 255, 255, 0.08)',
+            border: '1px solid rgba(255, 255, 255, 0.3)',
             borderRadius: '50%',
             display: 'flex',
             alignItems: 'center',
             justifyContent: 'center',
             margin: '0 auto 15px auto'
           }}>
-            <Lock size={30} color="#fbbf24" />
+            <Lock size={30} color="#ffffff" />
           </div>
           <h2 style={{ fontSize: '1.6rem', fontWeight: 'bold', color: '#ffffff' }}>Acesso Restrito</h2>
           <p style={{ color: '#9ca3af', fontSize: '0.9rem', marginTop: '5px' }}>Painel Administrativo AtualEstilo</p>

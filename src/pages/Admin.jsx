@@ -291,7 +291,7 @@ export function Admin({ onLogout }) {
     <div className="admin-container fade-in">
       <div className="admin-header">
         <h1 className="admin-title">
-          <ShieldCheck color="#fbbf24" size={32} /> Painel Administrativo
+          <ShieldCheck color="#ffffff" size={32} /> Painel Administrativo
         </h1>
         <button 
           onClick={onLogout} 
@@ -333,7 +333,7 @@ export function Admin({ onLogout }) {
       {/* Painel Configuração */}
       {abaAtiva === 'config' ? (
         <div className="painel-box fade-in">
-          <h3 className="painel-title"><Settings color="#fbbf24" size={22} /> Configurar Horários de Atendimento</h3>
+          <h3 className="painel-title"><Settings color="#ffffff" size={22} /> Configurar Horários de Atendimento</h3>
           <p style={{ color: '#9ca3af', fontSize: '0.9rem', marginBottom: '18px' }}>
             Selecione o barbeiro para editar os horários disponibilizados para agendamento.
           </p>
@@ -365,7 +365,7 @@ export function Admin({ onLogout }) {
             </button>
           </div>
 
-          <p style={{ color: '#fbbf24', fontSize: '0.85rem', marginBottom: '12px', fontFamily: 'monospace' }}>
+          <p style={{ color: '#e5e7eb', fontSize: '0.85rem', marginBottom: '12px', fontFamily: 'monospace' }}>
             Clique em um horário para removê-lo:
           </p>
 
@@ -384,7 +384,7 @@ export function Admin({ onLogout }) {
           <div style={{ borderTop: '1px solid #2e2e2e', paddingTop: '16px', display: 'flex', justifyContent: 'flex-end' }}>
             <button 
               onClick={handleSalvarConfig}
-              style={{ background: '#ca8a04', border: 'none', color: '#ffffff', padding: '12px 24px', borderRadius: '10px', fontWeight: 'bold', cursor: 'pointer', fontSize: '1rem' }}
+              style={{ background: '#ffffff', border: 'none', color: '#000000', padding: '12px 24px', borderRadius: '10px', fontWeight: 'bold', cursor: 'pointer', fontSize: '1rem' }}
             >
               💾 Salvar no Banco SQL
             </button>
@@ -394,7 +394,7 @@ export function Admin({ onLogout }) {
         <>
           {/* Painel Ações Rápidas */}
           <div className="painel-box">
-            <h3 className="painel-title"><Zap color="#fbbf24" size={20} /> Ações Rápidas</h3>
+            <h3 className="painel-title"><Zap color="#ffffff" size={20} /> Ações Rápidas</h3>
             <div className="grid-acoes-rapidas">
               <input 
                 type="text" 
@@ -480,7 +480,7 @@ export function Admin({ onLogout }) {
                 </button>
                 <button 
                   onClick={handleCriarAgendamentoAdmin}
-                  style={{ background: '#16a34a', border: 'none', color: '#ffffff', padding: '8px 18px', borderRadius: '8px', fontWeight: 'bold', cursor: 'pointer', fontSize: '0.85rem' }}
+                  style={{ background: '#ffffff', border: 'none', color: '#000000', padding: '8px 18px', borderRadius: '8px', fontWeight: 'bold', cursor: 'pointer', fontSize: '0.85rem' }}
                 >
                   ➕ Cadastrar
                 </button>
@@ -494,7 +494,7 @@ export function Admin({ onLogout }) {
               <span style={{ fontSize: '0.85rem', color: '#9ca3af', fontWeight: 'bold', textTransform: 'uppercase', display: 'flex', alignItems: 'center', gap: '6px' }}>
                 <Filter size={16} /> Filtrar Lista
               </span>
-              <span style={{ color: '#fbbf24', fontFamily: 'monospace', fontWeight: 'bold', fontSize: '0.9rem' }}>
+              <span style={{ color: '#ffffff', fontFamily: 'monospace', fontWeight: 'bold', fontSize: '0.9rem' }}>
                 Total: {agendamentosFiltrados.length}
               </span>
             </div>
@@ -552,7 +552,7 @@ export function Admin({ onLogout }) {
                   <div key={dataStr} className="card-dia-agrupado">
                     <div className="header-dia-agrupado">
                       <div>
-                        <h3 style={{ color: '#fbbf24', fontSize: '1.2rem', fontWeight: 'bold', textTransform: 'capitalize' }}>
+                        <h3 style={{ color: '#ffffff', fontSize: '1.2rem', fontWeight: 'bold', textTransform: 'capitalize' }}>
                           📅 {diaSemana}
                         </h3>
                         <p style={{ color: '#9ca3af', fontSize: '0.85rem' }}>{dataExtenso}</p>
@@ -589,7 +589,7 @@ export function Admin({ onLogout }) {
                                 <div style={{ color: '#9ca3af', fontSize: '0.85rem', marginTop: '4px', display: 'flex', gap: '14px', flexWrap: 'wrap' }}>
                                   {ag.telefone && <span>📱 {ag.telefone}</span>}
                                   <span>✂️ {ag.barbeiro_nome}</span>
-                                  {ag.servico && <span style={{ color: '#fbbf24' }}>• {ag.servico}</span>}
+                                  {ag.servico && <span style={{ color: '#ffffff', fontWeight: 'bold' }}>• {ag.servico}</span>}
                                 </div>
                               </div>
                             </div>

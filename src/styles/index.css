@@ -12,10 +12,10 @@
   --bg-card-inner: #1c1c1c;
   --bg-card-hover: #262626;
   --border-color: #2e2e2e;
-  --border-color-light: #3d3d3d;
-  --gold-primary: #fbbf24;
-  --gold-dark: #ca8a04;
-  --gold-hover: #d97706;
+  --border-color-light: #444444;
+  --white-primary: #ffffff;
+  --white-soft: #f3f4f6;
+  --silver: #e5e7eb;
   --text-main: #f3f4f6;
   --text-muted: #9ca3af;
   --danger: #ef4444;
@@ -49,18 +49,18 @@ html {
 }
 
 @keyframes scaleIn {
-  from { opacity: 0; transform: scale(0.92); }
+  from { opacity: 0; transform: scale(0.94); }
   to { opacity: 1; transform: scale(1); }
 }
 
 @keyframes pulseGlow {
-  0%, 100% { transform: scale(1); box-shadow: 0 0 0 rgba(251, 191, 36, 0); }
-  50% { transform: scale(1.03); box-shadow: 0 0 20px rgba(251, 191, 36, 0.4); }
+  0%, 100% { transform: scale(1); box-shadow: 0 0 0 rgba(255, 255, 255, 0); }
+  50% { transform: scale(1.03); box-shadow: 0 0 20px rgba(255, 255, 255, 0.25); }
 }
 
-.fade-in { animation: fadeIn 0.4s ease-out forwards; }
-.slide-up { animation: slideUp 0.5s ease-out forwards; }
-.scale-in { animation: scaleIn 0.4s ease-out forwards; }
+.fade-in { animation: fadeIn 0.35s ease-out forwards; }
+.slide-up { animation: slideUp 0.4s ease-out forwards; }
+.scale-in { animation: scaleIn 0.35s ease-out forwards; }
 .pulse { animation: pulseGlow 2.5s ease-in-out infinite; }
 
 .hover-lift {
@@ -68,7 +68,7 @@ html {
 }
 .hover-lift:hover {
   transform: translateY(-4px);
-  box-shadow: 0 12px 30px rgba(0, 0, 0, 0.8), 0 0 15px rgba(251, 191, 36, 0.15);
+  box-shadow: 0 12px 30px rgba(0, 0, 0, 0.9), 0 0 15px rgba(255, 255, 255, 0.1);
 }
 
 /* Layout Elements */
@@ -141,7 +141,7 @@ html {
 
 .link-menu {
   background: transparent;
-  border: none;
+  border: 1px solid transparent;
   color: var(--text-muted);
   font-size: 1rem;
   font-weight: 600;
@@ -154,13 +154,13 @@ html {
 
 .link-menu:hover {
   color: #ffffff;
-  background: rgba(255, 255, 255, 0.06);
+  background: rgba(255, 255, 255, 0.08);
 }
 
 .link-menu.ativo {
-  color: var(--gold-primary);
-  background: rgba(251, 191, 36, 0.12);
-  border: 1px solid rgba(251, 191, 36, 0.3);
+  color: #ffffff;
+  background: rgba(255, 255, 255, 0.12);
+  border: 1px solid rgba(255, 255, 255, 0.4);
 }
 
 .botao-menu-mobile {
@@ -194,8 +194,8 @@ html {
 }
 
 .item-menu-mobile:hover, .item-menu-mobile.ativo {
-  background: rgba(251, 191, 36, 0.15);
-  color: var(--gold-primary);
+  background: rgba(255, 255, 255, 0.15);
+  color: #ffffff;
 }
 
 /* Hero Section */
@@ -228,7 +228,7 @@ html {
   max-width: 260px;
   height: auto;
   margin-bottom: 20px;
-  filter: drop-shadow(0 0 20px rgba(251, 191, 36, 0.25));
+  filter: drop-shadow(0 0 15px rgba(255, 255, 255, 0.15));
 }
 
 .subtitulo-hero {
@@ -241,7 +241,7 @@ html {
 
 .coluna-hero-horario {
   background: linear-gradient(145deg, #181818 0%, #101010 100%);
-  border: 1px solid rgba(251, 191, 36, 0.35);
+  border: 1px solid var(--border-color-light);
   border-radius: 20px;
   padding: 35px 25px;
   text-align: center;
@@ -254,7 +254,7 @@ html {
 .icone-relogio-hero {
   width: 48px;
   height: 48px;
-  color: var(--gold-primary);
+  color: #ffffff;
   margin-bottom: 15px;
 }
 
@@ -289,12 +289,12 @@ html {
 }
 
 .hora-funcionamento-hero {
-  color: var(--gold-primary);
+  color: #ffffff;
   font-weight: 700;
 }
 
 .botao-agendar-hero {
-  background: linear-gradient(135deg, var(--gold-primary) 0%, var(--gold-dark) 100%);
+  background: #ffffff;
   color: #000000;
   border: none;
   font-weight: 800;
@@ -303,14 +303,15 @@ html {
   border-radius: 12px;
   cursor: pointer;
   transition: all 0.3s ease;
-  box-shadow: 0 4px 20px rgba(202, 138, 4, 0.4);
+  box-shadow: 0 4px 20px rgba(255, 255, 255, 0.2);
   width: 100%;
   max-width: 320px;
 }
 
 .botao-agendar-hero:hover {
+  background: #e5e5e5;
   transform: translateY(-2px) scale(1.02);
-  box-shadow: 0 6px 25px rgba(251, 191, 36, 0.6);
+  box-shadow: 0 6px 25px rgba(255, 255, 255, 0.35);
 }
 
 /* Services Grid */
@@ -338,7 +339,7 @@ html {
   display: block;
   width: 60px;
   height: 4px;
-  background: var(--gold-primary);
+  background: #ffffff;
   margin: 10px auto 0;
   border-radius: 2px;
 }
@@ -363,8 +364,8 @@ html {
 .cartao-servico:hover {
   background: var(--bg-card-hover);
   transform: translateY(-6px);
-  border-color: var(--gold-primary);
-  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.9), 0 0 15px rgba(251, 191, 36, 0.25);
+  border-color: #ffffff;
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.9), 0 0 15px rgba(255, 255, 255, 0.15);
 }
 
 .imagem-servico {
@@ -402,14 +403,14 @@ html {
 .preco-servico {
   font-size: 1.35rem;
   font-weight: 800;
-  color: var(--gold-primary);
+  color: #ffffff;
 }
 
 .botao-card-agendar {
   margin-top: auto;
-  background: rgba(251, 191, 36, 0.1);
-  border: 1px solid rgba(251, 191, 36, 0.4);
-  color: var(--gold-primary);
+  background: rgba(255, 255, 255, 0.08);
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  color: #ffffff;
   padding: 10px 16px;
   border-radius: 8px;
   font-weight: 700;
@@ -419,7 +420,7 @@ html {
 }
 
 .cartao-servico:hover .botao-card-agendar {
-  background: var(--gold-primary);
+  background: #ffffff;
   color: #000000;
 }
 
@@ -429,7 +430,7 @@ html {
 }
 
 .botao-agendar-servicos {
-  background: linear-gradient(135deg, var(--gold-primary) 0%, var(--gold-dark) 100%);
+  background: #ffffff;
   color: #000000;
   border: none;
   font-weight: 800;
@@ -438,6 +439,12 @@ html {
   border-radius: 12px;
   cursor: pointer;
   transition: all 0.3s ease;
+  box-shadow: 0 4px 20px rgba(255, 255, 255, 0.2);
+}
+
+.botao-agendar-servicos:hover {
+  background: #e5e5e5;
+  transform: scale(1.03);
 }
 
 /* Booking Form Container */
@@ -461,7 +468,7 @@ html {
 .titulo-agendamento {
   font-size: 1.8rem;
   font-weight: 800;
-  color: var(--gold-primary);
+  color: #ffffff;
 }
 
 .formulario-agendamento {
@@ -509,14 +516,14 @@ html {
 }
 
 .cartao-barbeiro:hover {
-  border-color: var(--gold-primary);
+  border-color: #ffffff;
   background: #242424;
 }
 
 .cartao-barbeiro.selecionado {
-  border-color: var(--gold-primary);
-  background: rgba(251, 191, 36, 0.15);
-  box-shadow: 0 0 15px rgba(251, 191, 36, 0.2);
+  border-color: #ffffff;
+  background: rgba(255, 255, 255, 0.12);
+  box-shadow: 0 0 15px rgba(255, 255, 255, 0.15);
 }
 
 .input-radio-barbeiro {
@@ -528,7 +535,7 @@ html {
   height: 50px;
   border-radius: 50%;
   object-fit: cover;
-  border: 2px solid var(--gold-primary);
+  border: 2px solid #ffffff;
 }
 
 .nome-barbeiro-card {
@@ -551,12 +558,12 @@ html {
 }
 
 .input-campo:focus, .select-campo:focus {
-  border-color: var(--gold-primary);
-  box-shadow: 0 0 0 3px rgba(251, 191, 36, 0.2);
+  border-color: #ffffff;
+  box-shadow: 0 0 0 3px rgba(255, 255, 255, 0.2);
 }
 
 .botao-confirmar {
-  background: linear-gradient(135deg, var(--gold-primary) 0%, var(--gold-dark) 100%);
+  background: #ffffff;
   color: #000000;
   border: none;
   font-size: 1.1rem;
@@ -565,12 +572,17 @@ html {
   border-radius: 12px;
   cursor: pointer;
   transition: all 0.3s;
-  box-shadow: 0 4px 15px rgba(202, 138, 4, 0.4);
+  box-shadow: 0 4px 15px rgba(255, 255, 255, 0.2);
   margin-top: 10px;
 }
 
+.botao-confirmar:hover:not(:disabled) {
+  background: #e5e5e5;
+  transform: translateY(-2px);
+}
+
 .botao-confirmar:disabled {
-  opacity: 0.5;
+  opacity: 0.4;
   cursor: not-allowed;
   box-shadow: none;
   background: #2a2a2a;
@@ -597,7 +609,7 @@ html {
 .titulo-sobre {
   font-size: 2.2rem;
   font-weight: 800;
-  color: var(--gold-primary);
+  color: #ffffff;
   margin-bottom: 25px;
 }
 
@@ -609,7 +621,8 @@ html {
 }
 
 .destaque-texto {
-  color: var(--gold-primary);
+  color: #ffffff;
+  font-weight: 700;
 }
 
 .fotos-sobre-nos {
@@ -632,7 +645,7 @@ html {
   height: 140px;
   border-radius: 50%;
   object-fit: cover;
-  border: 3px solid var(--gold-primary);
+  border: 3px solid #ffffff;
   box-shadow: 0 6px 20px rgba(0, 0, 0, 0.8);
 }
 
@@ -666,7 +679,7 @@ html {
 .titulo-valor {
   font-size: 1.3rem;
   font-weight: 700;
-  color: var(--gold-primary);
+  color: #ffffff;
   margin-bottom: 12px;
 }
 
@@ -726,7 +739,7 @@ html {
 }
 
 .link-rodape:hover {
-  color: var(--gold-primary);
+  color: #ffffff;
 }
 
 .item-contato {
@@ -740,7 +753,7 @@ html {
 .icone-contato {
   width: 18px;
   height: 18px;
-  color: var(--gold-primary);
+  color: #ffffff;
   flex-shrink: 0;
 }
 
@@ -788,7 +801,7 @@ html {
 }
 
 .icone-rede-social:hover {
-  color: var(--gold-primary);
+  color: #ffffff;
   transform: translateY(-2px);
 }
 
@@ -834,14 +847,15 @@ html {
 }
 
 .slot-btn:hover:not(:disabled) {
-  border-color: var(--gold-primary);
+  border-color: #ffffff;
   color: #ffffff;
 }
 
 .slot-btn.selecionado {
-  background: var(--gold-dark);
-  border-color: var(--gold-primary);
-  color: #ffffff;
+  background: #ffffff;
+  border-color: #ffffff;
+  color: #000000;
+  font-weight: bold;
   transform: scale(1.05);
 }
 

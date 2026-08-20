@@ -104,16 +104,16 @@ export function MeusAgendamentos() {
               }}
               className="hover-lift"
             >
-              <h4 style={{ color: '#fbbf24', fontSize: '1.2rem', fontWeight: 'bold', marginBottom: '10px' }}>
+              <h4 style={{ color: '#ffffff', fontSize: '1.2rem', fontWeight: 'bold', marginBottom: '10px' }}>
                 {ag.servico}
               </h4>
               
               <div style={{ display: 'flex', flexDirection: 'column', gap: '6px', color: '#d1d5db', fontSize: '0.95rem', marginBottom: '15px' }}>
                 <span style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-                  <Calendar size={16} color="#fbbf24" /> Data: <strong>{formatarDataBR(ag.data_agendamento)}</strong> às <strong>{ag.horario}</strong>
+                  <Calendar size={16} color="#ffffff" /> Data: <strong>{formatarDataBR(ag.data_agendamento)}</strong> às <strong>{ag.horario}</strong>
                 </span>
                 <span style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-                  <User size={16} color="#fbbf24" /> Barbeiro: <strong>{ag.barbeiro_nome}</strong>
+                  <User size={16} color="#ffffff" /> Barbeiro: <strong>{ag.barbeiro_nome}</strong>
                 </span>
               </div>
 
