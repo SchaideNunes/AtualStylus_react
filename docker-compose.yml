@@ -14,10 +14,10 @@ services:
       - PORT=3001
       - DB_HOST=db
       - DB_PORT=3306
-      - DB_USER=atual_user
-      - DB_PASSWORD=atual_password
-      - DB_NAME=atualestilo_db
-      - JWT_SECRET=chave_secreta_jwt_para_docker_123456
+      - DB_USER=${MYSQL_USER:-atual_user}
+      - DB_PASSWORD=${MYSQL_PASSWORD:-atual_password}
+      - DB_NAME=${MYSQL_DATABASE:-atualestilo_db}
+      - JWT_SECRET=${JWT_SECRET:-chave_secreta_jwt_padrao_2026}
       - JWT_EXPIRES_IN=7d
     depends_on:
       db:
@@ -33,16 +33,16 @@ services:
     ports:
       - "3306:3306"
     environment:
-      MYSQL_ROOT_PASSWORD: root_password_segura
-      MYSQL_DATABASE: atualestilo_db
-      MYSQL_USER: atual_user
-      MYSQL_PASSWORD: atual_password
+      MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD:-Rootadmin123}
+      MYSQL_DATABASE: ${MYSQL_DATABASE:-atualestilo_db}
+      MYSQL_USER: ${MYSQL_USER:-atual_user}
+      MYSQL_PASSWORD: ${MYSQL_PASSWORD:-atual_password}
     volumes:
       - mysql_data:/var/lib/mysql
       - ./schema.sql:/docker-entrypoint-initdb.d/01-schema.sql:ro
       - ./seed.sql:/docker-entrypoint-initdb.d/02-seed.sql:ro
     healthcheck:
-      test: ["CMD", "mysqladmin", "ping", "-h", "localhost", "-u", "atual_user", "-patual_password"]
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost", "-u", "root", "-p${MYSQL_ROOT_PASSWORD:-Rootadmin123}"]
       interval: 5s
       timeout: 5s
       retries: 10
@@ -58,7 +58,7 @@ services:
     environment:
       PMA_HOST: db
       PMA_PORT: 3306
-      MYSQL_ROOT_PASSWORD: root_password_segura
+      MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD:-Rootadmin123}
     depends_on:
       - db
     networks:

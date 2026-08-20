@@ -22,10 +22,13 @@ dist/
 dist-ssr/
 *.local
 
-# Environment variables
+# Environment variables & Sensitive Credentials
 .env
-.env.*.local
+.env.*
+!.env.example
 supabase-config.js
+export_supabase.mjs
+seed_from_supabase.sql
 
 # Editor directories and files
 .vscode/*
