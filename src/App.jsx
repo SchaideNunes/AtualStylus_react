@@ -15,31 +15,38 @@ export function App() {
   const [servicoPreSelecionado, setServicoPreSelecionado] = useState('');
   const [usuarioAdmin, setUsuarioAdmin] = useState(null);
 
-  // Lê hash inicial da URL (ex: #agendamento, #agendar, #sobre, #meusAgendamentos, #admin, #login)
+  // Lê rota da URL tanto por Pathname (/admin) quanto por Hash (#admin)
   useEffect(() => {
-    const handleHash = () => {
+    const handleRoute = () => {
+      const pathname = window.location.pathname.replace(/^\/+|\/+$/g, '').toLowerCase();
       const hash = window.location.hash.replace('#', '').toLowerCase();
-      if (hash === 'meusagendamentos' || hash === 'meus-agendamentos') {
+      const rota = pathname || hash;
+
+      if (rota === 'meusagendamentos' || rota === 'meus-agendamentos') {
         setPaginaAtiva('meusAgendamentos');
-      } else if (hash === 'agendamento' || hash === 'agendar') {
+      } else if (rota === 'agendamento' || rota === 'agendar') {
         setPaginaAtiva('agendamento');
-      } else if (hash === 'sobre' || hash === 'sobre-nos') {
+      } else if (rota === 'sobre' || rota === 'sobre-nos') {
         setPaginaAtiva('sobre');
-      } else if (hash === 'admin') {
+      } else if (rota === 'admin') {
         const token = localStorage.getItem('token_admin_atualestilo');
         if (token) setPaginaAtiva('admin');
         else setPaginaAtiva('login');
-      } else if (hash === 'login') {
+      } else if (rota === 'login') {
         setPaginaAtiva('login');
-      } else if (hash === 'inicio' || hash === 'home' || hash === '') {
+      } else if (rota === 'inicio' || rota === 'home' || rota === '') {
         setPaginaAtiva('inicio');
       }
       window.scrollTo(0, 0);
     };
 
-    handleHash();
-    window.addEventListener('hashchange', handleHash);
-    return () => window.removeEventListener('hashchange', handleHash);
+    handleRoute();
+    window.addEventListener('hashchange', handleRoute);
+    window.addEventListener('popstate', handleRoute);
+    return () => {
+      window.removeEventListener('hashchange', handleRoute);
+      window.removeEventListener('popstate', handleRoute);
+    };
   }, []);
 
   const handleNavegar = (pagina) => {
