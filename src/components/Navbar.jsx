@@ -4,6 +4,21 @@ import { Menu, X, Calendar, UserCheck, Home, Info } from 'lucide-react';
 export function Navbar({ paginaAtiva, onNavegar }) {
   const [menuAberto, setMenuAberto] = useState(false);
 
+  // Bloqueia o scroll da página quando a gaveta mobile estiver aberta
+  useEffect(() => {
+    if (menuAberto) {
+      document.body.style.overflow = 'hidden';
+      document.body.style.touchAction = 'none';
+    } else {
+      document.body.style.overflow = '';
+      document.body.style.touchAction = '';
+    }
+    return () => {
+      document.body.style.overflow = '';
+      document.body.style.touchAction = '';
+    };
+  }, [menuAberto]);
+
   // Fecha o menu ao pressionar Escape ou redimensionar para desktop
   useEffect(() => {
     const handleKeyDown = (e) => {
