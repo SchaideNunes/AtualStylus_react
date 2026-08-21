@@ -1054,7 +1054,7 @@ body {
 
 .input-limpo, .select-limpo {
   width: 100%;
-  background: transparent;
+  background: transparent !important;
   border: none;
   color: #ffffff;
   font-size: 1rem;
@@ -1067,6 +1067,18 @@ body {
 .input-limpo::placeholder {
   color: #555555;
   font-weight: 400;
+}
+
+/* Previne fundo branco / azul do preenchimento automático do navegador (Chrome / Edge / Safari) */
+input:-webkit-autofill,
+input:-webkit-autofill:hover, 
+input:-webkit-autofill:focus, 
+input:-webkit-autofill:active {
+  -webkit-box-shadow: 0 0 0 1000px #1c1c1c inset !important;
+  -webkit-text-fill-color: #ffffff !important;
+  box-shadow: 0 0 0 1000px #1c1c1c inset !important;
+  caret-color: #ffffff !important;
+  transition: background-color 5000s ease-in-out 0s;
 }
 
 .select-limpo {
