@@ -1,147 +1,337 @@
-/* Admin Dashboard Specific Styles - Black & White Theme */
+/* ========================================================================= */
+/* ATUALESTILO BARBEARIA - ADMIN DASHBOARD (LUXURY REVAMP) */
+/* ========================================================================= */
+
 .admin-container {
-  max-width: 1000px;
-  margin: 20px auto;
-  padding: 0 15px;
+  max-width: 1100px;
+  margin: 30px auto 60px;
+  padding: 0 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
 }
 
-.admin-header {
+/* 1. Header do Admin */
+.admin-header-revamp {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  margin-bottom: 25px;
-  border-bottom: 1px solid var(--border-color);
-  padding-bottom: 16px;
+  flex-wrap: wrap;
+  gap: 16px;
+  background: #141414;
+  border: 1px solid var(--border-color);
+  border-radius: 20px;
+  padding: 20px 24px;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.8);
 }
 
-.admin-title {
-  font-size: 1.8rem;
+.admin-titulo-box {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.icone-admin-escudo {
+  width: 44px;
+  height: 44px;
+  background: #202020;
+  border: 1px solid #383838;
+  border-radius: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.admin-title-texto {
+  font-size: 1.4rem;
+  font-weight: 900;
+  color: #ffffff;
+  letter-spacing: -0.02em;
+  margin: 0;
+  text-transform: uppercase;
+}
+
+.admin-subtitle-texto {
+  color: var(--text-muted);
+  font-size: 0.85rem;
+  margin: 0;
+}
+
+.btn-sair-admin {
+  background: rgba(239, 68, 68, 0.12);
+  color: #fca5a5;
+  border: 1px solid rgba(239, 68, 68, 0.35);
+  padding: 10px 20px;
+  border-radius: 12px;
+  font-weight: 700;
+  font-size: 0.9rem;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  transition: all 0.2s ease;
+}
+
+.btn-sair-admin:hover {
+  background: #ef4444;
+  color: #ffffff;
+  border-color: #ef4444;
+  transform: translateY(-1px);
+}
+
+/* 2. Tabs Segmentadas */
+.admin-tabs-segmentada {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 10px;
+  background: #0e0e0e;
+  border: 1px solid var(--border-color);
+  padding: 6px;
+  border-radius: 18px;
+}
+
+@media (min-width: 768px) {
+  .admin-tabs-segmentada {
+    grid-template-columns: repeat(4, 1fr);
+    gap: 8px;
+  }
+}
+
+.tab-btn-revamp {
+  background: transparent;
+  border: 1px solid transparent;
+  padding: 12px 16px;
+  border-radius: 14px;
+  font-weight: 700;
+  font-size: 0.92rem;
+  cursor: pointer;
+  color: var(--text-muted);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.tab-btn-revamp:hover {
+  color: #ffffff;
+  background: #1a1a1a;
+}
+
+.tab-btn-revamp.ativo-pendentes {
+  background: #ffffff;
+  color: #000000;
+  box-shadow: 0 4px 15px rgba(255, 255, 255, 0.2);
+}
+
+.tab-btn-revamp.ativo-concluidos {
+  background: #22c55e;
+  color: #000000;
+  box-shadow: 0 4px 15px rgba(34, 197, 94, 0.3);
+}
+
+.tab-btn-revamp.ativo-bloqueios {
+  background: #ef4444;
+  color: #ffffff;
+  box-shadow: 0 4px 15px rgba(239, 68, 68, 0.3);
+}
+
+.tab-btn-revamp.ativo-config {
+  background: #ffffff;
+  color: #000000;
+  box-shadow: 0 4px 15px rgba(255, 255, 255, 0.2);
+}
+
+.badge-contador-tab {
+  background: rgba(0, 0, 0, 0.25);
+  color: inherit;
+  padding: 2px 8px;
+  border-radius: 999px;
+  font-size: 0.78rem;
+  font-weight: 800;
+}
+
+/* 3. Painel Container / Cards */
+.painel-box-admin {
+  background: #141414;
+  border: 1px solid var(--border-color);
+  border-radius: 24px;
+  padding: 26px 22px;
+  box-shadow: 0 15px 40px rgba(0, 0, 0, 0.85);
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.painel-header-titulo {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 10px;
+  border-bottom: 1px solid #222222;
+  padding-bottom: 14px;
+}
+
+.painel-titulo-texto {
+  font-size: 1.15rem;
   font-weight: 800;
   color: #ffffff;
   display: flex;
   align-items: center;
+  gap: 8px;
+  text-transform: uppercase;
+  letter-spacing: -0.01em;
+}
+
+/* 4. Grid Ações Rápidas */
+.grid-acoes-rapidas-revamp {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 14px;
+}
+
+@media (min-width: 640px) {
+  .grid-acoes-rapidas-revamp {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (min-width: 960px) {
+  .grid-acoes-rapidas-revamp {
+    grid-template-columns: repeat(3, 1fr);
+  }
+}
+
+.barra-inferior-acoes {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 14px;
+  border-top: 1px solid #222222;
+  padding-top: 18px;
+}
+
+.label-checkbox-recorrente {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  cursor: pointer;
+  color: #d1d5db;
+  font-size: 0.9rem;
+  font-weight: 500;
+}
+
+.label-checkbox-recorrente input[type="checkbox"] {
+  width: 18px;
+  height: 18px;
+  cursor: pointer;
+  accent-color: #ffffff;
+}
+
+.grupo-botoes-acoes {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
   gap: 10px;
 }
 
-.btn-sair {
-  background: #dc2626;
+.btn-acao-rapida {
+  padding: 11px 18px;
+  border-radius: 12px;
+  font-weight: 700;
+  font-size: 0.88rem;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  transition: all 0.2s ease;
+  border: 1px solid transparent;
+}
+
+.btn-bloqueio-lote {
+  background: rgba(239, 68, 68, 0.12);
+  color: #fca5a5;
+  border-color: rgba(239, 68, 68, 0.35);
+}
+
+.btn-bloqueio-lote:hover {
+  background: #ef4444;
   color: #ffffff;
+  border-color: #ef4444;
+}
+
+.btn-bloqueio-unitario {
+  background: #202020;
+  color: #d1d5db;
+  border-color: #383838;
+}
+
+.btn-bloqueio-unitario:hover {
+  background: #333333;
+  color: #ffffff;
+}
+
+.btn-cadastrar-principal {
+  background: #ffffff;
+  color: #000000;
   border: none;
-  padding: 8px 18px;
-  border-radius: 8px;
+  font-weight: 800;
+  box-shadow: 0 4px 15px rgba(255, 255, 255, 0.2);
+}
+
+.btn-cadastrar-principal:hover {
+  background: #e5e5e5;
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(255, 255, 255, 0.35);
+}
+
+/* 5. Grid de Filtros */
+.grid-filtros-revamp {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 12px;
+}
+
+@media (min-width: 640px) {
+  .grid-filtros-revamp {
+    grid-template-columns: 2fr 1.3fr 1.3fr 0.8fr;
+  }
+}
+
+.btn-limpar-filtros {
+  background: #202020;
+  border: 1px solid #383838;
+  color: #d1d5db;
+  border-radius: 14px;
   font-weight: 700;
   font-size: 0.9rem;
   cursor: pointer;
-  transition: background 0.2s;
-}
-.btn-sair:hover {
-  background: #b91c1c;
-}
-
-.admin-tabs {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 10px;
-  margin-bottom: 25px;
-}
-
-.tab-btn {
-  flex: 1;
-  min-width: 130px;
-  padding: 12px;
-  border-radius: 10px;
-  font-weight: 700;
-  font-size: 0.95rem;
-  cursor: pointer;
-  transition: all 0.2s ease;
-  border: 1px solid var(--border-color);
-  background: #1c1c1c;
-  color: var(--text-muted);
-  text-align: center;
-}
-
-.tab-btn:hover {
-  background: #282828;
-  color: #ffffff;
-}
-
-.tab-btn.ativo-pendentes {
-  background: rgba(255, 255, 255, 0.15);
-  border-color: #ffffff;
-  color: #ffffff;
-}
-
-.tab-btn.ativo-concluidos {
-  background: rgba(34, 197, 94, 0.15);
-  border-color: #22c55e;
-  color: #22c55e;
-}
-
-.tab-btn.ativo-bloqueios {
-  background: rgba(239, 68, 68, 0.15);
-  border-color: #ef4444;
-  color: #ef4444;
-}
-
-.tab-btn.ativo-config {
-  background: rgba(255, 255, 255, 0.15);
-  border-color: #ffffff;
-  color: #ffffff;
-}
-
-.painel-box {
-  background: var(--bg-card);
-  border: 1px solid var(--border-color);
-  border-radius: 16px;
-  padding: 22px;
-  margin-bottom: 25px;
-  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.7);
-}
-
-.painel-title {
-  font-size: 1.15rem;
-  font-weight: 700;
-  color: #ffffff;
-  margin-bottom: 16px;
   display: flex;
   align-items: center;
-  gap: 8px;
+  justify-content: center;
+  padding: 12px;
+  transition: all 0.2s ease;
 }
 
-.grid-acoes-rapidas {
-  display: grid;
-  grid-template-columns: 1fr;
-  gap: 12px;
+.btn-limpar-filtros:hover {
+  background: #ffffff;
+  color: #000000;
+  border-color: #ffffff;
 }
 
-@media (min-width: 768px) {
-  .grid-acoes-rapidas {
-    grid-template-columns: 1fr 1fr;
-  }
-}
-
-.grid-filtros {
-  display: grid;
-  grid-template-columns: 1fr;
-  gap: 12px;
-}
-
-@media (min-width: 768px) {
-  .grid-filtros {
-    grid-template-columns: 2fr 1.5fr 1.5fr 1fr;
-  }
-}
-
-.card-dia-agrupado {
+/* 6. Listagem Agrupada de Agendamentos */
+.card-dia-agrupado-revamp {
   background: #141414;
   border: 1px solid var(--border-color);
-  border-radius: 16px;
+  border-radius: 20px;
   overflow: hidden;
-  margin-bottom: 25px;
-  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.7);
+  margin-bottom: 20px;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.7);
 }
 
-.header-dia-agrupado {
+.header-dia-agrupado-revamp {
   background: #1c1c1c;
   padding: 14px 20px;
   border-bottom: 1px solid var(--border-color);
@@ -152,99 +342,213 @@
   gap: 10px;
 }
 
-.item-agendamento-row {
+.titulo-dia-calendario {
+  color: #ffffff;
+  font-size: 1.15rem;
+  font-weight: 800;
+  text-transform: capitalize;
+  margin: 0;
+}
+
+.subtitulo-dia-calendario {
+  color: var(--text-muted);
+  font-size: 0.85rem;
+  margin: 2px 0 0 0;
+}
+
+.badge-contagem-dia {
+  background: #282828;
+  border: 1px solid #3a3a3a;
+  color: #ffffff;
+  font-size: 0.8rem;
+  padding: 5px 12px;
+  border-radius: 999px;
+  font-weight: 700;
+}
+
+.item-agendamento-row-revamp {
   padding: 16px 20px;
-  border-bottom: 1px solid #242424;
+  border-bottom: 1px solid #222222;
   display: flex;
   flex-direction: column;
-  gap: 12px;
-  transition: background 0.2s;
+  gap: 14px;
+  transition: background 0.2s ease;
 }
 
 @media (min-width: 768px) {
-  .item-agendamento-row {
+  .item-agendamento-row-revamp {
     flex-direction: row;
     justify-content: space-between;
     align-items: center;
   }
 }
 
-.item-agendamento-row:hover {
+.item-agendamento-row-revamp:last-child {
+  border-bottom: none;
+}
+
+.item-agendamento-row-revamp:hover {
   background: #1c1c1c;
 }
 
-.item-agendamento-row.bloqueado {
-  background: rgba(127, 29, 29, 0.15);
+.item-agendamento-row-revamp.bloqueado {
+  background: rgba(127, 29, 29, 0.08);
   border-left: 4px solid #ef4444;
 }
 
-.item-agendamento-row.confirmado {
+.item-agendamento-row-revamp.confirmado {
   border-left: 4px solid #ffffff;
 }
 
-.hora-badge {
-  background: #0a0a0a;
+.item-agendamento-row-revamp.concluido {
+  border-left: 4px solid #22c55e;
+}
+
+.hora-badge-revamp {
+  background: #000000;
   border: 1px solid var(--border-color);
-  border-radius: 8px;
+  border-radius: 12px;
   padding: 8px 14px;
-  font-size: 1.2rem;
+  font-size: 1.15rem;
   font-weight: 900;
   color: #ffffff;
   font-family: monospace;
   text-align: center;
   min-width: 80px;
+  flex-shrink: 0;
 }
 
-.btn-acao-admin {
+.detalhes-agendamento-cliente {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.nome-cliente-admin {
+  font-size: 1.1rem;
+  font-weight: 800;
+  color: #ffffff;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin: 0;
+}
+
+.meta-info-agendamento {
+  color: var(--text-muted);
+  font-size: 0.88rem;
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  flex-wrap: wrap;
+}
+
+.link-whats-admin {
+  color: #4ade80;
+  text-decoration: none;
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  transition: underline 0.2s;
+}
+
+.link-whats-admin:hover {
+  text-decoration: underline;
+}
+
+.grupo-botoes-linha-admin {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.btn-linha-acao {
   padding: 8px 14px;
-  border-radius: 8px;
+  border-radius: 10px;
   font-weight: 700;
   font-size: 0.85rem;
   cursor: pointer;
-  display: flex;
+  display: inline-flex;
   align-items: center;
   gap: 6px;
-  transition: all 0.2s;
+  transition: all 0.2s ease;
   border: 1px solid transparent;
 }
 
-.btn-concluir {
-  background: rgba(34, 197, 94, 0.15);
+.btn-linha-concluir {
+  background: rgba(34, 197, 94, 0.12);
   color: #4ade80;
-  border-color: #166534;
+  border-color: rgba(34, 197, 94, 0.35);
 }
-.btn-concluir:hover {
+
+.btn-linha-concluir:hover {
   background: #22c55e;
   color: #000000;
+  border-color: #22c55e;
 }
 
-.btn-liberar {
-  background: rgba(239, 68, 68, 0.15);
+.btn-linha-liberar {
+  background: rgba(239, 68, 68, 0.12);
   color: #fca5a5;
-  border-color: #991b1b;
+  border-color: rgba(239, 68, 68, 0.35);
 }
-.btn-liberar:hover {
+
+.btn-linha-liberar:hover {
   background: #ef4444;
   color: #ffffff;
+  border-color: #ef4444;
 }
 
-.chip-horario-config {
+/* 7. Aba de Configurações */
+.config-barbeiro-seletor-box {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  flex-wrap: wrap;
+  margin-bottom: 20px;
+}
+
+.box-adicionar-horario-config {
+  background: #1c1c1c;
+  border: 1px solid var(--border-color);
+  border-radius: 18px;
+  padding: 18px 20px;
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  flex-wrap: wrap;
+  margin-bottom: 24px;
+}
+
+.grid-chips-horarios {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  max-height: 320px;
+  overflow-y: auto;
+  padding: 4px;
+  margin-bottom: 25px;
+}
+
+.chip-horario-config-revamp {
   background: #1c1c1c;
   border: 1px solid var(--border-color);
   color: #ffffff;
-  padding: 8px 14px;
-  border-radius: 8px;
+  padding: 10px 16px;
+  border-radius: 12px;
   font-family: monospace;
-  font-size: 0.95rem;
+  font-size: 1rem;
+  font-weight: 700;
   cursor: pointer;
-  transition: all 0.2s;
-  display: flex;
+  display: inline-flex;
   align-items: center;
-  gap: 6px;
+  gap: 8px;
+  transition: all 0.2s ease;
 }
 
-.chip-horario-config:hover {
+.chip-horario-config-revamp:hover {
   background: #7f1d1d;
   border-color: #ef4444;
   color: #fca5a5;
+  transform: translateY(-2px);
 }

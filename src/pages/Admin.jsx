@@ -2,7 +2,25 @@ import React, { useState, useEffect, useMemo } from 'react';
 import { api } from '../services/api';
 import { ModalBloqueio } from '../components/ModalBloqueio';
 import { formatarDataBR, getDataHojeString, isDomingo } from '../utils/dateUtils';
-import { ShieldCheck, LogOut, CheckCircle, Trash2, Settings, Zap, Filter, Plus } from 'lucide-react';
+import { 
+  ShieldCheck, 
+  LogOut, 
+  CheckCircle, 
+  Trash2, 
+  Settings, 
+  Zap, 
+  Filter, 
+  Plus, 
+  User, 
+  Phone, 
+  Calendar, 
+  Clock, 
+  Scissors, 
+  Lock, 
+  Check, 
+  RotateCcw,
+  AlertTriangle
+} from 'lucide-react';
 import '../styles/admin.css';
 
 export function Admin({ onLogout }) {
@@ -44,7 +62,7 @@ export function Admin({ onLogout }) {
       const dataLimite = dataHoje.toISOString().split('T')[0];
 
       const lista = await api.getAgendamentosAdmin({ dataLimite });
-      setAgendamentos(lista);
+      setAgendamentos(lista || []);
     } catch (err) {
       console.error('Erro ao carregar dados do admin:', err);
       if (err.message.includes('Não autenticado') || err.message.includes('Token')) {
@@ -68,7 +86,7 @@ export function Admin({ onLogout }) {
       }
       try {
         const slots = await api.getHorariosDisponiveis(adminData, adminBarbeiro);
-        setHorariosAdminLivres(slots);
+        setHorariosAdminLivres(slots || []);
       } catch (e) {
         setHorariosAdminLivres([]);
       }
@@ -93,6 +111,23 @@ export function Admin({ onLogout }) {
       carregarConfig();
     }
   }, [abaAtiva, configBarbeiroId]);
+
+  // Contadores por aba
+  const contadores = useMemo(() => {
+    const hoje = getDataHojeString();
+    let pendentes = 0;
+    let concluidos = 0;
+    let bloqueios = 0;
+
+    agendamentos.forEach((item) => {
+      const isBloqueio = item.status === 'bloqueado' || item.nome === 'BLOQUEIO';
+      if (item.status === 'confirmado' && !isBloqueio) pendentes++;
+      if (item.status === 'concluido') concluidos++;
+      if (isBloqueio && item.data_agendamento >= hoje) bloqueios++;
+    });
+
+    return { pendentes, concluidos, bloqueios };
+  }, [agendamentos]);
 
   // Filtragem dos registros conforme a aba e os inputs de busca
   const agendamentosFiltrados = useMemo(() => {
@@ -289,257 +324,362 @@ export function Admin({ onLogout }) {
 
   return (
     <div className="admin-container fade-in">
-      <div className="admin-header">
-        <h1 className="admin-title">
-          <ShieldCheck color="#ffffff" size={32} /> Painel Administrativo
-        </h1>
+      {/* 1. Header do Painel */}
+      <div className="admin-header-revamp">
+        <div className="admin-titulo-box">
+          <div className="icone-admin-escudo">
+            <ShieldCheck color="#ffffff" size={24} />
+          </div>
+          <div>
+            <h1 className="admin-title-texto">Painel Administrativo</h1>
+            <p className="admin-subtitle-texto">AtualEstilo Barbearia • Gestão em Tempo Real</p>
+          </div>
+        </div>
+
         <button 
           onClick={onLogout} 
-          className="btn-sair"
-          style={{ display: 'flex', alignItems: 'center', gap: '6px' }}
+          className="btn-sair-admin"
+          aria-label="Sair da conta"
         >
           <LogOut size={16} /> Sair
         </button>
       </div>
 
-      {/* Tabs */}
-      <div className="admin-tabs">
+      {/* 2. Tabs Segmentadas */}
+      <nav className="admin-tabs-segmentada" aria-label="Abas de Gestão">
         <button 
           onClick={() => setAbaAtiva('pendentes')} 
-          className={`tab-btn ${abaAtiva === 'pendentes' ? 'ativo-pendentes' : ''}`}
+          className={`tab-btn-revamp ${abaAtiva === 'pendentes' ? 'ativo-pendentes' : ''}`}
         >
           ⏳ Pendentes
+          <span className="badge-contador-tab">{contadores.pendentes}</span>
         </button>
+
         <button 
           onClick={() => setAbaAtiva('concluidos')} 
-          className={`tab-btn ${abaAtiva === 'concluidos' ? 'ativo-concluidos' : ''}`}
+          className={`tab-btn-revamp ${abaAtiva === 'concluidos' ? 'ativo-concluidos' : ''}`}
         >
           ✅ Concluídos
+          <span className="badge-contador-tab">{contadores.concluidos}</span>
         </button>
+
         <button 
           onClick={() => setAbaAtiva('bloqueios')} 
-          className={`tab-btn ${abaAtiva === 'bloqueios' ? 'ativo-bloqueios' : ''}`}
+          className={`tab-btn-revamp ${abaAtiva === 'bloqueios' ? 'ativo-bloqueios' : ''}`}
         >
           🚫 Bloqueios
+          <span className="badge-contador-tab">{contadores.bloqueios}</span>
         </button>
+
         <button 
           onClick={() => setAbaAtiva('config')} 
-          className={`tab-btn ${abaAtiva === 'config' ? 'ativo-config' : ''}`}
+          className={`tab-btn-revamp ${abaAtiva === 'config' ? 'ativo-config' : ''}`}
         >
-          ⚙️ Config
+          ⚙️ Configuração
         </button>
-      </div>
+      </nav>
 
-      {/* Painel Configuração */}
+      {/* 3. Conteúdo da Aba Configuração */}
       {abaAtiva === 'config' ? (
-        <div className="painel-box fade-in">
-          <h3 className="painel-title"><Settings color="#ffffff" size={22} /> Configurar Horários de Atendimento</h3>
-          <p style={{ color: '#9ca3af', fontSize: '0.9rem', marginBottom: '18px' }}>
-            Selecione o barbeiro para editar os horários disponibilizados para agendamento.
+        <div className="painel-box-admin scale-in">
+          <div className="painel-header-titulo">
+            <h2 className="painel-titulo-texto">
+              <Settings color="#ffffff" size={20} /> Configurar Horários de Atendimento
+            </h2>
+          </div>
+
+          <p style={{ color: '#9ca3af', fontSize: '0.92rem', margin: 0 }}>
+            Selecione o profissional para gerenciar os horários de atendimento que ficam disponíveis para agendamento online.
           </p>
 
-          <select 
-            value={configBarbeiroId} 
-            onChange={(e) => setConfigBarbeiroId(e.target.value)}
-            className="select-campo"
-            style={{ maxWidth: '300px', marginBottom: '20px' }}
-          >
-            <option value="1">Geilson</option>
-            <option value="2">Denilson</option>
-          </select>
+          <div className="config-barbeiro-seletor-box">
+            <div className="campo-caixa-limpo" style={{ minWidth: '220px' }}>
+              <span className="rotulo-campo-limpo">PROFISSIONAL</span>
+              <div className="linha-input-limpo">
+                <Scissors size={18} className="icone-input-limpo" />
+                <select 
+                  value={configBarbeiroId} 
+                  onChange={(e) => setConfigBarbeiroId(e.target.value)}
+                  className="select-limpo"
+                >
+                  <option value="1">Geilson</option>
+                  <option value="2">Denilson</option>
+                </select>
+              </div>
+            </div>
+          </div>
 
-          <div style={{ background: '#141414', padding: '16px', borderRadius: '12px', border: '1px solid #2e2e2e', marginBottom: '20px', display: 'flex', gap: '12px', alignItems: 'center', flexWrap: 'wrap' }}>
-            <span style={{ fontWeight: 'bold', color: '#e5e7eb' }}>Novo Horário:</span>
-            <input 
-              type="time" 
-              value={novoHorarioInput}
-              onChange={(e) => setNovoHorarioInput(e.target.value)}
-              className="input-campo"
-              style={{ width: '140px' }}
-            />
+          <div className="box-adicionar-horario-config">
+            <div className="campo-caixa-limpo" style={{ width: '180px' }}>
+              <span className="rotulo-campo-limpo">NOVO HORÁRIO</span>
+              <div className="linha-input-limpo">
+                <Clock size={18} className="icone-input-limpo" />
+                <input 
+                  type="time" 
+                  value={novoHorarioInput}
+                  onChange={(e) => setNovoHorarioInput(e.target.value)}
+                  className="input-limpo"
+                />
+              </div>
+            </div>
+
             <button 
               onClick={handleAdicionarHorarioConfig}
-              style={{ background: '#16a34a', border: 'none', color: '#ffffff', padding: '10px 18px', borderRadius: '8px', fontWeight: 'bold', cursor: 'pointer' }}
+              className="btn-acao-rapida btn-cadastrar-principal"
+              style={{ padding: '14px 22px', borderRadius: '14px' }}
             >
-              + Adicionar
+              <Plus size={18} /> Adicionar Horário
             </button>
           </div>
 
-          <p style={{ color: '#e5e7eb', fontSize: '0.85rem', marginBottom: '12px', fontFamily: 'monospace' }}>
-            Clique em um horário para removê-lo:
-          </p>
+          <div>
+            <span style={{ color: '#9ca3af', fontSize: '0.85rem', fontWeight: '700', textTransform: 'uppercase', display: 'block', marginBottom: '12px' }}>
+              Horários Cadastrados (Clique para remover):
+            </span>
 
-          <div style={{ display: 'flex', flexWrap: 'wrap', gap: '10px', maxHeight: '280px', overflowY: 'auto', marginBottom: '25px', padding: '4px' }}>
-            {configHorariosLista.map(h => (
-              <button 
-                key={h} 
-                onClick={() => handleRemoverHorarioConfig(h)}
-                className="chip-horario-config"
-              >
-                ✕ {h}
-              </button>
-            ))}
+            <div className="grid-chips-horarios">
+              {configHorariosLista.map(h => (
+                <button 
+                  key={h} 
+                  onClick={() => handleRemoverHorarioConfig(h)}
+                  className="chip-horario-config-revamp hover-lift"
+                  title="Clique para remover este horário"
+                >
+                  ✕ {h}
+                </button>
+              ))}
+            </div>
           </div>
 
-          <div style={{ borderTop: '1px solid #2e2e2e', paddingTop: '16px', display: 'flex', justifyContent: 'flex-end' }}>
+          <div style={{ borderTop: '1px solid #222222', paddingTop: '20px', display: 'flex', justifyContent: 'flex-end' }}>
             <button 
               onClick={handleSalvarConfig}
-              style={{ background: '#ffffff', border: 'none', color: '#000000', padding: '12px 24px', borderRadius: '10px', fontWeight: 'bold', cursor: 'pointer', fontSize: '1rem' }}
+              className="btn-acao-rapida btn-cadastrar-principal"
+              style={{ padding: '14px 28px', fontSize: '0.95rem' }}
             >
-              💾 Salvar no Banco SQL
+              <Check size={18} /> Salvar Horários no Banco SQL
             </button>
           </div>
         </div>
       ) : (
         <>
-          {/* Painel Ações Rápidas */}
-          <div className="painel-box">
-            <h3 className="painel-title"><Zap color="#ffffff" size={20} /> Ações Rápidas</h3>
-            <div className="grid-acoes-rapidas">
-              <input 
-                type="text" 
-                placeholder="Nome do Cliente (Vazio p/ Bloqueio)"
-                value={adminNome}
-                onChange={(e) => setAdminNome(e.target.value)}
-                className="input-campo"
-              />
-              <input 
-                type="text" 
-                placeholder="Telefone (Opcional)"
-                value={adminTelefone}
-                onChange={(e) => setAdminTelefone(e.target.value)}
-                className="input-campo"
-              />
+          {/* 4. Painel Ações Rápidas */}
+          <div className="painel-box-admin">
+            <div className="painel-header-titulo">
+              <h2 className="painel-titulo-texto">
+                <Zap color="#ffffff" size={20} /> Ações Rápidas
+              </h2>
+            </div>
 
-              <div style={{ display: 'flex', gap: '10px' }}>
-                <input 
-                  type="date" 
-                  value={adminData}
-                  onChange={(e) => setAdminData(e.target.value)}
-                  className="input-campo"
-                />
-                <select 
-                  value={adminHorario}
-                  onChange={(e) => setAdminHorario(e.target.value)}
-                  className="select-campo"
-                  style={{ width: '130px' }}
-                >
-                  <option value="">Horário</option>
-                  {horariosAdminLivres.map(h => (
-                    <option key={h} value={h}>{h}</option>
-                  ))}
-                </select>
+            <div className="grid-acoes-rapidas-revamp">
+              {/* Nome */}
+              <div className="campo-caixa-limpo">
+                <span className="rotulo-campo-limpo">NOME DO CLIENTE</span>
+                <div className="linha-input-limpo">
+                  <User size={18} className="icone-input-limpo" />
+                  <input 
+                    type="text" 
+                    placeholder="Ex: Gabriel Silva (Vazio p/ Bloqueio)"
+                    value={adminNome}
+                    onChange={(e) => setAdminNome(e.target.value)}
+                    className="input-limpo"
+                  />
+                </div>
               </div>
 
-              <div style={{ display: 'flex', gap: '10px' }}>
-                <select 
-                  value={adminBarbeiro}
-                  onChange={(e) => setAdminBarbeiro(e.target.value)}
-                  className="select-campo"
-                >
-                  <option value="1">Geilson</option>
-                  <option value="2">Denilson</option>
-                </select>
-                <select 
-                  value={adminServico}
-                  onChange={(e) => setAdminServico(e.target.value)}
-                  className="select-campo"
-                >
-                  <option value="Corte e Barba - R$ 35">Corte e Barba</option>
-                  <option value="Corte Social - R$ 25">Corte Social</option>
-                  <option value="Degradê - R$ 25">Degradê</option>
-                  <option value="Navalhado - R$ 25">Navalhado</option>
-                  <option value="Corte Raspado - R$ 20">Corte Raspado</option>
-                  <option value="Barba e Pezinho - R$ 15">Barba e Pezinho</option>
-                </select>
+              {/* Telefone */}
+              <div className="campo-caixa-limpo">
+                <span className="rotulo-campo-limpo">WHATSAPP (OPCIONAL)</span>
+                <div className="linha-input-limpo">
+                  <Phone size={18} className="icone-input-limpo" />
+                  <input 
+                    type="tel" 
+                    placeholder="(00) 00000-0000"
+                    value={adminTelefone}
+                    onChange={(e) => setAdminTelefone(e.target.value)}
+                    className="input-limpo"
+                  />
+                </div>
+              </div>
+
+              {/* Data */}
+              <div className="campo-caixa-limpo">
+                <span className="rotulo-campo-limpo">DATA DO ATENDIMENTO</span>
+                <div className="linha-input-limpo">
+                  <Calendar size={18} className="icone-input-limpo" />
+                  <input 
+                    type="date" 
+                    value={adminData}
+                    onChange={(e) => setAdminData(e.target.value)}
+                    className="input-limpo"
+                  />
+                </div>
+              </div>
+
+              {/* Horário */}
+              <div className="campo-caixa-limpo">
+                <span className="rotulo-campo-limpo">HORÁRIO DISPONÍVEL</span>
+                <div className="linha-input-limpo">
+                  <Clock size={18} className="icone-input-limpo" />
+                  <select 
+                    value={adminHorario}
+                    onChange={(e) => setAdminHorario(e.target.value)}
+                    className="select-limpo"
+                  >
+                    <option value="">Selecione o Horário</option>
+                    {horariosAdminLivres.map(h => (
+                      <option key={h} value={h}>{h}</option>
+                    ))}
+                  </select>
+                </div>
+              </div>
+
+              {/* Barbeiro */}
+              <div className="campo-caixa-limpo">
+                <span className="rotulo-campo-limpo">PROFISSIONAL</span>
+                <div className="linha-input-limpo">
+                  <Scissors size={18} className="icone-input-limpo" />
+                  <select 
+                    value={adminBarbeiro}
+                    onChange={(e) => setAdminBarbeiro(e.target.value)}
+                    className="select-limpo"
+                  >
+                    <option value="1">Geilson</option>
+                    <option value="2">Denilson</option>
+                  </select>
+                </div>
+              </div>
+
+              {/* Serviço */}
+              <div className="campo-caixa-limpo">
+                <span className="rotulo-campo-limpo">SERVIÇO</span>
+                <div className="linha-input-limpo">
+                  <Scissors size={18} className="icone-input-limpo" />
+                  <select 
+                    value={adminServico}
+                    onChange={(e) => setAdminServico(e.target.value)}
+                    className="select-limpo"
+                  >
+                    <option value="Corte e Barba - R$ 35">Corte e Barba - R$ 35</option>
+                    <option value="Corte Social - R$ 25">Corte Social - R$ 25</option>
+                    <option value="Degradê - R$ 25">Degradê - R$ 25</option>
+                    <option value="Navalhado - R$ 25">Navalhado - R$ 25</option>
+                    <option value="Corte Raspado - R$ 20">Corte Raspado - R$ 20</option>
+                    <option value="Barba e Pezinho - R$ 15">Barba e Pezinho - R$ 15</option>
+                  </select>
+                </div>
               </div>
             </div>
 
-            <div style={{ marginTop: '16px', display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: '12px', borderTop: '1px solid #2e2e2e', paddingTop: '14px' }}>
-              <label style={{ display: 'flex', alignItems: 'center', gap: '8px', cursor: 'pointer', color: '#d1d5db', fontSize: '0.9rem' }}>
+            <div className="barra-inferior-acoes">
+              <label className="label-checkbox-recorrente">
                 <input 
                   type="checkbox" 
                   checked={checkRecorrente}
                   onChange={(e) => setCheckRecorrente(e.target.checked)}
                 />
-                Cliente Fixo (Toda semana durante 1 ano)
+                <span>Cliente Fixo (Toda semana durante 1 ano / 52 semanas)</span>
               </label>
 
-              <div style={{ display: 'flex', gap: '10px' }}>
+              <div className="grupo-botoes-acoes">
                 <button 
                   onClick={handleAbrirModalBloqueio}
-                  style={{ background: '#7f1d1d', border: '1px solid #ef4444', color: '#ffffff', padding: '8px 16px', borderRadius: '8px', fontWeight: 'bold', cursor: 'pointer', fontSize: '0.85rem' }}
+                  className="btn-acao-rapida btn-bloqueio-lote"
                 >
-                  🛡️ Bloqueio em Lote
+                  <ShieldCheck size={16} /> Bloqueio em Lote
                 </button>
+
                 <button 
                   onClick={handleCriarBloqueioUnitario}
-                  style={{ background: '#450a0a', border: '1px solid #991b1b', color: '#fca5a5', padding: '8px 14px', borderRadius: '8px', fontWeight: 'bold', cursor: 'pointer', fontSize: '0.85rem' }}
+                  className="btn-acao-rapida btn-bloqueio-unitario"
                 >
-                  🔒 Unitário
+                  <Lock size={16} /> Unitário
                 </button>
+
                 <button 
                   onClick={handleCriarAgendamentoAdmin}
-                  style={{ background: '#ffffff', border: 'none', color: '#000000', padding: '8px 18px', borderRadius: '8px', fontWeight: 'bold', cursor: 'pointer', fontSize: '0.85rem' }}
+                  className="btn-acao-rapida btn-cadastrar-principal"
                 >
-                  ➕ Cadastrar
+                  <Plus size={16} strokeWidth={3} /> Cadastrar
                 </button>
               </div>
             </div>
           </div>
 
-          {/* Painel Filtros */}
-          <div className="painel-box">
-            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '12px' }}>
-              <span style={{ fontSize: '0.85rem', color: '#9ca3af', fontWeight: 'bold', textTransform: 'uppercase', display: 'flex', alignItems: 'center', gap: '6px' }}>
-                <Filter size={16} /> Filtrar Lista
+          {/* 5. Painel Filtros */}
+          <div className="painel-box-admin">
+            <div className="painel-header-titulo">
+              <span className="painel-titulo-texto" style={{ fontSize: '1rem' }}>
+                <Filter size={18} /> Filtrar Lista
               </span>
-              <span style={{ color: '#ffffff', fontFamily: 'monospace', fontWeight: 'bold', fontSize: '0.9rem' }}>
+              <span style={{ color: '#ffffff', fontFamily: 'monospace', fontWeight: '800', fontSize: '0.95rem' }}>
                 Total: {agendamentosFiltrados.length}
               </span>
             </div>
 
-            <div className="grid-filtros">
-              <input 
-                type="text" 
-                placeholder="🔍 Nome ou Telefone..."
-                value={buscaTexto}
-                onChange={(e) => setBuscaTexto(e.target.value)}
-                className="input-campo"
-              />
-              <input 
-                type="date" 
-                value={buscaData}
-                onChange={(e) => setBuscaData(e.target.value)}
-                className="input-campo"
-              />
-              <select 
-                value={buscaBarbeiro}
-                onChange={(e) => setBuscaBarbeiro(e.target.value)}
-                className="select-campo"
-              >
-                <option value="">✂️ Todos os Barbeiros</option>
-                <option value="1">Geilson</option>
-                <option value="2">Denilson</option>
-              </select>
+            <div className="grid-filtros-revamp">
+              <div className="campo-caixa-limpo">
+                <span className="rotulo-campo-limpo">BUSCA RÁPIDA</span>
+                <div className="linha-input-limpo">
+                  <User size={18} className="icone-input-limpo" />
+                  <input 
+                    type="text" 
+                    placeholder="Nome ou WhatsApp..."
+                    value={buscaTexto}
+                    onChange={(e) => setBuscaTexto(e.target.value)}
+                    className="input-limpo"
+                  />
+                </div>
+              </div>
+
+              <div className="campo-caixa-limpo">
+                <span className="rotulo-campo-limpo">DATA ESPECÍFICA</span>
+                <div className="linha-input-limpo">
+                  <Calendar size={18} className="icone-input-limpo" />
+                  <input 
+                    type="date" 
+                    value={buscaData}
+                    onChange={(e) => setBuscaData(e.target.value)}
+                    className="input-limpo"
+                  />
+                </div>
+              </div>
+
+              <div className="campo-caixa-limpo">
+                <span className="rotulo-campo-limpo">BARBEIRO</span>
+                <div className="linha-input-limpo">
+                  <Scissors size={18} className="icone-input-limpo" />
+                  <select 
+                    value={buscaBarbeiro}
+                    onChange={(e) => setBuscaBarbeiro(e.target.value)}
+                    className="select-limpo"
+                  >
+                    <option value="">Todos os Barbeiros</option>
+                    <option value="1">Geilson</option>
+                    <option value="2">Denilson</option>
+                  </select>
+                </div>
+              </div>
+
               <button 
                 onClick={() => { setBuscaTexto(''); setBuscaData(''); setBuscaBarbeiro(''); }}
-                style={{ background: '#262626', border: '1px solid #333333', color: '#ffffff', borderRadius: '8px', cursor: 'pointer', fontWeight: '600' }}
+                className="btn-limpar-filtros"
+                title="Limpar todos os filtros"
               >
-                Limpar
+                <RotateCcw size={16} style={{ marginRight: '6px' }} /> Limpar
               </button>
             </div>
           </div>
 
-          {/* Lista de Agendamentos */}
+          {/* 6. Listagem Agrupada de Agendamentos */}
           <div className="lista-agendamentos">
             {carregando ? (
-              <div style={{ textAlign: 'center', padding: '40px' }}>
-                <p style={{ color: '#9ca3af' }}>Carregando dados...</p>
+              <div style={{ textAlign: 'center', padding: '50px' }}>
+                <p style={{ color: '#9ca3af', fontSize: '1.05rem' }}>Carregando atendimentos...</p>
               </div>
             ) : Object.keys(agendamentosAgrupados).length === 0 ? (
-              <div style={{ textAlign: 'center', padding: '40px', background: '#141414', borderRadius: '16px', border: '1px solid #2e2e2e' }}>
-                <p style={{ color: '#9ca3af', fontSize: '1.1rem' }}>Nenhum agendamento encontrado.</p>
+              <div style={{ textAlign: 'center', padding: '45px', background: '#141414', borderRadius: '20px', border: '1px solid #2e2e2e' }}>
+                <p style={{ color: '#9ca3af', fontSize: '1.1rem', margin: 0 }}>Nenhum registro encontrado para esta aba/filtro.</p>
               </div>
             ) : (
               Object.entries(agendamentosAgrupados).map(([dataStr, lista]) => {
@@ -549,68 +689,80 @@ export function Admin({ onLogout }) {
                 const dataExtenso = dataObj.toLocaleDateString('pt-BR', { day: '2-digit', month: 'long', year: 'numeric' });
 
                 return (
-                  <div key={dataStr} className="card-dia-agrupado">
-                    <div className="header-dia-agrupado">
+                  <div key={dataStr} className="card-dia-agrupado-revamp hover-lift">
+                    <div className="header-dia-agrupado-revamp">
                       <div>
-                        <h3 style={{ color: '#ffffff', fontSize: '1.2rem', fontWeight: 'bold', textTransform: 'capitalize' }}>
+                        <h3 className="titulo-dia-calendario">
                           📅 {diaSemana}
                         </h3>
-                        <p style={{ color: '#9ca3af', fontSize: '0.85rem' }}>{dataExtenso}</p>
+                        <p className="subtitulo-dia-calendario">{dataExtenso}</p>
                       </div>
-                      <span style={{ background: '#262626', border: '1px solid #333333', color: '#e5e7eb', fontSize: '0.8rem', padding: '4px 12px', borderRadius: '20px', fontWeight: 'bold' }}>
-                        {lista.length} agendamento(s)
+                      <span className="badge-contagem-dia">
+                        {lista.length} atendimento(s)
                       </span>
                     </div>
 
                     <div>
                       {lista.map((ag) => {
                         const isBloqueio = ag.status === 'bloqueado' || ag.nome === 'BLOQUEIO';
+                        const statusClasse = isBloqueio ? 'bloqueado' : (ag.status === 'concluido' ? 'concluido' : 'confirmado');
 
                         return (
                           <div 
                             key={ag.id} 
-                            className={`item-agendamento-row ${isBloqueio ? 'bloqueado' : 'confirmado'}`}
+                            className={`item-agendamento-row-revamp ${statusClasse}`}
                           >
                             <div style={{ display: 'flex', alignItems: 'center', gap: '16px' }}>
-                              <div className="hora-badge">
+                              <div className="hora-badge-revamp">
                                 {ag.horario}
                               </div>
 
-                              <div>
-                                <h4 style={{ fontSize: '1.1rem', fontWeight: 'bold', color: isBloqueio ? '#fca5a5' : '#ffffff', display: 'flex', alignItems: 'center', gap: '8px' }}>
+                              <div className="detalhes-agendamento-cliente">
+                                <h4 className="nome-cliente-admin">
                                   {ag.nome}
                                   {isBloqueio && (
-                                    <span style={{ fontSize: '0.7rem', background: 'rgba(239, 68, 68, 0.2)', color: '#ef4444', padding: '2px 6px', borderRadius: '4px', border: '1px solid rgba(239, 68, 68, 0.4)', textTransform: 'uppercase' }}>
+                                    <span style={{ fontSize: '0.72rem', background: 'rgba(239, 68, 68, 0.15)', color: '#ef4444', padding: '3px 8px', borderRadius: '6px', border: '1px solid rgba(239, 68, 68, 0.4)', textTransform: 'uppercase', fontWeight: '800' }}>
                                       Bloqueado
                                     </span>
                                   )}
                                 </h4>
 
-                                <div style={{ color: '#9ca3af', fontSize: '0.85rem', marginTop: '4px', display: 'flex', gap: '14px', flexWrap: 'wrap' }}>
-                                  {ag.telefone && <span>📱 {ag.telefone}</span>}
-                                  <span>✂️ {ag.barbeiro_nome}</span>
-                                  {ag.servico && <span style={{ color: '#ffffff', fontWeight: 'bold' }}>• {ag.servico}</span>}
+                                <div className="meta-info-agendamento">
+                                  {ag.telefone && (
+                                    <span>
+                                      📱 <a 
+                                           href={`https://wa.me/55${ag.telefone.replace(/\D/g, '')}`} 
+                                           target="_blank" 
+                                           rel="noopener noreferrer"
+                                           className="link-whats-admin"
+                                         >
+                                           {ag.telefone}
+                                         </a>
+                                    </span>
+                                  )}
+                                  <span>✂️ <strong>{ag.barbeiro_nome}</strong></span>
+                                  {ag.servico && <span style={{ color: '#ffffff', fontWeight: '700' }}>• {ag.servico}</span>}
                                 </div>
                               </div>
                             </div>
 
-                            <div style={{ display: 'flex', gap: '8px' }}>
+                            <div className="grupo-botoes-linha-admin">
                               {abaAtiva === 'pendentes' && !isBloqueio && (
                                 <button 
                                   onClick={() => handleConcluir(ag.id)}
-                                  className="btn-acao-admin btn-concluir"
-                                  title="Marcar como Concluído"
+                                  className="btn-linha-acao btn-linha-concluir"
+                                  title="Marcar como realizado"
                                 >
                                   <CheckCircle size={16} /> Concluir
                                 </button>
                               )}
 
                               <button 
-                                onClick={() => handleDeletar(ag.id, abaAtiva === 'concluidos')}
-                                className="btn-acao-admin btn-liberar"
-                                title={abaAtiva === 'concluidos' ? 'Apagar permanentemente' : 'Cancelar e liberar horário'}
+                                onClick={() => handleDeletar(ag.id, ag.status === 'concluido')}
+                                className="btn-linha-acao btn-linha-liberar"
+                                title={ag.status === 'concluido' ? 'Excluir histórico' : 'Cancelar e liberar horário'}
                               >
-                                <Trash2 size={16} /> {abaAtiva === 'concluidos' ? 'Apagar' : 'Liberar'}
+                                <Trash2 size={16} /> {ag.status === 'concluido' ? 'Apagar' : 'Liberar'}
                               </button>
                             </div>
                           </div>
@@ -625,7 +777,7 @@ export function Admin({ onLogout }) {
         </>
       )}
 
-      {/* Modal Bloqueio em Lote */}
+      {/* Modal de Bloqueio em Lote */}
       <ModalBloqueio 
         isOpen={modalBloqueioAberto}
         onClose={() => setModalBloqueioAberto(false)}
