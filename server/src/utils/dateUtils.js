@@ -11,15 +11,15 @@ export function isDomingo(dataStr) {
 
 export function getDataHojeString() {
   const d = new Date();
-  const ano = d.getFullYear();
-  const mes = String(d.getMonth() + 1).padStart(2, '0');
-  const dia = String(d.getDate()).padStart(2, '0');
+  const formatoBR = d.toLocaleDateString('pt-BR', { timeZone: 'America/Sao_Paulo', year: 'numeric', month: '2-digit', day: '2-digit' });
+  const [dia, mes, ano] = formatoBR.split('/');
   return `${ano}-${mes}-${dia}`;
 }
 
 export function formatarDataBR(dataStr) {
   if (!dataStr) return '';
-  const partes = dataStr.split('-');
+  const dataLimpa = String(dataStr).split('T')[0];
+  const partes = dataLimpa.split('-');
   if (partes.length === 3) {
     return `${partes[2]}/${partes[1]}/${partes[0]}`;
   }

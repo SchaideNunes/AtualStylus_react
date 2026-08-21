@@ -114,11 +114,14 @@ export class MysqlDatabase {
   }
 
   async getAgendamentosPorTelefone(telefone, dataMinima) {
+    const apenasDigitos = String(telefone).replace(/\D/g, '');
     const [rows] = await this.pool.execute(
       `SELECT * FROM agendamentos 
-       WHERE telefone = ? AND status = 'confirmado' AND data_agendamento >= ? 
+       WHERE (telefone = ? OR REPLACE(REPLACE(REPLACE(REPLACE(telefone, '(', ''), ')', ''), '-', ''), ' ', '') = ?)
+         AND status = 'confirmado' 
+         AND data_agendamento >= ? 
        ORDER BY data_agendamento ASC, horario ASC`,
-      [telefone, dataMinima]
+      [telefone, apenasDigitos, dataMinima]
     );
     return rows;
   }

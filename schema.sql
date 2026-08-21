@@ -1,7 +1,3 @@
--- ==============================================================================
--- ATUALESTILO BARBEARIA - ESQUEMA DO BANCO DE DADOS SQL (Hostinger MySQL / MariaDB)
--- ==============================================================================
-
 -- 1. Tabela de Configurações dos Barbeiros e Horários de Atendimento
 CREATE TABLE IF NOT EXISTS barbeiros_config (
     id INT PRIMARY KEY,

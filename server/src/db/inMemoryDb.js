@@ -89,12 +89,14 @@ export class InMemoryDatabase {
   }
 
   async getAgendamentosPorTelefone(telefone, dataMinima) {
+    const apenasDigitos = String(telefone || '').replace(/\D/g, '');
     return this.agendamentos.filter(ag => {
-      const matchTel = ag.telefone === telefone;
+      const dbDigitos = String(ag.telefone || '').replace(/\D/g, '');
+      const matchTel = ag.telefone === telefone || (apenasDigitos && dbDigitos === apenasDigitos);
       const matchStatus = ag.status === 'confirmado';
       const matchData = dataMinima ? ag.data_agendamento >= dataMinima : true;
       return matchTel && matchStatus && matchData;
-    }).sort((a, b) => a.data_agendamento.localeCompare(b.data_agendamento) || a.horario.localeCompare(b.horario));
+    }).sort((a, b) => (a.data_agendamento + a.horario).localeCompare(b.data_agendamento + b.horario));
   }
 
   async getAgendamentoById(id) {
