@@ -1097,103 +1097,371 @@ html {
   box-shadow: 0 8px 25px rgba(255, 255, 255, 0.35);
 }
 
-/* About Us Section */
-.container-sobre {
-  max-width: 900px;
-  margin: 40px auto;
-  padding: 0 20px;
-}
-
-.caixa-sobre {
-  background: var(--bg-card);
-  border: 1px solid var(--border-color);
-  border-radius: 20px;
-  padding: 40px 30px;
-  margin-bottom: 30px;
-  text-align: center;
-  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.7);
-}
-
-.titulo-sobre {
-  font-size: 2.2rem;
-  font-weight: 800;
-  color: #ffffff;
-  margin-bottom: 25px;
-}
-
-.texto-sobre {
-  font-size: 1.1rem;
-  line-height: 1.8;
-  color: #d1d5db;
-  margin-bottom: 20px;
-}
-
-.destaque-texto {
-  color: #ffffff;
-  font-weight: 700;
-}
-
-.fotos-sobre-nos {
+/* ========================================================================= */
+/* REVAMP: SEÇÃO SOBRE NÓS */
+/* ========================================================================= */
+.container-sobre-revamp {
+  max-width: 1100px;
+  margin: 30px auto 60px;
+  padding: 0 16px;
   display: flex;
-  justify-content: center;
-  gap: 30px;
-  margin-top: 35px;
-  flex-wrap: wrap;
+  flex-direction: column;
+  gap: 45px;
 }
 
-.foto-sobre-card {
+/* 1. Header Editorial da Página */
+.sobre-hero-card {
+  background: linear-gradient(180deg, #181818 0%, #0e0e0e 100%);
+  border: 1px solid var(--border-color);
+  border-radius: 28px;
+  padding: 40px 24px 35px;
+  text-align: center;
+  position: relative;
+  overflow: hidden;
+  box-shadow: 0 20px 50px rgba(0, 0, 0, 0.9), inset 0 1px 0 rgba(255, 255, 255, 0.1);
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 10px;
 }
 
-.foto-sobre-card img {
-  width: 140px;
-  height: 140px;
-  border-radius: 50%;
-  object-fit: cover;
-  border: 3px solid #ffffff;
-  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.8);
-}
-
-.foto-sobre-card span {
-  font-size: 1.2rem;
-  font-weight: 700;
-  color: #ffffff;
-}
-
-.grid-valores {
-  display: grid;
-  grid-template-columns: 1fr;
-  gap: 20px;
-}
-
-@media (min-width: 640px) {
-  .grid-valores {
-    grid-template-columns: 1fr 1fr;
+@media (min-width: 768px) {
+  .sobre-hero-card {
+    padding: 50px 40px 45px;
   }
 }
 
-.caixa-valor {
-  background: var(--bg-card);
-  border: 1px solid var(--border-color);
-  border-radius: 16px;
-  padding: 25px;
-  text-align: center;
-  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.6);
+.badge-sobre-tag {
+  background: #242424;
+  border: 1px solid #383838;
+  color: #ffffff;
+  font-size: 0.76rem;
+  font-weight: 800;
+  padding: 6px 14px;
+  border-radius: 999px;
+  letter-spacing: 0.08em;
+  margin-bottom: 16px;
 }
 
-.titulo-valor {
-  font-size: 1.3rem;
-  font-weight: 700;
+.titulo-sobre-hero {
+  font-size: 1.8rem;
+  font-weight: 900;
   color: #ffffff;
+  letter-spacing: -0.02em;
+  line-height: 1.2;
+  margin-bottom: 16px;
+  text-transform: uppercase;
+  max-width: 800px;
+}
+
+@media (min-width: 768px) {
+  .titulo-sobre-hero {
+    font-size: 2.8rem;
+  }
+}
+
+.subtitulo-sobre-hero {
+  color: #d1d5db;
+  font-size: 1.05rem;
+  line-height: 1.7;
+  max-width: 760px;
+  margin-bottom: 35px;
+}
+
+/* Grid de Estatísticas */
+.grid-estatisticas-sobre {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 14px;
+  width: 100%;
+  max-width: 850px;
+}
+
+@media (min-width: 768px) {
+  .grid-estatisticas-sobre {
+    grid-template-columns: repeat(4, 1fr);
+    gap: 18px;
+  }
+}
+
+.item-estatistica {
+  background: #141414;
+  border: 1px solid var(--border-color);
+  border-radius: 16px;
+  padding: 18px 12px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+}
+
+.numero-estatistica {
+  font-size: 1.6rem;
+  font-weight: 900;
+  color: #ffffff;
+}
+
+.rotulo-estatistica {
+  font-size: 0.78rem;
+  color: var(--text-muted);
+  font-weight: 600;
+  text-align: center;
+}
+
+/* 2. Barbeiros Experts */
+.secao-barbeiros-sobre {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+}
+
+.titulo-secao-sobre {
+  font-size: 1.8rem;
+  font-weight: 800;
+  color: #ffffff;
+  letter-spacing: -0.01em;
+  margin-bottom: 6px;
+  text-transform: uppercase;
+}
+
+.subtitulo-secao-sobre {
+  color: var(--text-muted);
+  font-size: 0.95rem;
+  margin-bottom: 28px;
+}
+
+.grid-barbeiros-sobre {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 20px;
+  width: 100%;
+  max-width: 850px;
+}
+
+@media (min-width: 680px) {
+  .grid-barbeiros-sobre {
+    grid-template-columns: 1fr 1fr;
+    gap: 24px;
+  }
+}
+
+.card-barbeiro-perfil {
+  background: #141414;
+  border: 1px solid var(--border-color);
+  border-radius: 22px;
+  overflow: hidden;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.7);
+  display: flex;
+  flex-direction: column;
+  transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.card-barbeiro-perfil:hover {
+  border-color: #ffffff;
+}
+
+.foto-perfil-wrapper {
+  position: relative;
+  width: 100%;
+  height: 220px;
+  background: #000000;
+  overflow: hidden;
+}
+
+.foto-perfil-img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center top;
+  transition: transform 0.4s ease;
+}
+
+.card-barbeiro-perfil:hover .foto-perfil-img {
+  transform: scale(1.05);
+}
+
+.overlay-foto-perfil {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(180deg, rgba(0,0,0,0) 40%, rgba(20,20,20,1) 100%);
+}
+
+.conteudo-perfil-barbeiro {
+  padding: 16px 20px 24px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  flex: 1;
+}
+
+.nome-perfil {
+  font-size: 1.4rem;
+  font-weight: 800;
+  color: #ffffff;
+  margin-bottom: 2px;
+}
+
+.cargo-perfil {
+  font-size: 0.82rem;
+  font-weight: 700;
+  color: #9ca3af;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
   margin-bottom: 12px;
 }
 
-.texto-valor {
-  color: var(--text-muted);
+.descricao-perfil {
+  color: #d1d5db;
+  font-size: 0.92rem;
   line-height: 1.6;
+  margin-bottom: 20px;
+  flex: 1;
+}
+
+.btn-falar-barbeiro {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  background: #202020;
+  border: 1px solid #383838;
+  color: #ffffff;
+  text-decoration: none;
+  font-size: 0.9rem;
+  font-weight: 700;
+  padding: 10px 18px;
+  border-radius: 10px;
+  transition: all 0.2s ease;
+  width: 100%;
+}
+
+.btn-falar-barbeiro:hover {
+  background: #ffffff;
+  color: #000000;
+  border-color: #ffffff;
+}
+
+/* 3. Pilares e Diferenciais */
+.secao-pilares-sobre {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+}
+
+.grid-pilares-sobre {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 18px;
+  width: 100%;
+  margin-top: 24px;
+}
+
+@media (min-width: 768px) {
+  .grid-pilares-sobre {
+    grid-template-columns: repeat(3, 1fr);
+  }
+}
+
+.card-pilar-sobre {
+  background: #141414;
+  border: 1px solid var(--border-color);
+  border-radius: 20px;
+  padding: 28px 20px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.6);
+  transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.card-pilar-sobre:hover {
+  background: #1c1c1c;
+  border-color: #ffffff;
+}
+
+.icone-pilar-box {
+  width: 56px;
+  height: 56px;
+  background: #202020;
+  border: 1px solid #383838;
+  border-radius: 16px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 16px;
+}
+
+.card-pilar-sobre h4 {
+  font-size: 1.1rem;
+  font-weight: 800;
+  color: #ffffff;
+  margin-bottom: 8px;
+}
+
+.card-pilar-sobre p {
+  color: var(--text-muted);
+  font-size: 0.92rem;
+  line-height: 1.6;
+}
+
+/* 4. CTA Final */
+.card-cta-sobre {
+  background: linear-gradient(180deg, #181818 0%, #0e0e0e 100%);
+  border: 1px solid var(--border-color);
+  border-radius: 24px;
+  padding: 36px 24px;
+  text-align: center;
+  box-shadow: 0 15px 40px rgba(0, 0, 0, 0.8);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.icone-local-sobre {
+  width: 52px;
+  height: 52px;
+  background: #222222;
+  border: 1px solid #3a3a3a;
+  border-radius: 14px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 14px;
+}
+
+.card-cta-sobre h3 {
+  font-size: 1.5rem;
+  font-weight: 800;
+  color: #ffffff;
+  margin-bottom: 6px;
+}
+
+.endereco-cta-sobre {
+  color: var(--text-muted);
+  font-size: 0.95rem;
+  margin-bottom: 24px;
+}
+
+.btn-agendar-cta-sobre {
+  background: #ffffff;
+  color: #000000;
+  border: none;
+  font-size: 1.05rem;
+  font-weight: 800;
+  padding: 16px 36px;
+  border-radius: 14px;
+  cursor: pointer;
+  transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+  box-shadow: 0 4px 20px rgba(255, 255, 255, 0.25);
+}
+
+.btn-agendar-cta-sobre:hover {
+  background: #e5e5e5;
+  transform: translateY(-2px) scale(1.02);
+  box-shadow: 0 8px 30px rgba(255, 255, 255, 0.4);
 }
 
 /* Footer */

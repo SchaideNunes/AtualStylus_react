@@ -81,7 +81,7 @@ export function App() {
       case 'meusAgendamentos':
         return <MeusAgendamentos />;
       case 'sobre':
-        return <Sobre />;
+        return <Sobre onNavegar={handleNavegar} />;
       case 'login':
         return <Login onLoginSucesso={handleLoginSucesso} />;
       case 'admin':
