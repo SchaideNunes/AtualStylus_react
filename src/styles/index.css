@@ -1474,6 +1474,122 @@ body {
   box-shadow: 0 8px 30px rgba(255, 255, 255, 0.4);
 }
 
+/* ========================================================================= */
+/* REVAMP: TELA DE LOGIN / ACESSO RESTRITO */
+/* ========================================================================= */
+.container-login-revamp {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 78vh;
+  padding: 40px 16px;
+}
+
+.cartao-login-limpo {
+  background: #141414;
+  border: 1px solid var(--border-color);
+  border-radius: 26px;
+  padding: 38px 28px 32px;
+  width: 100%;
+  max-width: 420px;
+  box-shadow: 0 25px 60px rgba(0, 0, 0, 0.95), inset 0 1px 0 rgba(255, 255, 255, 0.08);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+}
+
+@media (min-width: 480px) {
+  .cartao-login-limpo {
+    padding: 44px 34px 36px;
+  }
+}
+
+.badge-icone-login {
+  width: 58px;
+  height: 58px;
+  background: #202020;
+  border: 1px solid #383838;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 18px;
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.6);
+}
+
+.titulo-login-limpo {
+  font-size: 1.7rem;
+  font-weight: 900;
+  color: #ffffff;
+  letter-spacing: -0.02em;
+  margin-bottom: 6px;
+  text-transform: uppercase;
+}
+
+.subtitulo-login-limpo {
+  color: var(--text-muted);
+  font-size: 0.92rem;
+  margin-bottom: 26px;
+}
+
+.formulario-login-limpo {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+.btn-toggle-senha {
+  background: transparent;
+  border: none;
+  color: #6b7280;
+  cursor: pointer;
+  padding: 4px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: color 0.2s ease;
+  margin-left: auto;
+}
+
+.btn-toggle-senha:hover {
+  color: #ffffff;
+}
+
+.alerta-erro-login {
+  background: rgba(127, 29, 29, 0.25);
+  border: 1px solid rgba(239, 68, 68, 0.5);
+  color: #fca5a5;
+  padding: 12px 14px;
+  border-radius: 12px;
+  font-size: 0.88rem;
+  font-weight: 500;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  text-align: left;
+}
+
+.footer-login-link {
+  margin-top: 24px;
+}
+
+.link-voltar-home {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  color: var(--text-muted);
+  font-size: 0.9rem;
+  text-decoration: none;
+  font-weight: 600;
+  transition: color 0.2s ease;
+}
+
+.link-voltar-home:hover {
+  color: #ffffff;
+}
+
 /* Footer */
 .rodape {
   background: #0a0a0a;

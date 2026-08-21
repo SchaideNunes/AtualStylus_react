@@ -83,7 +83,7 @@ export function App() {
       case 'sobre':
         return <Sobre onNavegar={handleNavegar} />;
       case 'login':
-        return <Login onLoginSucesso={handleLoginSucesso} />;
+        return <Login onLoginSucesso={handleLoginSucesso} onVoltarHome={() => handleNavegar('inicio')} />;
       case 'admin':
         return <Admin onLogout={handleLogout} />;
       default:
