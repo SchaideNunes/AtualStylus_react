@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { createPortal } from 'react-dom';
 import { X, ShieldAlert, Check } from 'lucide-react';
 import { formatarDataBR, filtrarHorariosPassadosSeHoje, getDataHojeString } from '../utils/dateUtils';
 
@@ -9,7 +10,13 @@ export function ModalBloqueio({ isOpen, onClose, data, barbeiroId, barbeiroNome,
   useEffect(() => {
     if (isOpen) {
       setSlotsSelecionados([]);
+      document.body.style.overflow = 'hidden';
+    } else {
+      document.body.style.overflow = '';
     }
+    return () => {
+      document.body.style.overflow = '';
+    };
   }, [isOpen, data, barbeiroId]);
 
   if (!isOpen) return null;
@@ -48,7 +55,7 @@ export function ModalBloqueio({ isOpen, onClose, data, barbeiroId, barbeiroNome,
     }
   };
 
-  return (
+  const modalJSX = (
     <div className="modal-overlay" onClick={onClose}>
       <div className="modal-card scale-in" onClick={e => e.stopPropagation()} style={{ borderRadius: '24px', background: '#141414', border: '1px solid #2e2e2e' }}>
         <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '16px', borderBottom: '1px solid #242424', paddingBottom: '14px' }}>
@@ -124,4 +131,6 @@ export function ModalBloqueio({ isOpen, onClose, data, barbeiroId, barbeiroNome,
       </div>
     </div>
   );
+
+  return typeof document !== 'undefined' ? createPortal(modalJSX, document.body) : null;
 }
