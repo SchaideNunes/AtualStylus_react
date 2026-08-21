@@ -8,16 +8,18 @@ export class AuthService {
   }
 
   async login(email, password) {
-    if (!email || !password) {
+    const emailLimpo = String(email || '').trim().toLowerCase();
+    const senhaLimpa = String(password || '').trim();
+    if (!emailLimpo || !senhaLimpa) {
       throw new Error('Email e senha são obrigatórios');
     }
 
-    const user = await this.db.findAdminByEmail(email);
+    const user = await this.db.findAdminByEmail(emailLimpo);
     if (!user) {
       throw new Error('Credenciais inválidas');
     }
 
-    const senhaValida = await bcrypt.compare(password, user.password_hash);
+    const senhaValida = await bcrypt.compare(senhaLimpa, user.password_hash);
     if (!senhaValida) {
       throw new Error('Credenciais inválidas');
     }

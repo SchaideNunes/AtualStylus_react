@@ -26,13 +26,13 @@ ON DUPLICATE KEY UPDATE
     horarios = VALUES(horarios);
 
 -- 2. Administrador Padrão (Email: admin@atualestilo.com.br / Senha padrão: admin123)
--- Hash bcrypt de 'admin123' com 10 rounds: $2a$10$EixZaYVK1fsbw1ZfbX3OXePaWxn96p36WQoeG6Lruj3vjPGga31lW
+-- Hash bcrypt de 'admin123' com 10 rounds: $2a$10$Jdi8oFosfsbPK9nR4EEc4uL1V0O.uRSQ8IUmSjDSUsHu6x9UKHh6u
 INSERT INTO admin_users (id, nome, email, password_hash)
 VALUES (
     1,
     'Administrador AtualEstilo',
     'admin@atualestilo.com.br',
-    '$2a$10$EixZaYVK1fsbw1ZfbX3OXePaWxn96p36WQoeG6Lruj3vjPGga31lW'
+    '$2a$10$Jdi8oFosfsbPK9nR4EEc4uL1V0O.uRSQ8IUmSjDSUsHu6x9UKHh6u'
 )
 ON DUPLICATE KEY UPDATE
     nome = VALUES(nome),

@@ -33,7 +33,8 @@ const loginLimiter = rateLimit({
 // ==========================================
 apiRouter.post('/auth/login', loginLimiter, async (req, res) => {
   try {
-    const { email, password } = req.body;
+    const email = req.body.email;
+    const password = req.body.password || req.body.senha;
     const { authService } = getServices();
     const result = await authService.login(email, password);
     return res.json(result);
