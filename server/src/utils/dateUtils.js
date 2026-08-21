@@ -30,9 +30,16 @@ export function filtrarHorariosPassadosSeHoje(horarios, horaAtual, minutoAtual) 
   if (!horarios || !Array.isArray(horarios)) return [];
   
   if (horaAtual === undefined || minutoAtual === undefined) {
-    const agora = new Date();
-    horaAtual = agora.getHours();
-    minutoAtual = agora.getMinutes();
+    const agoraFormatada = new Intl.DateTimeFormat('pt-BR', {
+      timeZone: 'America/Sao_Paulo',
+      hour: 'numeric',
+      minute: 'numeric',
+      hour12: false
+    }).format(new Date());
+
+    const [hStr, mStr] = agoraFormatada.split(':');
+    horaAtual = Number(hStr);
+    minutoAtual = Number(mStr);
   }
 
   return horarios.filter((h) => {
