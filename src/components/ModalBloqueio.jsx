@@ -10,12 +10,21 @@ export function ModalBloqueio({ isOpen, onClose, data, barbeiroId, barbeiroNome,
   useEffect(() => {
     if (isOpen) {
       setSlotsSelecionados([]);
+      document.body.classList.add('modal-aberto');
+      document.documentElement.classList.add('modal-aberto');
       document.body.style.overflow = 'hidden';
+      document.documentElement.style.overflow = 'hidden';
     } else {
+      document.body.classList.remove('modal-aberto');
+      document.documentElement.classList.remove('modal-aberto');
       document.body.style.overflow = '';
+      document.documentElement.style.overflow = '';
     }
     return () => {
+      document.body.classList.remove('modal-aberto');
+      document.documentElement.classList.remove('modal-aberto');
       document.body.style.overflow = '';
+      document.documentElement.style.overflow = '';
     };
   }, [isOpen, data, barbeiroId]);
 
