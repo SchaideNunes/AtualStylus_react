@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { X, ShieldAlert } from 'lucide-react';
+import { X, ShieldAlert, Check } from 'lucide-react';
 import { formatarDataBR, filtrarHorariosPassadosSeHoje, getDataHojeString } from '../utils/dateUtils';
 
 export function ModalBloqueio({ isOpen, onClose, data, barbeiroId, barbeiroNome, horariosBarbeiro = [], horariosOcupados = [], onConfirmar }) {
@@ -50,24 +50,25 @@ export function ModalBloqueio({ isOpen, onClose, data, barbeiroId, barbeiroNome,
 
   return (
     <div className="modal-overlay" onClick={onClose}>
-      <div className="modal-card scale-in" onClick={e => e.stopPropagation()}>
-        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '15px', borderBottom: '1px solid #2e2e2e', paddingBottom: '12px' }}>
-          <h3 style={{ color: '#ffffff', fontSize: '1.3rem', fontWeight: 'bold', display: 'flex', alignItems: 'center', gap: '8px' }}>
-            <ShieldAlert color="#ef4444" size={24} /> Bloqueio Múltiplo
+      <div className="modal-card scale-in" onClick={e => e.stopPropagation()} style={{ borderRadius: '24px', background: '#141414', border: '1px solid #2e2e2e' }}>
+        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '16px', borderBottom: '1px solid #242424', paddingBottom: '14px' }}>
+          <h3 style={{ color: '#ffffff', fontSize: '1.25rem', fontWeight: '800', display: 'flex', alignItems: 'center', gap: '8px', margin: 0, textTransform: 'uppercase' }}>
+            <ShieldAlert color="#ef4444" size={22} /> Bloqueio em Lote
           </h3>
           <button 
             onClick={onClose}
-            style={{ background: 'transparent', border: 'none', color: '#9ca3af', cursor: 'pointer' }}
+            style={{ background: '#202020', border: '1px solid #383838', color: '#9ca3af', cursor: 'pointer', borderRadius: '50%', width: '32px', height: '32px', display: 'flex', alignItems: 'center', justifyContent: 'center' }}
+            aria-label="Fechar modal"
           >
-            <X size={24} />
+            <X size={18} />
           </button>
         </div>
 
-        <p style={{ color: '#e5e7eb', fontSize: '0.95rem', marginBottom: '18px', fontFamily: 'monospace' }}>
-          Bloqueando agenda de <b>{barbeiroNome}</b> para <b>{formatarDataBR(data)}</b>
+        <p style={{ color: '#d1d5db', fontSize: '0.92rem', marginBottom: '18px' }}>
+          Selecione os horários livres de <strong>{barbeiroNome}</strong> para <strong>{formatarDataBR(data)}</strong> que deseja bloquear:
         </p>
 
-        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(80px, 1fr))', gap: '10px', maxHeight: '280px', overflowY: 'auto', padding: '5px', marginBottom: '20px' }}>
+        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(85px, 1fr))', gap: '10px', maxHeight: '280px', overflowY: 'auto', padding: '4px', marginBottom: '22px' }}>
           {horariosFiltrados.map(horario => {
             const isOcupado = horariosOcupados.includes(horario);
             const isSelecionado = slotsSelecionados.includes(horario);
@@ -78,6 +79,8 @@ export function ModalBloqueio({ isOpen, onClose, data, barbeiroId, barbeiroNome,
                 disabled={isOcupado}
                 onClick={() => toggleSlot(horario)}
                 className={`slot-btn ${isSelecionado ? 'selecionado' : ''}`}
+                style={{ borderRadius: '12px' }}
+                title={isOcupado ? 'Horário já ocupado ou bloqueado' : `Selecionar ${horario}`}
               >
                 {horario}
               </button>
@@ -85,23 +88,36 @@ export function ModalBloqueio({ isOpen, onClose, data, barbeiroId, barbeiroNome,
           })}
         </div>
 
-        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', borderTop: '1px solid #2e2e2e', paddingTop: '16px' }}>
-          <span style={{ color: '#9ca3af', fontSize: '0.95rem' }}>
-            {slotsSelecionados.length} selecionado(s)
+        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: '12px', borderTop: '1px solid #242424', paddingTop: '16px' }}>
+          <span style={{ color: '#9ca3af', fontSize: '0.9rem', fontWeight: '700' }}>
+            {slotsSelecionados.length} horário(s) selecionado(s)
           </span>
           <div style={{ display: 'flex', gap: '10px' }}>
             <button
               onClick={onClose}
-              style={{ background: '#262626', border: '1px solid #333333', color: '#e5e7eb', padding: '10px 18px', borderRadius: '8px', cursor: 'pointer', fontWeight: '600' }}
+              style={{ background: '#202020', border: '1px solid #383838', color: '#e5e7eb', padding: '10px 18px', borderRadius: '12px', cursor: 'pointer', fontWeight: '700', fontSize: '0.88rem' }}
             >
               Cancelar
             </button>
             <button
               disabled={salvando || slotsSelecionados.length === 0}
               onClick={handleConfirmar}
-              style={{ background: '#dc2626', border: 'none', color: '#ffffff', padding: '10px 20px', borderRadius: '8px', cursor: 'pointer', fontWeight: 'bold' }}
+              style={{ 
+                background: slotsSelecionados.length === 0 ? '#2a2a2a' : '#ef4444', 
+                border: 'none', 
+                color: '#ffffff', 
+                padding: '10px 22px', 
+                borderRadius: '12px', 
+                cursor: slotsSelecionados.length === 0 ? 'not-allowed' : 'pointer', 
+                fontWeight: '800',
+                fontSize: '0.88rem',
+                display: 'inline-flex',
+                alignItems: 'center',
+                gap: '6px',
+                transition: 'all 0.2s ease'
+              }}
             >
-              {salvando ? 'Salvando...' : 'Confirmar Bloqueio'}
+              <Check size={16} /> {salvando ? 'Salvando...' : 'Confirmar Bloqueio'}
             </button>
           </div>
         </div>
