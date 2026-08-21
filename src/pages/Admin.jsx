@@ -262,38 +262,80 @@ export function Admin({ onLogout }) {
     }
   };
 
+  const [carregandoModalBloqueio, setCarregandoModalBloqueio] = useState(false);
+
   const handleAbrirModalBloqueio = async () => {
     if (!adminData || !adminBarbeiro) {
-      alert('Selecione Data e Barbeiro antes de abrir o bloqueio em lote.');
+      alert('Por favor, selecione Data e Barbeiro antes de abrir o bloqueio em lote.');
       return;
     }
 
     try {
-      const cfg = await api.getConfigHorariosBarbeiro(adminBarbeiro);
-      setHorariosBarbeiroConfig(cfg.horarios || []);
+      setCarregandoModalBloqueio(true);
+      
+      // 1. Obter horários cadastrados do barbeiro (com fallback seguro)
+      let horariosCfg = [];
+      try {
+        const cfg = await api.getConfigHorariosBarbeiro(adminBarbeiro);
+        if (cfg && Array.isArray(cfg.horarios) && cfg.horarios.length > 0) {
+          horariosCfg = cfg.horarios;
+        }
+      } catch (e) {
+        console.warn('Fallback para horários padrão do barbeiro:', e);
+      }
 
-      const agsDoDia = agendamentos.filter(
-        ag => ag.data_agendamento === adminData && 
-              String(ag.barbeiro_id) === String(adminBarbeiro) && 
-              ag.status !== 'cancelado'
-      );
-      setHorariosOcupadosDia(agsDoDia.map(a => a.horario));
+      if (horariosCfg.length === 0) {
+        horariosCfg = adminBarbeiro === '1' 
+          ? ["08:30", "09:30", "10:00", "11:00", "14:00", "14:30", "15:30", "16:00", "17:00", "17:30", "18:00", "18:30"] 
+          : ["08:30", "09:30", "10:00", "11:00", "14:00", "14:30", "15:30", "16:00", "17:00"];
+      }
+
+      setHorariosBarbeiroConfig(horariosCfg);
+
+      // 2. Obter agendamentos ocupados no dia diretamente do banco SQL
+      let ocupados = [];
+      try {
+        const agsDoDia = await api.getAgendamentosAdmin({ 
+          data: adminData, 
+          barbeiroId: adminBarbeiro 
+        });
+        ocupados = (agsDoDia || [])
+          .filter(ag => ag.status !== 'cancelado')
+          .map(ag => ag.horario);
+      } catch (e) {
+        // Fallback para agendamentos locais em memória
+        ocupados = agendamentos
+          .filter(ag => ag.data_agendamento === adminData && 
+                        String(ag.barbeiro_id) === String(adminBarbeiro) && 
+                        ag.status !== 'cancelado')
+          .map(ag => ag.horario);
+      }
+
+      setHorariosOcupadosDia(ocupados);
       setModalBloqueioAberto(true);
     } catch (err) {
-      alert('Erro ao carregar dados do modal: ' + err.message);
+      alert('Erro ao carregar dados do modal de bloqueio: ' + err.message);
+    } finally {
+      setCarregandoModalBloqueio(false);
     }
   };
 
   const handleConfirmarBloqueioLote = async (slots) => {
+    if (!slots || slots.length === 0) return;
     const barbeiroNome = adminBarbeiro === '1' ? 'Geilson' : 'Denilson';
-    await api.criarBloqueioLote({
-      barbeiro_id: parseInt(adminBarbeiro),
-      barbeiro_nome: barbeiroNome,
-      data_agendamento: adminData,
-      horarios: slots
-    });
-    alert('Bloqueios salvos com sucesso!');
-    carregarAgendamentos();
+    try {
+      await api.criarBloqueioLote({
+        barbeiro_id: parseInt(adminBarbeiro),
+        barbeiro_nome: barbeiroNome,
+        data_agendamento: adminData,
+        horarios: slots
+      });
+      alert('✅ Horários bloqueados com sucesso!');
+      setModalBloqueioAberto(false);
+      await carregarAgendamentos();
+    } catch (err) {
+      alert('Erro ao salvar bloqueios em lote: ' + err.message);
+    }
   };
 
   // Funções da Aba Config
@@ -584,9 +626,10 @@ export function Admin({ onLogout }) {
               <div className="grupo-botoes-acoes">
                 <button 
                   onClick={handleAbrirModalBloqueio}
+                  disabled={carregandoModalBloqueio}
                   className="btn-acao-rapida btn-bloqueio-lote"
                 >
-                  <ShieldCheck size={16} /> Bloqueio em Lote
+                  <ShieldCheck size={16} /> {carregandoModalBloqueio ? 'Carregando...' : 'Bloqueio em Lote'}
                 </button>
 
                 <button 
