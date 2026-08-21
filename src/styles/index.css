@@ -125,9 +125,11 @@ body {
 }
 
 .imagem-logo-cabecalho {
-  height: 75px;
+  height: 52px;
   width: auto;
+  max-width: 140px;
   object-fit: contain;
+  mix-blend-mode: lighten;
   transition: transform 0.3s ease;
 }
 .imagem-logo-cabecalho:hover {
@@ -523,6 +525,7 @@ body {
   max-width: 170px;
   height: auto;
   object-fit: contain;
+  mix-blend-mode: lighten;
   filter: drop-shadow(0 0 25px rgba(255, 255, 255, 0.12));
   transition: transform 0.3s ease;
 }
