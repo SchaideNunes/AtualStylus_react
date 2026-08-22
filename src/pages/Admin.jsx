@@ -10,7 +10,8 @@ import {
   isDomingo, 
   normalizarDataISO, 
   obterDetalhesData,
-  formatarMesAno
+  formatarMesAno,
+  adicionarMeses
 } from '../utils/dateUtils';
 import { 
   ShieldCheck, 
@@ -28,7 +29,10 @@ import {
   Lock, 
   Check, 
   RotateCcw,
-  Repeat
+  Repeat,
+  ChevronLeft,
+  ChevronRight,
+  History
 } from 'lucide-react';
 import '../styles/admin.css';
 
@@ -58,11 +62,7 @@ export function Admin({ onLogout }) {
   const carregarAgendamentos = async () => {
     try {
       setCarregando(true);
-      const dataHoje = new Date();
-      dataHoje.setDate(dataHoje.getDate() - 60);
-      const dataLimite = dataHoje.toISOString().split('T')[0];
-
-      const lista = await api.getAgendamentosAdmin({ dataLimite });
+      const lista = await api.getAgendamentosAdmin();
       setAgendamentos(lista || []);
     } catch (err) {
       console.error('Erro ao carregar dados do admin:', err);
@@ -99,7 +99,6 @@ export function Admin({ onLogout }) {
   // Contadores por aba
   const contadores = useMemo(() => {
     const hoje = getDataHojeString();
-    const mesAtual = mesConcluidos || hoje.substring(0, 7);
     let pendentes = 0;
     let concluidos = 0;
     let bloqueios = 0;
@@ -110,12 +109,14 @@ export function Admin({ onLogout }) {
       if (item.status === 'confirmado' && !isBloqueio) {
         if (dataItem >= hoje) {
           pendentes++;
-        } else if (dataItem.startsWith(mesAtual)) {
+        } else if (mesConcluidos === 'todos' || dataItem.startsWith(mesConcluidos)) {
           concluidos++;
         }
       }
-      if (item.status === 'concluido' && dataItem.startsWith(mesAtual)) {
-        concluidos++;
+      if (item.status === 'concluido') {
+        if (mesConcluidos === 'todos' || dataItem.startsWith(mesConcluidos)) {
+          concluidos++;
+        }
       }
       if (isBloqueio && dataItem >= hoje) bloqueios++;
     });
@@ -142,7 +143,7 @@ export function Admin({ onLogout }) {
         matchAba = item.status === 'confirmado' && !isBloqueio && dataItem >= hoje;
       } else if (abaAtiva === 'concluidos') {
         const isConcluidoStatus = (item.status === 'concluido') || (item.status === 'confirmado' && !isBloqueio && dataItem < hoje);
-        const matchMes = buscaDataNormalizada ? true : dataItem.startsWith(mesConcluidos);
+        const matchMes = buscaDataNormalizada ? true : (mesConcluidos === 'todos' || dataItem.startsWith(mesConcluidos));
         matchAba = isConcluidoStatus && matchMes;
       } else if (abaAtiva === 'bloqueios') {
         matchAba = isBloqueio && dataItem >= hoje;
@@ -494,33 +495,86 @@ export function Admin({ onLogout }) {
             </div>
           </div>
 
-          {/* Banner de Mês de Referência para Concluídos */}
+          {/* Banner de Navegação de Meses para Concluídos */}
           {abaAtiva === 'concluidos' && (
             <div className="painel-box-admin" style={{ padding: '14px 18px', background: '#121212', border: '1px solid #282828' }}>
-              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: '12px' }}>
-                <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
-                  <span style={{ fontSize: '0.86rem', fontWeight: '800', color: '#ffffff', textTransform: 'uppercase', display: 'flex', alignItems: 'center', gap: '6px' }}>
-                    <Calendar size={16} /> Mês:
-                  </span>
-                  <input 
-                    type="month" 
-                    value={mesConcluidos} 
-                    onChange={(e) => setMesConcluidos(e.target.value)} 
-                    style={{ background: '#000000', border: '1px solid #383838', borderRadius: '8px', color: '#ffffff', padding: '6px 12px', fontSize: '0.88rem', fontWeight: '700', fontFamily: 'monospace' }}
-                  />
-                  {mesConcluidos !== getDataHojeString().substring(0, 7) && (
-                    <button
-                      onClick={() => setMesConcluidos(getDataHojeString().substring(0, 7))}
-                      style={{ background: '#222222', border: '1px solid #3a3a3a', color: '#ffffff', borderRadius: '8px', padding: '6px 10px', fontSize: '0.78rem', cursor: 'pointer', fontWeight: '700' }}
-                    >
-                      Mês Atual
-                    </button>
-                  )}
+              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: '14px' }}>
+                <div style={{ display: 'flex', alignItems: 'center', gap: '8px', flexWrap: 'wrap' }}>
+                  <button
+                    onClick={() => {
+                      const base = mesConcluidos === 'todos' ? getDataHojeString().substring(0, 7) : mesConcluidos;
+                      setMesConcluidos(adicionarMeses(base, -1));
+                    }}
+                    title="Mês Anterior"
+                    style={{ background: '#1e1e1e', border: '1px solid #333333', color: '#ffffff', borderRadius: '8px', width: '34px', height: '34px', display: 'inline-flex', alignItems: 'center', justifyContent: 'center', cursor: 'pointer' }}
+                  >
+                    <ChevronLeft size={16} />
+                  </button>
+
+                  <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
+                    <Calendar size={15} color="#9ca3af" />
+                    <input 
+                      type="month" 
+                      value={mesConcluidos === 'todos' ? '' : mesConcluidos} 
+                      onChange={(e) => setMesConcluidos(e.target.value)} 
+                      style={{ background: '#000000', border: '1px solid #383838', borderRadius: '8px', color: '#ffffff', padding: '6px 10px', fontSize: '0.88rem', fontWeight: '700', fontFamily: 'monospace' }}
+                    />
+                  </div>
+
+                  <button
+                    onClick={() => {
+                      const base = mesConcluidos === 'todos' ? getDataHojeString().substring(0, 7) : mesConcluidos;
+                      setMesConcluidos(adicionarMeses(base, 1));
+                    }}
+                    title="Próximo Mês"
+                    style={{ background: '#1e1e1e', border: '1px solid #333333', color: '#ffffff', borderRadius: '8px', width: '34px', height: '34px', display: 'inline-flex', alignItems: 'center', justifyContent: 'center', cursor: 'pointer' }}
+                  >
+                    <ChevronRight size={16} />
+                  </button>
+
+                  <button
+                    onClick={() => setMesConcluidos(getDataHojeString().substring(0, 7))}
+                    style={{ 
+                      background: mesConcluidos === getDataHojeString().substring(0, 7) ? '#ffffff' : '#222222', 
+                      color: mesConcluidos === getDataHojeString().substring(0, 7) ? '#000000' : '#ffffff', 
+                      border: '1px solid #3a3a3a', 
+                      borderRadius: '8px', 
+                      padding: '6px 12px', 
+                      fontSize: '0.78rem', 
+                      cursor: 'pointer', 
+                      fontWeight: '700' 
+                    }}
+                  >
+                    Mês Atual
+                  </button>
+
+                  <button
+                    onClick={() => setMesConcluidos(mesConcluidos === 'todos' ? getDataHojeString().substring(0, 7) : 'todos')}
+                    style={{ 
+                      background: mesConcluidos === 'todos' ? '#ffffff' : '#222222', 
+                      color: mesConcluidos === 'todos' ? '#000000' : '#ffffff', 
+                      border: '1px solid #3a3a3a', 
+                      borderRadius: '8px', 
+                      padding: '6px 12px', 
+                      fontSize: '0.78rem', 
+                      cursor: 'pointer', 
+                      fontWeight: '700',
+                      display: 'inline-flex',
+                      alignItems: 'center',
+                      gap: '4px'
+                    }}
+                  >
+                    <History size={13} /> {mesConcluidos === 'todos' ? 'Vendo Todo o Histórico' : 'Todo o Histórico'}
+                  </button>
                 </div>
 
                 <div style={{ display: 'flex', alignItems: 'center', gap: '12px', flexWrap: 'wrap' }}>
                   <span style={{ fontSize: '0.84rem', color: '#9ca3af' }}>
-                    Atendimentos em <strong style={{ color: '#ffffff', textTransform: 'capitalize' }}>{formatarMesAno(mesConcluidos)}</strong>: <strong style={{ color: '#22c55e', fontSize: '0.95rem' }}>{agendamentosFiltrados.length}</strong>
+                    {mesConcluidos === 'todos' ? (
+                      <>Histórico Total: <strong style={{ color: '#22c55e', fontSize: '0.95rem' }}>{agendamentosFiltrados.length}</strong> atendimentos</>
+                    ) : (
+                      <>Atendimentos em <strong style={{ color: '#ffffff', textTransform: 'capitalize' }}>{formatarMesAno(mesConcluidos)}</strong>: <strong style={{ color: '#22c55e', fontSize: '0.95rem' }}>{agendamentosFiltrados.length}</strong></>
+                    )}
                   </span>
                   <span style={{ color: '#444444' }}>•</span>
                   <span style={{ fontSize: '0.84rem', color: '#9ca3af' }}>

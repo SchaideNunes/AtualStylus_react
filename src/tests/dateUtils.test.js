@@ -6,7 +6,8 @@ import {
   filtrarHorariosPassadosSeHoje,
   normalizarDataISO,
   obterDetalhesData,
-  formatarMesAno
+  formatarMesAno,
+  adicionarMeses
 } from '../utils/dateUtils';
 
 describe('Date Utilities & Availability Rules (TDD)', () => {
@@ -50,5 +51,12 @@ describe('Date Utilities & Availability Rules (TDD)', () => {
   it('deve formatar mês e ano em português por extenso', () => {
     expect(formatarMesAno('2026-08')).toMatch(/agosto de 2026/i);
     expect(formatarMesAno('2026-01')).toMatch(/janeiro de 2026/i);
+  });
+
+  it('deve navegar entre meses adicionando ou subtraindo delta', () => {
+    expect(adicionarMeses('2026-08', 1)).toBe('2026-09');
+    expect(adicionarMeses('2026-08', -1)).toBe('2026-07');
+    expect(adicionarMeses('2026-12', 1)).toBe('2027-01');
+    expect(adicionarMeses('2026-01', -1)).toBe('2025-12');
   });
 });

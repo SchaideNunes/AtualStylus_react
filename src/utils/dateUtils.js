@@ -118,3 +118,19 @@ export function formatarMesAno(mesAnoStr) {
   const d = new Date(ano, mes - 1, 1);
   return d.toLocaleDateString('pt-BR', { month: 'long', year: 'numeric' });
 }
+
+/**
+ * Adiciona ou subtrai meses de uma string YYYY-MM
+ * @param {string} mesAnoStr - Formato YYYY-MM
+ * @param {number} delta - Quantidade de meses a somar/subtrair
+ * @returns {string} Formato YYYY-MM
+ */
+export function adicionarMeses(mesAnoStr, delta = 0) {
+  if (!mesAnoStr) return '';
+  const [ano, mes] = mesAnoStr.split('-').map(Number);
+  if (!ano || !mes) return mesAnoStr;
+  const d = new Date(ano, (mes - 1) + delta, 1);
+  const novoAno = d.getFullYear();
+  const novoMes = String(d.getMonth() + 1).padStart(2, '0');
+  return `${novoAno}-${novoMes}`;
+}
