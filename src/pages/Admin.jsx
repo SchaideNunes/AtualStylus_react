@@ -384,47 +384,41 @@ export function Admin({ onLogout }) {
         </div>
       ) : (
         <>
-          {/* 4. Barra de Ações Rápidas (Abre modais popup) */}
-          <div className="painel-box-admin" style={{ padding: '20px 24px' }}>
-            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: '16px' }}>
-              <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
-                <Zap color="#ffffff" size={20} />
-                <span style={{ fontSize: '1.05rem', fontWeight: '800', color: '#ffffff', textTransform: 'uppercase', letterSpacing: '-0.01em' }}>
-                  Ações
-                </span>
+          {/* 4. Barra de Ações (Abre modais popup) */}
+          <div className="painel-box-admin box-acoes-admin">
+            <div className="acoes-header-linha">
+              <div className="acoes-titulo-tag">
+                <Zap color="#ffffff" size={18} />
+                <span>Ações</span>
               </div>
 
               <div className="grupo-botoes-acoes">
                 <button 
                   onClick={() => setModalNovoAgendamentoAberto(true)}
                   className="btn-acao-rapida btn-cadastrar-principal"
-                  style={{ padding: '12px 20px', fontSize: '0.9rem' }}
                 >
-                  <Plus size={18} strokeWidth={3} /> Novo Agendamento
+                  <Plus size={16} strokeWidth={3} /> Novo Agendamento
                 </button>
 
                 <button 
                   onClick={() => setModalClientesFixosAberto(true)}
                   className="btn-acao-rapida btn-bloqueio-unitario"
-                  style={{ padding: '12px 18px', fontSize: '0.9rem' }}
                 >
-                  <Repeat size={18} /> Clientes Fixos
+                  <Repeat size={16} /> Clientes Fixos
                 </button>
 
                 <button 
                   onClick={() => setModalBloqueioLoteAberto(true)}
                   className="btn-acao-rapida btn-bloqueio-lote"
-                  style={{ padding: '12px 18px', fontSize: '0.9rem' }}
                 >
-                  <ShieldCheck size={18} /> Bloqueio em Lote
+                  <ShieldCheck size={16} /> Bloqueio em Lote
                 </button>
 
                 <button 
                   onClick={() => setModalBloqueioUnitarioAberto(true)}
                   className="btn-acao-rapida btn-bloqueio-unitario"
-                  style={{ padding: '12px 18px', fontSize: '0.9rem' }}
                 >
-                  <Lock size={18} /> Bloqueio Unitário
+                  <Lock size={16} /> Bloqueio Unitário
                 </button>
               </div>
             </div>
