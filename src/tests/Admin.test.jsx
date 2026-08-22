@@ -63,7 +63,7 @@ describe('Admin Component Revamp (TDD)', () => {
     fireEvent.click(btnNovo);
 
     expect(screen.getByText('NOME DO CLIENTE')).toBeInTheDocument();
-    expect(screen.getByText('CONFIRMAR AGENDAMENTO')).toBeInTheDocument();
+    expect(screen.getByText(/Confirmar Agendamento/i)).toBeInTheDocument();
   });
 
   it('deve alternar para a aba de Configuração e listar horários', async () => {
