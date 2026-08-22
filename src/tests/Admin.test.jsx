@@ -131,6 +131,23 @@ describe('Admin Component Revamp (TDD)', () => {
     expect(screen.getByText('NOME DO PRODUTO *')).toBeInTheDocument();
   });
 
+  it('deve abrir o modal de Editar Produto e carregar os dados do produto', async () => {
+    render(<Admin onLogout={vi.fn()} />);
+    const btnProdutos = screen.getByRole('button', { name: /Produtos/i });
+    fireEvent.click(btnProdutos);
+
+    await waitFor(() => {
+      expect(screen.getByText('Pomada Modeladora Efeito Matte')).toBeInTheDocument();
+    });
+
+    const btnEditar = screen.getByRole('button', { name: /Editar/i });
+    fireEvent.click(btnEditar);
+
+    expect(screen.getByText('Editar Produto')).toBeInTheDocument();
+    const inputNome = screen.getByDisplayValue('Pomada Modeladora Efeito Matte');
+    expect(inputNome).toBeInTheDocument();
+  });
+
   it('deve alternar para a aba de Configuração e listar horários', async () => {
     api.getConfigHorariosBarbeiro.mockResolvedValue({
       horarios: ['08:30', '09:30', '10:00']

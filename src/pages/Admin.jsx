@@ -970,7 +970,10 @@ export function Admin({ onLogout }) {
         <ModalProduto 
           produto={produtoParaEditar}
           aoSalvar={handleSalvarProduto}
-          aoFechar={() => setModalProdutoAberto(false)}
+          aoFechar={() => {
+            setModalProdutoAberto(false);
+            setProdutoParaEditar(null);
+          }}
         />
       )}
     </div>

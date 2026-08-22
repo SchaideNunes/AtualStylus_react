@@ -28,6 +28,29 @@ export function ModalProduto({ produto, aoSalvar, aoFechar }) {
   const [processandoFoto, setProcessandoFoto] = useState(false);
   const [erro, setErro] = useState('');
 
+  // Sincronizar campos sempre que o produto para edição for alterado ou aberto
+  useEffect(() => {
+    if (produto && produto.id) {
+      setNome(produto.nome || '');
+      setDescricao(produto.descricao || '');
+      setPreco(produto.preco !== undefined ? String(produto.preco) : '');
+      setEmPromocao(Boolean(produto.em_promocao));
+      setPorcentagemDesconto(produto.porcentagem_desconto !== undefined ? Number(produto.porcentagem_desconto) : 0);
+      setFoto(produto.foto || '');
+      setCategoria(produto.categoria || 'Cabelo & Penteado');
+      setAtivo(produto.ativo !== undefined ? Boolean(produto.ativo) : true);
+    } else {
+      setNome('');
+      setDescricao('');
+      setPreco('');
+      setEmPromocao(false);
+      setPorcentagemDesconto(0);
+      setFoto('');
+      setCategoria('Cabelo & Penteado');
+      setAtivo(true);
+    }
+  }, [produto]);
+
   // Bloquear scroll do body enquanto o modal estiver aberto
   useEffect(() => {
     document.body.style.overflow = 'hidden';
