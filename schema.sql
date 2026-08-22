@@ -36,3 +36,21 @@ CREATE TABLE IF NOT EXISTS admin_users (
     password_hash VARCHAR(255) NOT NULL,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+-- 4. Tabela de Produtos da Loja (Vitrine & Gestão)
+CREATE TABLE IF NOT EXISTS produtos (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    nome VARCHAR(150) NOT NULL,
+    descricao TEXT,
+    preco DECIMAL(10, 2) NOT NULL DEFAULT 0.00,
+    preco_promocional DECIMAL(10, 2) NULL DEFAULT NULL,
+    porcentagem_desconto INT DEFAULT 0,
+    em_promocao BOOLEAN NOT NULL DEFAULT FALSE,
+    foto VARCHAR(255) DEFAULT '',
+    categoria VARCHAR(50) NOT NULL DEFAULT 'Geral',
+    ativo BOOLEAN NOT NULL DEFAULT TRUE,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+    INDEX idx_produtos_ativo (ativo),
+    INDEX idx_produtos_categoria (categoria)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;

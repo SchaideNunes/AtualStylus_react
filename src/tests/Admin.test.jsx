@@ -15,7 +15,11 @@ vi.mock('../services/api', () => ({
     concluirAgendamentoAdmin: vi.fn(),
     deletarAgendamentoAdmin: vi.fn(),
     getClientesFixos: vi.fn(),
-    deletarLoteClientesFixos: vi.fn()
+    deletarLoteClientesFixos: vi.fn(),
+    getProdutosAdmin: vi.fn(),
+    criarProdutoAdmin: vi.fn(),
+    atualizarProdutoAdmin: vi.fn(),
+    deletarProdutoAdmin: vi.fn()
   }
 }));
 
@@ -52,6 +56,20 @@ describe('Admin Component Revamp (TDD)', () => {
         ]
       }
     ]);
+    api.getProdutosAdmin.mockResolvedValue([
+      {
+        id: 1,
+        nome: 'Pomada Modeladora Efeito Matte',
+        descricao: 'Alta fixação sem brilho',
+        preco: 35.00,
+        preco_promocional: 28.00,
+        porcentagem_desconto: 20,
+        em_promocao: true,
+        foto: '/assets/degrade.webp',
+        categoria: 'Cabelo & Penteado',
+        ativo: true
+      }
+    ]);
   });
 
   it('deve renderizar o cabeçalho, abas e ações rápidas com design renovado', async () => {
@@ -61,6 +79,7 @@ describe('Admin Component Revamp (TDD)', () => {
     expect(screen.getByRole('button', { name: /Pendentes/i })).toBeInTheDocument();
     expect(screen.getByRole('button', { name: /Concluídos/i })).toBeInTheDocument();
     expect(screen.getByRole('button', { name: /Bloqueios/i })).toBeInTheDocument();
+    expect(screen.getByRole('button', { name: /Produtos/i })).toBeInTheDocument();
     expect(screen.getByRole('button', { name: /Configuração/i })).toBeInTheDocument();
     expect(screen.getByText(/^Ações$/i)).toBeInTheDocument();
 
@@ -94,6 +113,22 @@ describe('Admin Component Revamp (TDD)', () => {
     await waitFor(() => {
       expect(screen.getByText(/Cadastrados/i)).toBeInTheDocument();
     });
+  });
+
+  it('deve alternar para a aba de Produtos e abrir o modal de Novo Produto', async () => {
+    render(<Admin onLogout={vi.fn()} />);
+    const btnProdutos = screen.getByRole('button', { name: /Produtos/i });
+    fireEvent.click(btnProdutos);
+
+    await waitFor(() => {
+      expect(screen.getByText(/Gestão de Produtos & Vitrine/i)).toBeInTheDocument();
+      expect(screen.getByText('Pomada Modeladora Efeito Matte')).toBeInTheDocument();
+    });
+
+    const btnNovoProd = screen.getByRole('button', { name: /Novo Produto/i });
+    fireEvent.click(btnNovoProd);
+
+    expect(screen.getByText('NOME DO PRODUTO *')).toBeInTheDocument();
   });
 
   it('deve alternar para a aba de Configuração e listar horários', async () => {

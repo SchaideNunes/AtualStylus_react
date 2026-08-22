@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Menu, X, Calendar, UserCheck, Home, Info } from 'lucide-react';
+import { Menu, X, Calendar, UserCheck, Home, Info, ShoppingBag } from 'lucide-react';
 
 export function Navbar({ paginaAtiva, onNavegar }) {
   const [menuAberto, setMenuAberto] = useState(false);
@@ -81,6 +81,12 @@ export function Navbar({ paginaAtiva, onNavegar }) {
               Agendar
             </button>
             <button 
+              onClick={() => handleNavegar('produtos')} 
+              className={`link-menu ${paginaAtiva === 'produtos' ? 'ativo' : ''}`}
+            >
+              Produtos
+            </button>
+            <button 
               onClick={() => handleNavegar('sobre')} 
               className={`link-menu ${paginaAtiva === 'sobre' ? 'ativo' : ''}`}
             >
@@ -135,6 +141,14 @@ export function Navbar({ paginaAtiva, onNavegar }) {
           >
             <Calendar size={18} className="icone-drawer" />
             Agendar
+          </button>
+
+          <button 
+            onClick={() => handleNavegar('produtos')} 
+            className={`item-drawer-mobile ${paginaAtiva === 'produtos' ? 'ativo' : ''}`}
+          >
+            <ShoppingBag size={18} className="icone-drawer" />
+            Produtos
           </button>
 
           <button 

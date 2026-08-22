@@ -186,5 +186,67 @@ export const api = {
     const json = await res.json();
     if (!res.ok) throw new Error(json.error || 'Erro ao salvar configurações');
     return json;
+  },
+
+  // ==========================================
+  // PRODUTOS (VITRINE & ADMIN)
+  // ==========================================
+  async getProdutosPublicos() {
+    const res = await fetch(`${API_BASE}/produtos`);
+    const json = await res.json();
+    if (!res.ok) throw new Error(json.error || 'Erro ao carregar produtos');
+    return json;
+  },
+
+  async getProdutosAdmin(filtros = {}) {
+    const params = new URLSearchParams();
+    if (filtros.categoria) params.append('categoria', filtros.categoria);
+    if (filtros.busca) params.append('busca', filtros.busca);
+    if (filtros.em_promocao !== undefined) params.append('em_promocao', String(filtros.em_promocao));
+
+    const res = await fetch(`${API_BASE}/admin/produtos?${params.toString()}`, {
+      headers: getAuthHeaders()
+    });
+    const json = await res.json();
+    if (!res.ok) throw new Error(json.error || 'Erro ao carregar produtos no admin');
+    return json;
+  },
+
+  async criarProdutoAdmin(dados) {
+    const res = await fetch(`${API_BASE}/admin/produtos`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        ...getAuthHeaders()
+      },
+      body: JSON.stringify(dados)
+    });
+    const json = await res.json();
+    if (!res.ok) throw new Error(json.error || 'Erro ao cadastrar produto');
+    return json;
+  },
+
+  async atualizarProdutoAdmin(id, dados) {
+    const res = await fetch(`${API_BASE}/admin/produtos/${id}`, {
+      method: 'PUT',
+      headers: {
+        'Content-Type': 'application/json',
+        ...getAuthHeaders()
+      },
+      body: JSON.stringify(dados)
+    });
+    const json = await res.json();
+    if (!res.ok) throw new Error(json.error || 'Erro ao atualizar produto');
+    return json;
+  },
+
+  async deletarProdutoAdmin(id) {
+    const res = await fetch(`${API_BASE}/admin/produtos/${id}`, {
+      method: 'DELETE',
+      headers: getAuthHeaders()
+    });
+    const json = await res.json();
+    if (!res.ok) throw new Error(json.error || 'Erro ao excluir produto');
+    return json;
   }
 };

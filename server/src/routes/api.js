@@ -3,6 +3,7 @@ import rateLimit from 'express-rate-limit';
 import { getDatabase } from '../db/connection.js';
 import { AgendamentoService } from '../services/agendamentoService.js';
 import { AuthService } from '../services/authService.js';
+import { ProdutoService } from '../services/produtoService.js';
 import { authMiddleware } from '../middleware/auth.js';
 
 export const apiRouter = Router();
@@ -11,7 +12,8 @@ function getServices() {
   const db = getDatabase();
   return {
     agendamentoService: new AgendamentoService(db),
-    authService: new AuthService(db)
+    authService: new AuthService(db),
+    produtoService: new ProdutoService(db)
   };
 }
 
@@ -238,3 +240,70 @@ apiRouter.put('/admin/config/barbeiro/:id', authMiddleware, async (req, res) => 
     return res.status(400).json({ error: err.message });
   }
 });
+
+// ==========================================
+// 4. ROTAS DE PRODUTOS (VITRINE & ADMIN)
+// ==========================================
+
+// Listar produtos públicos da vitrine
+apiRouter.get('/produtos', async (req, res) => {
+  try {
+    const { produtoService } = getServices();
+    const produtos = await produtoService.listarPublicos();
+    return res.json(produtos);
+  } catch (err) {
+    return res.status(500).json({ error: err.message });
+  }
+});
+
+// Listar produtos no painel administrativo
+apiRouter.get('/admin/produtos', authMiddleware, async (req, res) => {
+  try {
+    const { categoria, busca, em_promocao } = req.query;
+    const { produtoService } = getServices();
+    const produtos = await produtoService.listarAdmin({
+      categoria,
+      busca,
+      em_promocao: em_promocao !== undefined ? em_promocao === 'true' : undefined
+    });
+    return res.json(produtos);
+  } catch (err) {
+    return res.status(500).json({ error: err.message });
+  }
+});
+
+// Criar produto (Admin)
+apiRouter.post('/admin/produtos', authMiddleware, async (req, res) => {
+  try {
+    const { produtoService } = getServices();
+    const produto = await produtoService.criarProduto(req.body);
+    return res.status(201).json(produto);
+  } catch (err) {
+    return res.status(400).json({ error: err.message });
+  }
+});
+
+// Atualizar produto (Admin)
+apiRouter.put('/admin/produtos/:id', authMiddleware, async (req, res) => {
+  try {
+    const { id } = req.params;
+    const { produtoService } = getServices();
+    const produto = await produtoService.atualizarProduto(id, req.body);
+    return res.json(produto);
+  } catch (err) {
+    return res.status(400).json({ error: err.message });
+  }
+});
+
+// Deletar produto (Admin)
+apiRouter.delete('/admin/produtos/:id', authMiddleware, async (req, res) => {
+  try {
+    const { id } = req.params;
+    const { produtoService } = getServices();
+    const produto = await produtoService.deletarProduto(id);
+    return res.json({ message: 'Produto excluído com sucesso', produto });
+  } catch (err) {
+    return res.status(400).json({ error: err.message });
+  }
+});
+
