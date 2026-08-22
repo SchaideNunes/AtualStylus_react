@@ -37,8 +37,9 @@ app.use(cors({
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
-// Rotas da API
+// Rotas da API (suporta /api/... e rewrites do Vercel)
 app.use('/api', apiRouter);
+app.use(apiRouter);
 
 // Servir frontend React em produção
 const distPath = path.resolve(__dirname, '../../dist');
