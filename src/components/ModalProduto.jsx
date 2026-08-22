@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { X, Tag, DollarSign, Percent, Image, AlignLeft, Check, AlertCircle, Eye } from 'lucide-react';
+import { X, Tag, DollarSign, Percent, Image, AlignLeft, Check, AlertCircle, Eye, Sparkles } from 'lucide-react';
 
 const CATEGORIAS_PADRAO = [
   'Cabelo & Penteado',
@@ -34,6 +34,25 @@ export function ModalProduto({ produto, aoSalvar, aoFechar }) {
 
   const [salvando, setSalvando] = useState(false);
   const [erro, setErro] = useState('');
+
+  // Bloquear scroll do body enquanto o modal estiver aberto
+  useEffect(() => {
+    document.body.style.overflow = 'hidden';
+    document.body.style.touchAction = 'none';
+    return () => {
+      document.body.style.overflow = '';
+      document.body.style.touchAction = '';
+    };
+  }, []);
+
+  // Fechar com tecla ESC
+  useEffect(() => {
+    const handleKeyDown = (e) => {
+      if (e.key === 'Escape') aoFechar();
+    };
+    window.addEventListener('keydown', handleKeyDown);
+    return () => window.removeEventListener('keydown', handleKeyDown);
+  }, [aoFechar]);
 
   // Cálculo automático do preço promocional baseado no preço base e na porcentagem
   const precoNum = parseFloat(preco) || 0;
@@ -96,39 +115,38 @@ export function ModalProduto({ produto, aoSalvar, aoFechar }) {
         {/* Cabeçalho */}
         <div className="modal-header-produto">
           <div className="titulo-box-modal">
-            <Tag size={20} color="#ffffff" />
+            <Tag size={18} color="#ffffff" />
             <h2>{isEdicao ? 'Editar Produto' : 'Novo Produto'}</h2>
           </div>
           <button onClick={aoFechar} className="btn-fechar-modal-x" aria-label="Fechar modal">
-            <X size={20} />
+            <X size={18} />
           </button>
         </div>
 
-        {/* Formulário */}
+        {/* Formulário Compacto */}
         <form onSubmit={handleSubmit} className="form-modal-produto">
           {erro && (
             <div className="banner-alerta-erro">
-              <AlertCircle size={16} />
+              <AlertCircle size={15} />
               <span>{erro}</span>
             </div>
           )}
 
-          {/* Nome */}
-          <div className="grupo-campo-modal">
-            <label className="label-campo-modal">NOME DO PRODUTO *</label>
-            <input 
-              type="text"
-              value={nome}
-              onChange={(e) => setNome(e.target.value)}
-              placeholder="Ex: Pomada Modeladora Efeito Matte"
-              className="input-modal-produto"
-              required
-            />
-          </div>
-
-          {/* Linha Dupla: Categoria e Preço Normal */}
+          {/* Linha 1: Nome do Produto + Categoria */}
           <div className="grid-dois-campos-modal">
-            <div className="grupo-campo-modal">
+            <div className="grupo-campo-modal" style={{ flex: '1.6 1 200px' }}>
+              <label className="label-campo-modal">NOME DO PRODUTO *</label>
+              <input 
+                type="text"
+                value={nome}
+                onChange={(e) => setNome(e.target.value)}
+                placeholder="Ex: Pomada Modeladora Efeito Matte"
+                className="input-modal-produto"
+                required
+              />
+            </div>
+
+            <div className="grupo-campo-modal" style={{ flex: '1.2 1 150px' }}>
               <label className="label-campo-modal">CATEGORIA</label>
               <select 
                 value={categoria}
@@ -140,7 +158,10 @@ export function ModalProduto({ produto, aoSalvar, aoFechar }) {
                 ))}
               </select>
             </div>
+          </div>
 
+          {/* Linha 2: Preço Normal */}
+          <div className="grid-dois-campos-modal">
             <div className="grupo-campo-modal">
               <label className="label-campo-modal">PREÇO NORMAL (R$) *</label>
               <div className="input-com-icone-preco">
@@ -157,30 +178,27 @@ export function ModalProduto({ produto, aoSalvar, aoFechar }) {
                 />
               </div>
             </div>
+
+            <div className="grupo-campo-modal" style={{ justifyContent: 'center' }}>
+              <label className="label-campo-modal">PROMOÇÃO</label>
+              <div 
+                className={`switch-promo-pill ${emPromocao ? 'ativo' : ''}`}
+                onClick={() => setEmPromocao(!emPromocao)}
+                role="button"
+                tabIndex={0}
+              >
+                <span>🔥 {emPromocao ? 'Promoção Ativa' : 'Sem Promoção'}</span>
+                <div className="indicador-dot" />
+              </div>
+            </div>
           </div>
 
-          {/* Bloco de Promoção Automática */}
-          <div className={`box-config-promocao ${emPromocao ? 'ativa' : ''}`}>
-            <div className="linha-toggle-promocao">
-              <div className="texto-toggle-promo">
-                <span className="titulo-toggle">🔥 Ativar Preço Promocional</span>
-                <span className="subtexto-toggle">Aplica desconto automático no preço original</span>
-              </div>
-              <label className="switch-toggle-custom">
-                <input 
-                  type="checkbox"
-                  checked={emPromocao}
-                  onChange={(e) => setEmPromocao(e.target.checked)}
-                />
-                <span className="slider-toggle-round"></span>
-              </label>
-            </div>
-
-            {emPromocao && (
-              <div className="conteudo-promo-expansivel">
-                <label className="label-campo-modal">PORCENTAGEM DE DESCONTO (%)</label>
-                
-                <div className="linha-input-desconto-presets">
+          {/* Bloco de Desconto e Promoção Automática */}
+          {emPromocao && (
+            <div className="box-config-promocao ativa fade-in">
+              <div className="linha-promo-controles-compact">
+                <div className="campo-pct-box">
+                  <span className="label-campo-modal">DESCONTO</span>
                   <div className="input-com-sufixo-pct">
                     <input 
                       type="number"
@@ -193,51 +211,40 @@ export function ModalProduto({ produto, aoSalvar, aoFechar }) {
                     />
                     <span className="sufixo-pct">%</span>
                   </div>
-
-                  <div className="chips-presets-desconto">
-                    {[10, 15, 20, 25, 30, 50].map((pct) => (
-                      <button
-                        type="button"
-                        key={pct}
-                        onClick={() => aplicarPresetDesconto(pct)}
-                        className={`chip-preset-pct ${porcentagemDesconto === pct ? 'ativo' : ''}`}
-                      >
-                        {pct}%
-                      </button>
-                    ))}
-                  </div>
                 </div>
 
-                {precoNum > 0 && precoPromocionalCalculado && (
-                  <div className="card-preview-calculo-promo">
-                    <div className="info-promo-calc">
-                      <span className="label-calc">Preço Final com {pctNum}% OFF:</span>
-                      <span className="valor-calc-destaque">
-                        R$ {precoPromocionalCalculado.toFixed(2)}
-                      </span>
-                    </div>
-                    <span className="badge-economia">
-                      Economia de R$ {valorEconomia}
-                    </span>
-                  </div>
-                )}
+                <div className="chips-presets-desconto">
+                  {[10, 15, 20, 25, 30, 50].map((pct) => (
+                    <button
+                      type="button"
+                      key={pct}
+                      onClick={() => aplicarPresetDesconto(pct)}
+                      className={`chip-preset-pct ${porcentagemDesconto === pct ? 'ativo' : ''}`}
+                    >
+                      {pct}%
+                    </button>
+                  ))}
+                </div>
               </div>
-            )}
-          </div>
 
-          {/* Imagem do Produto com Seletor Rápido */}
+              {precoNum > 0 && precoPromocionalCalculado && (
+                <div className="card-preview-calculo-promo-compact">
+                  <span className="label-calc">
+                    Preço Final com <b>{pctNum}% OFF</b>: <b style={{ color: '#22c55e', fontSize: '1rem' }}>R$ {precoPromocionalCalculado.toFixed(2)}</b>
+                  </span>
+                  <span className="badge-economia">
+                    Economia: R$ {valorEconomia}
+                  </span>
+                </div>
+              )}
+            </div>
+          )}
+
+          {/* Imagem / Foto do Produto */}
           <div className="grupo-campo-modal">
-            <label className="label-campo-modal">IMAGEM / FOTO DO PRODUTO</label>
-            <input 
-              type="text"
-              value={foto}
-              onChange={(e) => setFoto(e.target.value)}
-              placeholder="Ex: /assets/degrade.webp ou URL externa"
-              className="input-modal-produto"
-            />
-            <div className="presets-imagens-produtos">
-              <span className="rotulo-presets-foto">Atalhos de imagens da loja:</span>
-              <div className="grid-botoes-presets-foto">
+            <div className="linha-topo-label-presets">
+              <label className="label-campo-modal">IMAGEM DO PRODUTO</label>
+              <div className="grid-botoes-presets-foto-compact">
                 {PRESETS_FOTOS.map((preset) => (
                   <button
                     type="button"
@@ -250,6 +257,13 @@ export function ModalProduto({ produto, aoSalvar, aoFechar }) {
                 ))}
               </div>
             </div>
+            <input 
+              type="text"
+              value={foto}
+              onChange={(e) => setFoto(e.target.value)}
+              placeholder="URL da imagem (ex: /assets/degrade.webp)"
+              className="input-modal-produto"
+            />
           </div>
 
           {/* Descrição */}
@@ -258,44 +272,40 @@ export function ModalProduto({ produto, aoSalvar, aoFechar }) {
             <textarea 
               value={descricao}
               onChange={(e) => setDescricao(e.target.value)}
-              placeholder="Descreva as características, fixação, fragrância ou modo de uso..."
-              rows={3}
+              placeholder="Descreva as características e modo de uso..."
+              rows={2}
               className="textarea-modal-produto"
             />
           </div>
 
-          {/* Status Ativo na Vitrine */}
-          <div className="linha-switch-ativo">
-            <label className="switch-toggle-custom">
+          {/* Rodapé: Switch Ativo + Botões de Ação */}
+          <div className="linha-rodape-modal-produto">
+            <label className="label-switch-compact">
               <input 
                 type="checkbox"
                 checked={ativo}
                 onChange={(e) => setAtivo(e.target.checked)}
               />
-              <span className="slider-toggle-round"></span>
+              <span>{ativo ? '🟢 Visível na Loja' : '⚪ Oculto'}</span>
             </label>
-            <span className="texto-switch-ativo">
-              {ativo ? '🟢 Produto Visível na Vitrine Pública' : '⚪ Produto Oculto (Rascunho)'}
-            </span>
-          </div>
 
-          {/* Botões de Ação */}
-          <div className="modal-acoes-produto">
-            <button 
-              type="button"
-              onClick={aoFechar}
-              className="btn-cancelar-modal-produto"
-              disabled={salvando}
-            >
-              Cancelar
-            </button>
-            <button 
-              type="submit"
-              className="btn-salvar-modal-produto"
-              disabled={salvando}
-            >
-              {salvando ? 'Salvando...' : '✓ Salvar Produto'}
-            </button>
+            <div className="botoes-acoes-direita">
+              <button 
+                type="button"
+                onClick={aoFechar}
+                className="btn-cancelar-modal-produto"
+                disabled={salvando}
+              >
+                Cancelar
+              </button>
+              <button 
+                type="submit"
+                className="btn-salvar-modal-produto"
+                disabled={salvando}
+              >
+                {salvando ? 'Salvando...' : '✓ Salvar Produto'}
+              </button>
+            </div>
           </div>
         </form>
       </div>

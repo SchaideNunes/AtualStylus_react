@@ -1032,16 +1032,23 @@
 /* MODAL DE CADASTRO E EDIÇÃO DE PRODUTO */
 /* ========================================================================= */
 .modal-overlay-produtos {
-  position: fixed;
-  inset: 0;
-  background: rgba(0, 0, 0, 0.85);
-  backdrop-filter: blur(8px);
-  z-index: 9999;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  padding: 16px;
-  animation: fadeIn 0.2s ease-out;
+  position: fixed !important;
+  top: 0 !important;
+  left: 0 !important;
+  right: 0 !important;
+  bottom: 0 !important;
+  width: 100vw !important;
+  height: 100vh !important;
+  background: rgba(0, 0, 0, 0.88) !important;
+  backdrop-filter: blur(8px) !important;
+  -webkit-backdrop-filter: blur(8px) !important;
+  z-index: 99999 !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  padding: 16px !important;
+  overflow-y: auto !important;
+  box-sizing: border-box !important;
 }
 
 .modal-container-produto {
@@ -1049,54 +1056,56 @@
   border: 1px solid #2e2e2e;
   border-radius: 20px;
   width: 100%;
-  max-width: 560px;
-  max-height: 92vh;
-  overflow-y: auto;
+  max-width: 540px;
+  margin: auto;
+  max-height: 90vh;
   box-shadow: 0 25px 60px rgba(0, 0, 0, 0.95);
   display: flex;
   flex-direction: column;
+  overflow: hidden;
+  position: relative;
+  z-index: 100000;
 }
 
 .modal-header-produto {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding: 20px 24px;
+  padding: 14px 20px;
   border-bottom: 1px solid #242424;
-  position: sticky;
-  top: 0;
   background: #141414;
-  z-index: 10;
+  flex-shrink: 0;
 }
 
 .titulo-box-modal {
   display: flex;
   align-items: center;
-  gap: 10px;
+  gap: 8px;
 }
 
 .titulo-box-modal h2 {
-  font-size: 1.15rem;
+  font-size: 1.05rem;
   font-weight: 800;
   color: #ffffff;
   margin: 0;
 }
 
 .form-modal-produto {
-  padding: 20px 24px 24px;
+  padding: 16px 20px 20px;
   display: flex;
   flex-direction: column;
-  gap: 16px;
+  gap: 12px;
+  overflow-y: auto;
 }
 
 .grupo-campo-modal {
   display: flex;
   flex-direction: column;
-  gap: 6px;
+  gap: 4px;
 }
 
 .label-campo-modal {
-  font-size: 0.74rem;
+  font-size: 0.72rem;
   font-weight: 800;
   color: #9ca3af;
   letter-spacing: 0.05em;
@@ -1106,10 +1115,10 @@
 .input-modal-produto, .select-modal-produto, .textarea-modal-produto {
   background: #0a0a0a;
   border: 1px solid #2a2a2a;
-  border-radius: 10px;
-  padding: 11px 14px;
+  border-radius: 9px;
+  padding: 9px 12px;
   color: #ffffff;
-  font-size: 0.9rem;
+  font-size: 0.86rem;
   outline: none;
   transition: all 0.2s ease;
   width: 100%;
@@ -1122,9 +1131,13 @@
 }
 
 .grid-dois-campos-modal {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 12px;
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+
+.grid-dois-campos-modal > div {
+  flex: 1 1 180px;
 }
 
 .input-com-icone-preco {
@@ -1135,23 +1148,61 @@
 
 .prefixo-moeda {
   position: absolute;
-  left: 12px;
-  font-size: 0.85rem;
+  left: 10px;
+  font-size: 0.82rem;
   font-weight: 800;
   color: #9ca3af;
 }
 
 .input-com-prefixo {
-  padding-left: 38px;
+  padding-left: 32px;
 }
 
-/* Bloco de Promoção */
+/* Switch Promoção Pill */
+.switch-promo-pill {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  background: #0a0a0a;
+  border: 1px solid #2a2a2a;
+  border-radius: 9px;
+  padding: 9px 12px;
+  font-size: 0.82rem;
+  font-weight: 800;
+  color: #9ca3af;
+  cursor: pointer;
+  user-select: none;
+  transition: all 0.2s ease;
+}
+
+.switch-promo-pill .indicador-dot {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  background: #444444;
+  transition: all 0.2s ease;
+}
+
+.switch-promo-pill.ativo {
+  background: rgba(245, 158, 11, 0.08);
+  border-color: #f59e0b;
+  color: #fbbf24;
+}
+
+.switch-promo-pill.ativo .indicador-dot {
+  background: #22c55e;
+  box-shadow: 0 0 8px #22c55e;
+}
+
+/* Bloco de Promoção Compacto */
 .box-config-promocao {
   background: #0a0a0a;
   border: 1px solid #282828;
-  border-radius: 12px;
-  padding: 14px 16px;
-  transition: all 0.2s ease;
+  border-radius: 10px;
+  padding: 10px 12px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
 }
 
 .box-config-promocao.ativa {
@@ -1159,113 +1210,43 @@
   background: rgba(245, 158, 11, 0.04);
 }
 
-.linha-toggle-promocao {
+.linha-promo-controles-compact {
   display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 12px;
-}
-
-.texto-toggle-promo {
-  display: flex;
-  flex-direction: column;
-  gap: 2px;
-}
-
-.titulo-toggle {
-  font-size: 0.9rem;
-  font-weight: 800;
-  color: #ffffff;
-}
-
-.subtexto-toggle {
-  font-size: 0.76rem;
-  color: #9ca3af;
-}
-
-.switch-toggle-custom {
-  position: relative;
-  display: inline-block;
-  width: 44px;
-  height: 24px;
-  flex-shrink: 0;
-}
-
-.switch-toggle-custom input {
-  opacity: 0;
-  width: 0;
-  height: 0;
-}
-
-.slider-toggle-round {
-  position: absolute;
-  cursor: pointer;
-  inset: 0;
-  background-color: #333333;
-  transition: 0.25s;
-  border-radius: 24px;
-}
-
-.slider-toggle-round:before {
-  position: absolute;
-  content: "";
-  height: 18px;
-  width: 18px;
-  left: 3px;
-  bottom: 3px;
-  background-color: white;
-  transition: 0.25s;
-  border-radius: 50%;
-}
-
-.switch-toggle-custom input:checked + .slider-toggle-round {
-  background-color: #22c55e;
-}
-
-.switch-toggle-custom input:checked + .slider-toggle-round:before {
-  transform: translateX(20px);
-}
-
-.conteudo-promo-expansivel {
-  margin-top: 14px;
-  padding-top: 12px;
-  border-top: 1px solid #222222;
-  display: flex;
-  flex-direction: column;
-  gap: 10px;
-}
-
-.linha-input-desconto-presets {
-  display: flex;
-  align-items: center;
+  align-items: flex-end;
   gap: 10px;
   flex-wrap: wrap;
 }
 
+.campo-pct-box {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
 .input-com-sufixo-pct {
   position: relative;
-  width: 90px;
+  width: 80px;
 }
 
 .input-pct {
-  padding-right: 26px;
+  padding-right: 22px;
   text-align: center;
   font-weight: 800;
 }
 
 .sufixo-pct {
   position: absolute;
-  right: 10px;
+  right: 8px;
   top: 50%;
   transform: translateY(-50%);
-  font-size: 0.85rem;
+  font-size: 0.8rem;
   font-weight: 800;
   color: #9ca3af;
 }
 
 .chips-presets-desconto {
   display: flex;
-  gap: 6px;
+  gap: 5px;
   flex-wrap: wrap;
 }
 
@@ -1273,10 +1254,10 @@
   background: #1e1e1e;
   border: 1px solid #333333;
   color: #ffffff;
-  font-size: 0.78rem;
+  font-size: 0.74rem;
   font-weight: 800;
-  padding: 6px 10px;
-  border-radius: 8px;
+  padding: 6px 9px;
+  border-radius: 6px;
   cursor: pointer;
   transition: all 0.15s ease;
 }
@@ -1287,61 +1268,39 @@
   border-color: #ffffff;
 }
 
-.card-preview-calculo-promo {
+.card-preview-calculo-promo-compact {
   background: #141414;
   border: 1px dashed #444444;
-  border-radius: 10px;
-  padding: 10px 14px;
+  border-radius: 8px;
+  padding: 7px 10px;
   display: flex;
   align-items: center;
   justify-content: space-between;
-  gap: 10px;
-  flex-wrap: wrap;
-}
-
-.info-promo-calc {
-  display: flex;
-  align-items: center;
-  gap: 6px;
-}
-
-.label-calc {
-  font-size: 0.82rem;
-  color: #9ca3af;
-}
-
-.valor-calc-destaque {
-  font-size: 1.05rem;
-  font-weight: 900;
-  color: #22c55e;
+  gap: 8px;
+  font-size: 0.8rem;
 }
 
 .badge-economia {
-  font-size: 0.75rem;
+  font-size: 0.72rem;
   font-weight: 800;
   background: rgba(34, 197, 94, 0.15);
   color: #4ade80;
-  padding: 3px 8px;
-  border-radius: 6px;
+  padding: 2px 6px;
+  border-radius: 4px;
 }
 
-/* Presets Imagens */
-.presets-imagens-produtos {
-  margin-top: 4px;
+/* Imagem e Atalhos */
+.linha-topo-label-presets {
   display: flex;
-  flex-direction: column;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+.grid-botoes-presets-foto-compact {
+  display: flex;
   gap: 4px;
-}
-
-.rotulo-presets-foto {
-  font-size: 0.72rem;
-  color: #71717a;
-  font-weight: 600;
-}
-
-.grid-botoes-presets-foto {
-  display: flex;
-  gap: 6px;
   flex-wrap: wrap;
 }
 
@@ -1349,10 +1308,10 @@
   background: #1c1c1c;
   border: 1px solid #2e2e2e;
   color: #d1d5db;
-  font-size: 0.74rem;
+  font-size: 0.7rem;
   font-weight: 700;
-  padding: 4px 10px;
-  border-radius: 6px;
+  padding: 3px 7px;
+  border-radius: 5px;
   cursor: pointer;
   transition: all 0.15s ease;
 }
@@ -1363,34 +1322,55 @@
   border-color: #666666;
 }
 
-.linha-switch-ativo {
+.textarea-modal-produto {
+  resize: vertical;
+  min-height: 52px;
+}
+
+/* Rodapé */
+.linha-rodape-modal-produto {
   display: flex;
   align-items: center;
+  justify-content: space-between;
   gap: 12px;
-  padding: 8px 0;
+  margin-top: 4px;
+  padding-top: 10px;
+  border-top: 1px solid #222222;
+  flex-wrap: wrap;
 }
 
-.texto-switch-ativo {
-  font-size: 0.85rem;
+.label-switch-compact {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 0.8rem;
   font-weight: 700;
-  color: #f3f4f6;
+  color: #e5e7eb;
+  cursor: pointer;
+  user-select: none;
 }
 
-.modal-acoes-produto {
+.label-switch-compact input[type="checkbox"] {
+  accent-color: #22c55e;
+  width: 16px;
+  height: 16px;
+  cursor: pointer;
+}
+
+.botoes-acoes-direita {
   display: flex;
-  gap: 12px;
-  margin-top: 10px;
+  gap: 8px;
+  margin-left: auto;
 }
 
 .btn-cancelar-modal-produto {
-  flex: 1;
   background: #202020;
   border: 1px solid #333333;
   color: #ffffff;
-  font-size: 0.88rem;
+  font-size: 0.82rem;
   font-weight: 700;
-  padding: 12px;
-  border-radius: 12px;
+  padding: 9px 14px;
+  border-radius: 9px;
   cursor: pointer;
   transition: all 0.2s ease;
 }
@@ -1400,14 +1380,13 @@
 }
 
 .btn-salvar-modal-produto {
-  flex: 2;
   background: #ffffff;
   border: none;
   color: #000000;
-  font-size: 0.92rem;
+  font-size: 0.86rem;
   font-weight: 900;
-  padding: 12px;
-  border-radius: 12px;
+  padding: 9px 18px;
+  border-radius: 9px;
   cursor: pointer;
   transition: all 0.2s ease;
 }
