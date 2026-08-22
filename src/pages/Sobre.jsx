@@ -71,10 +71,6 @@ export function Sobre({ onNavegar }) {
             </div>
             <div className="conteudo-perfil-barbeiro">
               <h3 className="nome-perfil">Geilson</h3>
-              <span className="cargo-perfil">Master Barber</span>
-              <p className="descricao-perfil">
-                Especialista em degradês de alta precisão, cortes sociais modernos e alinhamento de barba com técnicas tradicionais.
-              </p>
               <a 
                 href="https://wa.me/5575991309594" 
                 target="_blank" 
@@ -99,10 +95,6 @@ export function Sobre({ onNavegar }) {
             </div>
             <div className="conteudo-perfil-barbeiro">
               <h3 className="nome-perfil">Denilson</h3>
-              <span className="cargo-perfil">Barber Stylist</span>
-              <p className="descricao-perfil">
-                Mestre em cortes navalhados, barboterapia relaxante, acabamentos finos e valorização do visual masculino.
-              </p>
               <a 
                 href="https://wa.me/5575991073283" 
                 target="_blank" 
