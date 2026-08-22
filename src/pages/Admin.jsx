@@ -525,58 +525,59 @@ export function Admin({ onLogout }) {
                         return (
                           <div 
                             key={ag.id} 
-                            className={`item-agendamento-row-revamp ${statusClasse}`}
+                            className={`item-agendamento-card-compact ${statusClasse}`}
                           >
-                            <div className="bloco-info-agendamento-linha">
-                              <div className="hora-badge-revamp">
-                                {ag.horario}
+                            {/* Linha Superior: Horário + Nome + Ações Rápidas */}
+                            <div className="agendamento-linha-topo">
+                              <div className="agendamento-lado-esquerdo">
+                                <span className="hora-chip-compact">{ag.horario}</span>
+                                <span className="nome-cliente-compact">
+                                  {ag.nome}
+                                  {isBloqueio && <span className="badge-bloqueio-mini">Bloqueado</span>}
+                                </span>
                               </div>
 
-                              <div className="detalhes-agendamento-cliente">
-                                <div className="nome-cliente-admin">
-                                  <span className="nome-texto-clamp">{ag.nome}</span>
-                                  {isBloqueio && (
-                                    <span className="badge-bloqueio-tag">
-                                      Bloqueado
-                                    </span>
-                                  )}
-                                </div>
+                              <div className="agendamento-acoes-compact">
+                                {abaAtiva === 'pendentes' && !isBloqueio && (
+                                  <button 
+                                    onClick={() => handleConcluir(ag.id)}
+                                    className="btn-acao-mini btn-mini-concluir"
+                                    title="Marcar como realizado"
+                                  >
+                                    <CheckCircle size={14} />
+                                    <span className="texto-btn-mini">Concluir</span>
+                                  </button>
+                                )}
 
-                                <div className="meta-info-agendamento">
-                                  {ag.telefone && (
-                                    <a 
-                                      href={`https://wa.me/55${ag.telefone.replace(/\D/g, '')}`} 
-                                      target="_blank" 
-                                      rel="noopener noreferrer"
-                                      className="link-whats-admin"
-                                    >
-                                      📱 {ag.telefone}
-                                    </a>
-                                  )}
-                                  <span className="tag-barbeiro-info">✂️ {ag.barbeiro_nome}</span>
-                                  {ag.servico && <span className="tag-servico-info">• {ag.servico}</span>}
-                                </div>
+                                <button 
+                                  onClick={() => handleDeletar(ag.id, ag.status === 'concluido')}
+                                  className="btn-acao-mini btn-mini-liberar"
+                                  title={ag.status === 'concluido' ? 'Excluir histórico' : 'Cancelar e liberar horário'}
+                                >
+                                  <Trash2 size={14} />
+                                  <span className="texto-btn-mini">{ag.status === 'concluido' ? 'Apagar' : 'Liberar'}</span>
+                                </button>
                               </div>
                             </div>
 
-                            <div className="grupo-botoes-linha-admin">
-                              {abaAtiva === 'pendentes' && !isBloqueio && (
-                                <button 
-                                  onClick={() => handleConcluir(ag.id)}
-                                  className="btn-linha-acao btn-linha-concluir"
-                                  title="Marcar como realizado"
-                                >
-                                  <CheckCircle size={14} /> <span>Concluir</span>
-                                </button>
+                            {/* Linha Inferior: Metadados em linha única limpa */}
+                            <div className="agendamento-linha-meta">
+                              {ag.servico && <span className="meta-item-servico">✂️ {ag.servico}</span>}
+                              <span className="meta-separador">•</span>
+                              <span className="meta-item-barbeiro">{ag.barbeiro_nome}</span>
+                              {ag.telefone && (
+                                <>
+                                  <span className="meta-separador">•</span>
+                                  <a 
+                                    href={`https://wa.me/55${ag.telefone.replace(/\D/g, '')}`} 
+                                    target="_blank" 
+                                    rel="noopener noreferrer"
+                                    className="meta-link-whats"
+                                  >
+                                    📱 {ag.telefone}
+                                  </a>
+                                </>
                               )}
-
-                              <button 
-                                onClick={() => handleDeletar(ag.id, ag.status === 'concluido')}
-                                className="btn-linha-acao btn-linha-liberar"
-                                title={ag.status === 'concluido' ? 'Excluir histórico' : 'Cancelar e liberar horário'}
-                              >
-                                <Trash2 size={14} /> <span>{ag.status === 'concluido' ? 'Apagar' : 'Liberar'}</span>
-                              </button>
                             </div>
                           </div>
                         );
