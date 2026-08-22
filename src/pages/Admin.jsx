@@ -124,25 +124,6 @@ export function Admin({ onLogout }) {
     return { pendentes, concluidos, bloqueios };
   }, [agendamentos, mesConcluidos]);
 
-  // Produtos filtrados no Admin
-  const produtosAdminFiltrados = useMemo(() => {
-    return produtosAdmin.filter(p => {
-      if (filtroProdutoCategoria !== 'Todos' && p.categoria !== filtroProdutoCategoria) return false;
-      if (filtroProdutoPromocao && !p.em_promocao) return false;
-      if (filtroProdutoBusca.trim()) {
-        const q = filtroProdutoBusca.toLowerCase();
-        const matchNome = p.nome?.toLowerCase().includes(q);
-        const matchDesc = p.descricao?.toLowerCase().includes(q);
-        if (!matchNome && !matchDesc) return false;
-      }
-      return true;
-    });
-  }, [produtosAdmin, filtroProdutoCategoria, filtroProdutoPromocao, filtroProdutoBusca]);
-
-  const categoriasAdmin = useMemo(() => {
-    return ['Todos', ...new Set(produtosAdmin.map(p => p.categoria).filter(Boolean))];
-  }, [produtosAdmin]);
-
   // Filtragem dos registros conforme a aba e os inputs de busca
   const agendamentosFiltrados = useMemo(() => {
     const hoje = getDataHojeString();
