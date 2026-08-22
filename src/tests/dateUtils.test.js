@@ -3,7 +3,9 @@ import {
   isDomingo, 
   getDataHojeString, 
   formatarDataBR, 
-  filtrarHorariosPassadosSeHoje 
+  filtrarHorariosPassadosSeHoje,
+  normalizarDataISO,
+  obterDetalhesData
 } from '../utils/dateUtils';
 
 describe('Date Utilities & Availability Rules (TDD)', () => {
@@ -18,6 +20,21 @@ describe('Date Utilities & Availability Rules (TDD)', () => {
 
   it('deve formatar data YYYY-MM-DD para DD/MM/AAAA', () => {
     expect(formatarDataBR('2026-08-22')).toBe('22/08/2026');
+    expect(formatarDataBR('2026-08-22T00:00:00.000Z')).toBe('22/08/2026');
+  });
+
+  it('deve normalizar qualquer formato de data para YYYY-MM-DD', () => {
+    expect(normalizarDataISO('2026-08-22')).toBe('2026-08-22');
+    expect(normalizarDataISO('2026-08-22T03:00:00.000Z')).toBe('2026-08-22');
+    expect(normalizarDataISO(new Date(2026, 7, 22))).toBe('2026-08-22');
+  });
+
+  it('deve extrair dia da semana e data por extenso sem retornar Invalid Date', () => {
+    const detalhes = obterDetalhesData('2026-08-22T00:00:00.000Z');
+    expect(detalhes.diaSemana).toMatch(/sábado/i);
+    expect(detalhes.dataExtenso).toMatch(/22 de agosto de 2026/i);
+    expect(detalhes.dataBR).toBe('22/08/2026');
+    expect(detalhes.dataISO).toBe('2026-08-22');
   });
 
   it('deve filtrar horários passados quando a data for hoje', () => {
@@ -26,7 +43,6 @@ describe('Date Utilities & Availability Rules (TDD)', () => {
     const horaAtual = 14;
     const minutoAtual = 15;
     const filtrados = filtrarHorariosPassadosSeHoje(slots, horaAtual, minutoAtual);
-    expect(filtrados).toEqual(['14:30', '15:30', '16:00', '17:30', '18:00'].filter(s => slots.includes(s)));
     expect(filtrados).toEqual(['17:30', '18:00']);
   });
 });

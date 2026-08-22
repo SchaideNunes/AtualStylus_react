@@ -2,9 +2,38 @@
  * Funções utilitárias de Data e Horários para o Servidor
  */
 
+export function normalizarDataISO(data) {
+  if (!data) return '';
+  if (data instanceof Date) {
+    const ano = data.getFullYear();
+    const mes = String(data.getMonth() + 1).padStart(2, '0');
+    const dia = String(data.getDate()).padStart(2, '0');
+    return `${ano}-${mes}-${dia}`;
+  }
+  return String(data).split('T')[0].trim();
+}
+
+export function obterDetalhesData(dataStr) {
+  const dataLimpa = normalizarDataISO(dataStr);
+  if (!dataLimpa) return { diaSemana: '', dataExtenso: '', dataBR: '', dataISO: '' };
+
+  const [ano, mes, dia] = dataLimpa.split('-').map(Number);
+  if (isNaN(ano) || isNaN(mes) || isNaN(dia)) {
+    return { diaSemana: '', dataExtenso: dataLimpa, dataBR: dataLimpa, dataISO: dataLimpa };
+  }
+
+  const dataObj = new Date(ano, mes - 1, dia);
+  const diaSemana = dataObj.toLocaleDateString('pt-BR', { weekday: 'long' });
+  const dataExtenso = dataObj.toLocaleDateString('pt-BR', { day: '2-digit', month: 'long', year: 'numeric' });
+  const dataBR = `${String(dia).padStart(2, '0')}/${String(mes).padStart(2, '0')}/${ano}`;
+
+  return { diaSemana, dataExtenso, dataBR, dataISO: dataLimpa };
+}
+
 export function isDomingo(dataStr) {
   if (!dataStr) return false;
-  const [ano, mes, dia] = dataStr.split('-').map(Number);
+  const dataLimpa = normalizarDataISO(dataStr);
+  const [ano, mes, dia] = dataLimpa.split('-').map(Number);
   const data = new Date(ano, mes - 1, dia);
   return data.getDay() === 0;
 }
@@ -18,7 +47,7 @@ export function getDataHojeString() {
 
 export function formatarDataBR(dataStr) {
   if (!dataStr) return '';
-  const dataLimpa = String(dataStr).split('T')[0];
+  const dataLimpa = normalizarDataISO(dataStr);
   const partes = dataLimpa.split('-');
   if (partes.length === 3) {
     return `${partes[2]}/${partes[1]}/${partes[0]}`;

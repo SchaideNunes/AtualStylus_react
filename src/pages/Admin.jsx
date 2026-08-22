@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useMemo } from 'react';
 import { api } from '../services/api';
 import { ModalBloqueio } from '../components/ModalBloqueio';
-import { formatarDataBR, getDataHojeString, isDomingo } from '../utils/dateUtils';
+import { formatarDataBR, getDataHojeString, isDomingo, normalizarDataISO, obterDetalhesData } from '../utils/dateUtils';
 import { 
   ShieldCheck, 
   LogOut, 
@@ -121,9 +121,10 @@ export function Admin({ onLogout }) {
 
     agendamentos.forEach((item) => {
       const isBloqueio = item.status === 'bloqueado' || item.nome === 'BLOQUEIO';
+      const dataItem = normalizarDataISO(item.data_agendamento);
       if (item.status === 'confirmado' && !isBloqueio) pendentes++;
       if (item.status === 'concluido') concluidos++;
-      if (isBloqueio && item.data_agendamento >= hoje) bloqueios++;
+      if (isBloqueio && dataItem >= hoje) bloqueios++;
     });
 
     return { pendentes, concluidos, bloqueios };
@@ -133,10 +134,12 @@ export function Admin({ onLogout }) {
   const agendamentosFiltrados = useMemo(() => {
     const hoje = getDataHojeString();
     const texto = buscaTexto.toLowerCase();
+    const buscaDataNormalizada = normalizarDataISO(buscaData);
 
     return agendamentos.filter((item) => {
+      const dataItem = normalizarDataISO(item.data_agendamento);
       const matchTexto = item.nome?.toLowerCase().includes(texto) || item.telefone?.includes(texto);
-      const matchData = buscaData ? item.data_agendamento === buscaData : true;
+      const matchData = buscaDataNormalizada ? dataItem === buscaDataNormalizada : true;
       const matchBarbeiro = buscaBarbeiro ? String(item.barbeiro_id) === String(buscaBarbeiro) : true;
 
       let matchAba = false;
@@ -147,7 +150,7 @@ export function Admin({ onLogout }) {
       } else if (abaAtiva === 'concluidos') {
         matchAba = item.status === 'concluido';
       } else if (abaAtiva === 'bloqueios') {
-        matchAba = isBloqueio && item.data_agendamento >= hoje;
+        matchAba = isBloqueio && dataItem >= hoje;
       }
 
       return matchTexto && matchData && matchBarbeiro && matchAba;
@@ -156,7 +159,11 @@ export function Admin({ onLogout }) {
 
   // Agrupamento por data para renderização do calendário
   const agendamentosAgrupados = useMemo(() => {
-    const copia = [...agendamentosFiltrados];
+    const copia = agendamentosFiltrados.map(ag => ({
+      ...ag,
+      data_agendamento: normalizarDataISO(ag.data_agendamento)
+    }));
+
     copia.sort((a, b) => {
       if (a.data_agendamento === b.data_agendamento) {
         return a.horario.localeCompare(b.horario);
@@ -169,10 +176,11 @@ export function Admin({ onLogout }) {
 
     const agrupados = {};
     copia.forEach((ag) => {
-      if (!agrupados[ag.data_agendamento]) {
-        agrupados[ag.data_agendamento] = [];
+      const chaveData = ag.data_agendamento;
+      if (!agrupados[chaveData]) {
+        agrupados[chaveData] = [];
       }
-      agrupados[ag.data_agendamento].push(ag);
+      agrupados[chaveData].push(ag);
     });
     return agrupados;
   }, [agendamentosFiltrados, abaAtiva]);
@@ -726,19 +734,16 @@ export function Admin({ onLogout }) {
               </div>
             ) : (
               Object.entries(agendamentosAgrupados).map(([dataStr, lista]) => {
-                const [ano, mes, dia] = dataStr.split('-').map(Number);
-                const dataObj = new Date(ano, mes - 1, dia);
-                const diaSemana = dataObj.toLocaleDateString('pt-BR', { weekday: 'long' });
-                const dataExtenso = dataObj.toLocaleDateString('pt-BR', { day: '2-digit', month: 'long', year: 'numeric' });
+                const { diaSemana, dataExtenso } = obterDetalhesData(dataStr);
 
                 return (
                   <div key={dataStr} className="card-dia-agrupado-revamp hover-lift">
                     <div className="header-dia-agrupado-revamp">
                       <div>
                         <h3 className="titulo-dia-calendario">
-                          📅 {diaSemana}
+                          📅 {diaSemana || 'Atendimentos'}
                         </h3>
-                        <p className="subtitulo-dia-calendario">{dataExtenso}</p>
+                        <p className="subtitulo-dia-calendario">{dataExtenso || dataStr}</p>
                       </div>
                       <span className="badge-contagem-dia">
                         {lista.length} atendimento(s)

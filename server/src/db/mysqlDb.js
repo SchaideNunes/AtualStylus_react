@@ -1,4 +1,5 @@
 import mysql from 'mysql2/promise';
+import { normalizarDataISO } from '../utils/dateUtils.js';
 
 /**
  * MySQL Database implementation for production on Hostinger / Docker
@@ -14,7 +15,8 @@ export class MysqlDatabase {
       waitForConnections: true,
       connectionLimit: 10,
       queueLimit: 0,
-      charset: 'utf8mb4'
+      charset: 'utf8mb4',
+      dateStrings: true
     });
   }
 
@@ -123,7 +125,7 @@ export class MysqlDatabase {
        ORDER BY data_agendamento ASC, horario ASC`,
       [telefone, apenasDigitos, dataMinima]
     );
-    return rows;
+    return rows.map(r => ({ ...r, data_agendamento: normalizarDataISO(r.data_agendamento) }));
   }
 
   async getAgendamentoById(id) {
@@ -131,7 +133,8 @@ export class MysqlDatabase {
       'SELECT * FROM agendamentos WHERE id = ?',
       [Number(id)]
     );
-    return rows.length > 0 ? rows[0] : null;
+    if (rows.length === 0) return null;
+    return { ...rows[0], data_agendamento: normalizarDataISO(rows[0].data_agendamento) };
   }
 
   async updateAgendamentoStatus(id, status) {
@@ -176,7 +179,7 @@ export class MysqlDatabase {
     sql += ' ORDER BY data_agendamento ASC, horario ASC LIMIT 5000';
 
     const [rows] = await this.pool.execute(sql, params);
-    return rows;
+    return rows.map(r => ({ ...r, data_agendamento: normalizarDataISO(r.data_agendamento) }));
   }
 
   async findAdminByEmail(email) {
