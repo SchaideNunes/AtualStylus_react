@@ -14,7 +14,8 @@ import {
   Check, 
   AlertCircle, 
   CalendarDays,
-  ChevronRight
+  ChevronRight,
+  ArrowLeft
 } from 'lucide-react';
 import { api } from '../services/api';
 import { getDataHojeString, formatarDataBR, isDomingo } from '../utils/dateUtils';
@@ -48,6 +49,7 @@ export function ModalClientesFixos({ isOpen, onClose, onAtualizarGeral }) {
       document.body.style.overflow = 'hidden';
       document.documentElement.style.overflow = 'hidden';
       setErro('');
+      setClienteSelecionado(null);
       carregarListaFixos();
     } else {
       document.body.classList.remove('modal-aberto');
@@ -68,11 +70,11 @@ export function ModalClientesFixos({ isOpen, onClose, onAtualizarGeral }) {
       setCarregandoLista(true);
       const lista = await api.getClientesFixos();
       setClientesFixos(lista || []);
-      if (lista && lista.length > 0) {
-        setClienteSelecionado(lista[0]);
-      } else {
-        setClienteSelecionado(null);
-      }
+      setClienteSelecionado(prev => {
+        if (!prev) return null;
+        const atualizado = lista?.find(c => c.chave === prev.chave);
+        return atualizado || null;
+      });
     } catch (e) {
       console.error(e);
     } finally {
@@ -155,6 +157,7 @@ export function ModalClientesFixos({ isOpen, onClose, onAtualizarGeral }) {
       setNome('');
       setTelefone('');
       setSubAba('lista');
+      setClienteSelecionado(null);
       await carregarListaFixos();
       if (onAtualizarGeral) await onAtualizarGeral();
     } catch (err) {
@@ -173,6 +176,7 @@ export function ModalClientesFixos({ isOpen, onClose, onAtualizarGeral }) {
       const ids = cliente.datas.map(d => d.id);
       await api.deletarLoteClientesFixos(ids);
       alert('✅ Todos os horários recorrentes foram cancelados e liberados!');
+      setClienteSelecionado(null);
       await carregarListaFixos();
       if (onAtualizarGeral) await onAtualizarGeral();
     } catch (err) {
@@ -199,7 +203,7 @@ export function ModalClientesFixos({ isOpen, onClose, onAtualizarGeral }) {
       <div 
         className="modal-card scale-in" 
         onClick={e => e.stopPropagation()} 
-        style={{ borderRadius: '24px', background: '#141414', border: '1px solid #2e2e2e', maxWidth: '780px', maxHeight: '90vh', overflowY: 'auto' }}
+        style={{ borderRadius: '24px', background: '#141414', border: '1px solid #2e2e2e', maxWidth: '680px', maxHeight: '90vh', overflowY: 'auto' }}
       >
         {/* Header */}
         <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '18px', borderBottom: '1px solid #242424', paddingBottom: '14px', gap: '10px' }}>
@@ -215,50 +219,52 @@ export function ModalClientesFixos({ isOpen, onClose, onAtualizarGeral }) {
           </button>
         </div>
 
-        {/* Sub-Abas Segmentadas */}
-        <div style={{ display: 'flex', gap: '8px', background: '#0a0a0a', padding: '6px', borderRadius: '14px', border: '1px solid #242424', marginBottom: '20px' }}>
+        {/* Sub-Abas Segmentadas com Alto Contraste */}
+        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(2, 1fr)', gap: '6px', background: '#0a0a0a', padding: '5px', borderRadius: '14px', border: '1px solid #242424', marginBottom: '18px' }}>
           <button
-            onClick={() => setSubAba('lista')}
+            onClick={() => { setSubAba('lista'); setClienteSelecionado(null); }}
             style={{
-              flex: 1,
-              padding: '10px 14px',
+              padding: '8px 12px',
               borderRadius: '10px',
-              border: 'none',
+              border: subAba === 'lista' ? '1px solid #ffffff' : '1px solid #262626',
               cursor: 'pointer',
               fontWeight: '800',
-              fontSize: '0.88rem',
+              fontSize: '0.82rem',
               display: 'flex',
               alignItems: 'center',
               justifyContent: 'center',
-              gap: '8px',
-              background: subAba === 'lista' ? '#ffffff' : 'transparent',
-              color: subAba === 'lista' ? '#000000' : '#9ca3af',
-              transition: 'all 0.2s ease'
+              gap: '6px',
+              background: subAba === 'lista' ? '#ffffff' : '#141414',
+              color: subAba === 'lista' ? '#000000' : '#d1d5db',
+              transition: 'all 0.15s ease',
+              whiteSpace: 'nowrap',
+              minHeight: '40px'
             }}
           >
-            <Users size={16} /> Clientes Cadastrados ({clientesFixos.length})
+            <Users size={15} /> <span>Cadastrados</span> <span style={{ background: subAba === 'lista' ? '#000000' : '#262626', color: '#ffffff', padding: '1px 6px', borderRadius: '5px', fontSize: '0.72rem', fontWeight: '900' }}>{clientesFixos.length}</span>
           </button>
 
           <button
-            onClick={() => setSubAba('novo')}
+            onClick={() => { setSubAba('novo'); setClienteSelecionado(null); }}
             style={{
-              flex: 1,
-              padding: '10px 14px',
+              padding: '8px 12px',
               borderRadius: '10px',
-              border: 'none',
+              border: subAba === 'novo' ? '1px solid #ffffff' : '1px solid #262626',
               cursor: 'pointer',
               fontWeight: '800',
-              fontSize: '0.88rem',
+              fontSize: '0.82rem',
               display: 'flex',
               alignItems: 'center',
               justifyContent: 'center',
-              gap: '8px',
-              background: subAba === 'novo' ? '#ffffff' : 'transparent',
-              color: subAba === 'novo' ? '#000000' : '#9ca3af',
-              transition: 'all 0.2s ease'
+              gap: '6px',
+              background: subAba === 'novo' ? '#ffffff' : '#141414',
+              color: subAba === 'novo' ? '#000000' : '#d1d5db',
+              transition: 'all 0.15s ease',
+              whiteSpace: 'nowrap',
+              minHeight: '40px'
             }}
           >
-            <Plus size={16} strokeWidth={3} /> Cadastrar Novo Fixo
+            <Plus size={15} strokeWidth={3} /> <span>Novo Fixo</span>
           </button>
         </div>
 
@@ -269,7 +275,7 @@ export function ModalClientesFixos({ isOpen, onClose, onAtualizarGeral }) {
           </div>
         )}
 
-        {/* ABA 1: LISTAGEM E DIAS OCUPADOS */}
+        {/* ABA 1: LISTAGEM E DIAS OCUPADOS (DRILL-DOWN MASTER-DETAIL) */}
         {subAba === 'lista' && (
           <div>
             {carregandoLista ? (
@@ -289,117 +295,146 @@ export function ModalClientesFixos({ isOpen, onClose, onAtualizarGeral }) {
                   <Plus size={16} strokeWidth={3} /> Cadastrar Primeiro Fixo
                 </button>
               </div>
-            ) : (
-              <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))', gap: '16px' }}>
-                {/* Coluna Esquerda: Lista de Clientes */}
-                <div style={{ display: 'flex', flexDirection: 'column', gap: '10px', maxHeight: '380px', overflowY: 'auto', paddingRight: '4px' }}>
-                  {clientesFixos.map(cliente => {
-                    const isAtivo = clienteSelecionado?.chave === cliente.chave;
-                    return (
-                      <div
-                        key={cliente.chave}
-                        onClick={() => setClienteSelecionado(cliente)}
-                        style={{
-                          background: isAtivo ? '#222222' : '#0d0d0d',
-                          border: isAtivo ? '1px solid #ffffff' : '1px solid #242424',
-                          borderRadius: '16px',
-                          padding: '14px',
-                          cursor: 'pointer',
-                          transition: 'all 0.2s ease',
-                          display: 'flex',
-                          justifyContent: 'space-between',
-                          alignItems: 'center'
-                        }}
-                      >
-                        <div>
-                          <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-                            <strong style={{ color: '#ffffff', fontSize: '0.98rem' }}>{cliente.nome}</strong>
-                            <span style={{ fontSize: '0.72rem', background: '#333333', color: '#ffffff', padding: '2px 8px', borderRadius: '6px', fontWeight: '800' }}>
-                              {cliente.datas.length} datas
-                            </span>
-                          </div>
-                          <p style={{ color: '#9ca3af', fontSize: '0.82rem', margin: '4px 0 0' }}>
-                            🕒 {cliente.horario} • ✂️ {cliente.barbeiro_nome}
-                          </p>
-                          {cliente.telefone && (
-                            <p style={{ color: '#6b7280', fontSize: '0.78rem', margin: '2px 0 0' }}>
-                              📱 {cliente.telefone}
-                            </p>
-                          )}
-                        </div>
-                        <ChevronRight size={18} color={isAtivo ? '#ffffff' : '#6b7280'} />
+            ) : !clienteSelecionado ? (
+              /* MODO 1: Lista de Clientes Fixos Cadastrados */
+              <div style={{ display: 'flex', flexDirection: 'column', gap: '8px', maxHeight: '420px', overflowY: 'auto' }}>
+                {clientesFixos.map(cliente => (
+                  <div
+                    key={cliente.chave}
+                    onClick={() => setClienteSelecionado(cliente)}
+                    style={{
+                      background: '#101010',
+                      border: '1px solid #242424',
+                      borderRadius: '14px',
+                      padding: '12px 14px',
+                      cursor: 'pointer',
+                      transition: 'all 0.15s ease',
+                      display: 'flex',
+                      justifyContent: 'space-between',
+                      alignItems: 'center'
+                    }}
+                  >
+                    <div style={{ minWidth: 0, flex: 1 }}>
+                      <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+                        <strong style={{ color: '#ffffff', fontSize: '0.94rem', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>
+                          {cliente.nome}
+                        </strong>
+                        <span style={{ fontSize: '0.7rem', background: '#222222', color: '#ffffff', border: '1px solid #383838', padding: '2px 7px', borderRadius: '6px', fontWeight: '800', flexShrink: 0 }}>
+                          {cliente.datas.length} datas
+                        </span>
                       </div>
-                    );
-                  })}
-                </div>
-
-                {/* Coluna Direita: Detalhes e Dias Ocupados */}
-                {clienteSelecionado && (
-                  <div style={{ background: '#0d0d0d', border: '1px solid #262626', borderRadius: '18px', padding: '16px', display: 'flex', flexDirection: 'column' }}>
-                    <div style={{ borderBottom: '1px solid #222222', paddingBottom: '12px', marginBottom: '14px' }}>
-                      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start' }}>
-                        <div>
-                          <h4 style={{ color: '#ffffff', margin: 0, fontSize: '1.05rem' }}>{clienteSelecionado.nome}</h4>
-                          <p style={{ color: '#9ca3af', fontSize: '0.85rem', margin: '4px 0 0' }}>
-                            {clienteSelecionado.servico} • {clienteSelecionado.horario} ({clienteSelecionado.barbeiro_nome})
-                          </p>
-                        </div>
-                        <button
-                          onClick={() => handleExcluirRecorrenciaCompleta(clienteSelecionado)}
-                          style={{
-                            background: 'rgba(239, 68, 68, 0.15)',
-                            border: '1px solid rgba(239, 68, 68, 0.4)',
-                            color: '#ef4444',
-                            borderRadius: '10px',
-                            padding: '6px 10px',
-                            cursor: 'pointer',
-                            fontSize: '0.78rem',
-                            fontWeight: '800',
-                            display: 'flex',
-                            alignItems: 'center',
-                            gap: '4px'
-                          }}
-                          title="Cancelar e liberar todos os dias futuros deste cliente"
-                        >
-                          <Trash2 size={14} /> Cancelar Todos
-                        </button>
-                      </div>
+                      <p style={{ color: '#9ca3af', fontSize: '0.78rem', margin: '3px 0 0', display: 'flex', alignItems: 'center', gap: '6px', flexWrap: 'wrap' }}>
+                        <span>🕒 {cliente.horario}</span>
+                        <span>•</span>
+                        <span>✂️ {cliente.barbeiro_nome}</span>
+                        {cliente.telefone && (
+                          <>
+                            <span>•</span>
+                            <span>📱 {cliente.telefone}</span>
+                          </>
+                        )}
+                      </p>
                     </div>
-
-                    <span style={{ color: '#9ca3af', fontSize: '0.8rem', fontWeight: '800', textTransform: 'uppercase', marginBottom: '10px', display: 'flex', alignItems: 'center', gap: '6px' }}>
-                      <CalendarDays size={15} /> Dias Ocupados ({clienteSelecionado.datas.length}):
-                    </span>
-
-                    <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(110px, 1fr))', gap: '8px', maxHeight: '220px', overflowY: 'auto', padding: '2px' }}>
-                      {clienteSelecionado.datas.map(ag => (
-                        <div 
-                          key={ag.id}
-                          style={{
-                            background: '#161616',
-                            border: '1px solid #2e2e2e',
-                            borderRadius: '10px',
-                            padding: '8px',
-                            display: 'flex',
-                            justifyContent: 'space-between',
-                            alignItems: 'center',
-                            fontSize: '0.82rem',
-                            color: '#ffffff',
-                            fontFamily: 'monospace'
-                          }}
-                        >
-                          <span>{formatarDataBR(ag.data_agendamento)}</span>
-                          <button
-                            onClick={() => handleExcluirDataUnica(ag.id, formatarDataBR(ag.data_agendamento))}
-                            style={{ background: 'transparent', border: 'none', color: '#9ca3af', cursor: 'pointer', padding: '2px' }}
-                            title="Liberar apenas esta data"
-                          >
-                            <X size={14} />
-                          </button>
-                        </div>
-                      ))}
+                    <div style={{ display: 'flex', alignItems: 'center', gap: '4px', color: '#9ca3af', fontSize: '0.75rem', fontWeight: '700', flexShrink: 0, paddingLeft: '10px' }}>
+                      <span style={{ color: '#ffffff' }}>Ver datas</span>
+                      <ChevronRight size={16} color="#ffffff" />
                     </div>
                   </div>
-                )}
+                ))}
+              </div>
+            ) : (
+              /* MODO 2: Drill-Down - Detalhes e Dias Ocupados do Cliente Selecionado */
+              <div style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
+                {/* Barra de Navegação Superior */}
+                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: '8px', borderBottom: '1px solid #222222', paddingBottom: '12px' }}>
+                  <button
+                    onClick={() => setClienteSelecionado(null)}
+                    style={{
+                      background: '#1c1c1c',
+                      border: '1px solid #333333',
+                      color: '#ffffff',
+                      borderRadius: '10px',
+                      padding: '7px 12px',
+                      cursor: 'pointer',
+                      fontSize: '0.8rem',
+                      fontWeight: '800',
+                      display: 'inline-flex',
+                      alignItems: 'center',
+                      gap: '6px'
+                    }}
+                  >
+                    <ArrowLeft size={15} /> Voltar para Lista
+                  </button>
+
+                  <button
+                    onClick={() => handleExcluirRecorrenciaCompleta(clienteSelecionado)}
+                    style={{
+                      background: 'rgba(239, 68, 68, 0.12)',
+                      border: '1px solid rgba(239, 68, 68, 0.35)',
+                      color: '#fca5a5',
+                      borderRadius: '10px',
+                      padding: '7px 12px',
+                      cursor: 'pointer',
+                      fontSize: '0.78rem',
+                      fontWeight: '800',
+                      display: 'inline-flex',
+                      alignItems: 'center',
+                      gap: '5px'
+                    }}
+                    title="Cancelar e liberar todos os dias futuros deste cliente"
+                  >
+                    <Trash2 size={14} /> Cancelar Todos os Horários
+                  </button>
+                </div>
+
+                {/* Resumo do Cliente Selecionado */}
+                <div style={{ background: '#0e0e0e', border: '1px solid #262626', borderRadius: '14px', padding: '12px 14px' }}>
+                  <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                    <h4 style={{ color: '#ffffff', margin: 0, fontSize: '1.05rem', fontWeight: '800' }}>{clienteSelecionado.nome}</h4>
+                    <span style={{ fontSize: '0.74rem', background: '#222222', color: '#ffffff', padding: '2px 8px', borderRadius: '6px', fontWeight: '800' }}>
+                      {clienteSelecionado.datas.length} agendamentos
+                    </span>
+                  </div>
+                  <p style={{ color: '#9ca3af', fontSize: '0.82rem', margin: '4px 0 0' }}>
+                    {clienteSelecionado.servico} • 🕒 {clienteSelecionado.horario} • ✂️ {clienteSelecionado.barbeiro_nome} {clienteSelecionado.telefone && `• 📱 ${clienteSelecionado.telefone}`}
+                  </p>
+                </div>
+
+                {/* Grid de Datas Ocupadas */}
+                <div>
+                  <span style={{ color: '#9ca3af', fontSize: '0.78rem', fontWeight: '800', textTransform: 'uppercase', marginBottom: '8px', display: 'flex', alignItems: 'center', gap: '6px' }}>
+                    <CalendarDays size={14} /> Dias Reservados (Clique no ✕ para liberar uma data):
+                  </span>
+
+                  <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(115px, 1fr))', gap: '8px', maxHeight: '260px', overflowY: 'auto', padding: '2px' }}>
+                    {clienteSelecionado.datas.map(ag => (
+                      <div 
+                        key={ag.id}
+                        style={{
+                          background: '#161616',
+                          border: '1px solid #2a2a2a',
+                          borderRadius: '8px',
+                          padding: '6px 8px',
+                          display: 'flex',
+                          justifyContent: 'space-between',
+                          alignItems: 'center',
+                          fontSize: '0.8rem',
+                          color: '#ffffff',
+                          fontFamily: 'monospace'
+                        }}
+                      >
+                        <span>{formatarDataBR(ag.data_agendamento)}</span>
+                        <button
+                          onClick={() => handleExcluirDataUnica(ag.id, formatarDataBR(ag.data_agendamento))}
+                          style={{ background: 'rgba(239, 68, 68, 0.1)', border: '1px solid rgba(239, 68, 68, 0.3)', color: '#fca5a5', borderRadius: '4px', cursor: 'pointer', padding: '2px 4px', display: 'flex', alignItems: 'center', justifyContent: 'center' }}
+                          title="Liberar apenas esta data"
+                        >
+                          <X size={12} />
+                        </button>
+                      </div>
+                    ))}
+                  </div>
+                </div>
               </div>
             )}
           </div>

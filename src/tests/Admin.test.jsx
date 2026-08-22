@@ -92,7 +92,7 @@ describe('Admin Component Revamp (TDD)', () => {
 
     expect(screen.getByText(/Gestão de Clientes Fixos/i)).toBeInTheDocument();
     await waitFor(() => {
-      expect(screen.getByText(/Clientes Cadastrados/i)).toBeInTheDocument();
+      expect(screen.getByText(/Cadastrados/i)).toBeInTheDocument();
     });
   });
 
