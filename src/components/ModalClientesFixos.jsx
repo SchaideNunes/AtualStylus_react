@@ -202,13 +202,13 @@ export function ModalClientesFixos({ isOpen, onClose, onAtualizarGeral }) {
         style={{ borderRadius: '24px', background: '#141414', border: '1px solid #2e2e2e', maxWidth: '780px', maxHeight: '90vh', overflowY: 'auto' }}
       >
         {/* Header */}
-        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '18px', borderBottom: '1px solid #242424', paddingBottom: '14px' }}>
-          <h3 style={{ color: '#ffffff', fontSize: '1.25rem', fontWeight: '800', display: 'flex', alignItems: 'center', gap: '10px', margin: 0, textTransform: 'uppercase' }}>
-            <Repeat color="#ffffff" size={22} /> Gestão de Clientes Fixos
+        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '18px', borderBottom: '1px solid #242424', paddingBottom: '14px', gap: '10px' }}>
+          <h3 style={{ color: '#ffffff', fontSize: 'clamp(0.92rem, 3.8vw, 1.2rem)', fontWeight: '800', display: 'flex', alignItems: 'center', gap: '8px', margin: 0, textTransform: 'uppercase', whiteSpace: 'nowrap' }}>
+            <Repeat color="#ffffff" size={18} /> Gestão de Clientes Fixos
           </h3>
           <button 
             onClick={onClose}
-            style={{ background: '#202020', border: '1px solid #383838', color: '#9ca3af', cursor: 'pointer', borderRadius: '50%', width: '32px', height: '32px', display: 'flex', alignItems: 'center', justifyContent: 'center' }}
+            style={{ background: '#202020', border: '1px solid #383838', color: '#9ca3af', cursor: 'pointer', borderRadius: '50%', width: '32px', height: '32px', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}
             aria-label="Fechar modal"
           >
             <X size={18} />
@@ -539,17 +539,17 @@ export function ModalClientesFixos({ isOpen, onClose, onAtualizarGeral }) {
               <button
                 type="button"
                 onClick={() => setSubAba('lista')}
-                style={{ background: '#202020', border: '1px solid #383838', color: '#e5e7eb', padding: '12px 20px', borderRadius: '12px', cursor: 'pointer', fontWeight: '700', fontSize: '0.9rem' }}
+                style={{ background: '#202020', border: '1px solid #383838', color: '#e5e7eb', padding: '10px 18px', borderRadius: '12px', cursor: 'pointer', fontWeight: '700', fontSize: '0.85rem', whiteSpace: 'nowrap' }}
               >
-                Voltar para Lista
+                Voltar
               </button>
               <button
                 type="submit"
                 disabled={salvando || !horario}
                 className="btn-acao-rapida btn-cadastrar-principal"
-                style={{ padding: '12px 24px', fontSize: '0.9rem' }}
+                style={{ padding: '10px 20px', fontSize: '0.85rem', whiteSpace: 'nowrap' }}
               >
-                <Check size={18} /> {salvando ? 'Cadastrando...' : 'Confirmar Cadastro Fixo'}
+                <Check size={16} /> {salvando ? 'Salvando...' : 'Confirmar'}
               </button>
             </div>
           </form>
