@@ -8,7 +8,7 @@ describe('ServiceCard Component (TDD)', () => {
     id: 1,
     nome: 'Corte e Barba',
     valor: 35,
-    foto: '/assets/corte-barba.jpg'
+    foto: '/assets/corte-barba.webp'
   };
 
   it('deve renderizar título do serviço, preço e imagem', () => {
@@ -18,7 +18,7 @@ describe('ServiceCard Component (TDD)', () => {
     expect(screen.getByText('Corte e Barba')).toBeInTheDocument();
     expect(screen.getByText('R$ 35,00')).toBeInTheDocument();
     const img = screen.getByRole('img');
-    expect(img).toHaveAttribute('src', '/assets/corte-barba.jpg');
+    expect(img).toHaveAttribute('src', '/assets/corte-barba.webp');
   });
 
   it('deve disparar onAgendar ao clicar no card', () => {

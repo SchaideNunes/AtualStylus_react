@@ -13,8 +13,8 @@ import { isDomingo, getDataHojeString } from '../utils/dateUtils';
 import { gerarLinkWhatsAppAgendamento } from '../utils/whatsapp';
 
 export const BARBEIROS_DEFAULT = [
-  { id: 1, nome: 'Geilson', foto: '/assets/Geilson.jpg' },
-  { id: 2, nome: 'Denilson', foto: '/assets/Denilson.jpg' }
+  { id: 1, nome: 'Geilson', foto: '/assets/Geilson.webp' },
+  { id: 2, nome: 'Denilson', foto: '/assets/Denilson.webp' }
 ];
 
 export const OPCOES_SERVICOS = [
@@ -195,7 +195,7 @@ export function Agendamento({ servicoPreSelecionado, onAgendamentoConcluido }) {
                       src={b.foto} 
                       alt={b.nome} 
                       className="foto-barbeiro-limpa"
-                      onError={(e) => { e.target.src = '/assets/Logo.jpg'; }}
+                      onError={(e) => { e.target.src = '/assets/Logo.webp'; }}
                     />
                     {selecionado && (
                       <div className="badge-check-barbeiro">

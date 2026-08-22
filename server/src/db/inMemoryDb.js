@@ -10,14 +10,14 @@ export class InMemoryDatabase {
         id: 1,
         nome: 'Geilson',
         telefone_whatsapp: '5575991309594',
-        foto: 'assets/Geilson.jpg',
+        foto: 'assets/Geilson.webp',
         horarios: ["08:30", "09:30", "10:00", "11:00", "14:00", "14:30", "15:30", "16:00", "17:00", "17:30", "18:00", "18:30"]
       },
       {
         id: 2,
         nome: 'Denilson',
         telefone_whatsapp: '5575991073283',
-        foto: 'assets/Denilson.jpg',
+        foto: 'assets/Denilson.webp',
         horarios: ["08:30", "09:30", "10:00", "11:00", "14:00", "14:30", "15:30", "16:00", "17:00"]
       }
     ];

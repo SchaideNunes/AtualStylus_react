@@ -48,8 +48,8 @@ export function Navbar({ paginaAtiva, onNavegar }) {
         <div className="barra-navegacao">
           <div className="logo-link" onClick={() => handleNavegar('inicio')} role="button" tabIndex={0}>
             <img 
-              src="/assets/logo sem fundo.png" 
-              alt="Logo AtualEstilo" 
+              src="/assets/logo sem fundo.webp" 
+              alt="AtualEstilo Barbearia" 
               className="imagem-logo-cabecalho" 
             />
           </div>

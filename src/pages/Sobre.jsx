@@ -62,10 +62,10 @@ export function Sobre({ onNavegar }) {
           <div className="card-barbeiro-perfil hover-lift">
             <div className="foto-perfil-wrapper">
               <img 
-                src="/assets/Geilson.jpg" 
+                src="/assets/Geilson.webp" 
                 alt="Geilson" 
                 className="foto-perfil-img"
-                onError={(e) => { e.target.src = '/assets/Logo.jpg'; }}
+                onError={(e) => { e.target.src = '/assets/Logo.webp'; }}
               />
               <div className="overlay-foto-perfil" />
             </div>
@@ -90,10 +90,10 @@ export function Sobre({ onNavegar }) {
           <div className="card-barbeiro-perfil hover-lift">
             <div className="foto-perfil-wrapper">
               <img 
-                src="/assets/Denilson.jpg" 
+                src="/assets/Denilson.webp" 
                 alt="Denilson" 
                 className="foto-perfil-img"
-                onError={(e) => { e.target.src = '/assets/Logo.jpg'; }}
+                onError={(e) => { e.target.src = '/assets/Logo.webp'; }}
               />
               <div className="overlay-foto-perfil" />
             </div>

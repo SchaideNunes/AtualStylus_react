@@ -3,12 +3,12 @@ import { Clock, MapPin, Scissors, ChevronDown, CheckCircle2 } from 'lucide-react
 import { ServiceCard } from '../components/ServiceCard';
 
 export const SERVICOS_LISTA = [
-  { id: 1, nome: 'Corte e Barba', valor: 35, foto: '/assets/corte-barba.jpg' },
-  { id: 2, nome: 'Corte Social', valor: 25, foto: '/assets/corte-social.jpg' },
-  { id: 3, nome: 'Degradê', valor: 25, foto: '/assets/degrade.jpg' },
-  { id: 4, nome: 'Navalhado', valor: 25, foto: '/assets/navalhado.jpg' },
-  { id: 5, nome: 'Corte Raspado', valor: 20, foto: '/assets/corte-raspado.jpg' },
-  { id: 6, nome: 'Barba e Pezinho', valor: 15, foto: '/assets/barba-pezinho.jpg' }
+  { id: 1, nome: 'Corte e Barba', valor: 35, foto: '/assets/corte-barba.webp' },
+  { id: 2, nome: 'Corte Social', valor: 25, foto: '/assets/corte-social.webp' },
+  { id: 3, nome: 'Degradê', valor: 25, foto: '/assets/degrade.webp' },
+  { id: 4, nome: 'Navalhado', valor: 25, foto: '/assets/navalhado.webp' },
+  { id: 5, nome: 'Corte Raspado', valor: 20, foto: '/assets/corte-raspado.webp' },
+  { id: 6, nome: 'Barba e Pezinho', valor: 15, foto: '/assets/barba-pezinho.webp' }
 ];
 
 export function Home({ onNavegar, onSelecionarServico }) {
@@ -80,7 +80,7 @@ export function Home({ onNavegar, onSelecionarServico }) {
           {/* Logo Centralizada em Destaque */}
           <div className="container-logo-editorial scale-in">
             <img 
-              src="/assets/logo sem fundo.png" 
+              src="/assets/logo sem fundo.webp" 
               alt="Logo AtualEstilo" 
               className="imagem-logo-editorial" 
             />
