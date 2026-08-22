@@ -1289,39 +1289,6 @@
   border-radius: 4px;
 }
 
-/* Imagem e Atalhos */
-.linha-topo-label-presets {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 8px;
-  flex-wrap: wrap;
-}
-
-.grid-botoes-presets-foto-compact {
-  display: flex;
-  gap: 4px;
-  flex-wrap: wrap;
-}
-
-.btn-preset-foto {
-  background: #1c1c1c;
-  border: 1px solid #2e2e2e;
-  color: #d1d5db;
-  font-size: 0.7rem;
-  font-weight: 700;
-  padding: 3px 7px;
-  border-radius: 5px;
-  cursor: pointer;
-  transition: all 0.15s ease;
-}
-
-.btn-preset-foto:hover, .btn-preset-foto.ativo {
-  background: #333333;
-  color: #ffffff;
-  border-color: #666666;
-}
-
 /* Upload de Imagem do Dispositivo */
 .caixa-upload-imagem-flex {
   display: flex;

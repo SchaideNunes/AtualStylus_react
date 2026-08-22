@@ -9,15 +9,6 @@ const CATEGORIAS_PADRAO = [
   'Geral'
 ];
 
-const PRESETS_FOTOS = [
-  { label: 'Degradê', url: '/assets/degrade.webp' },
-  { label: 'Barba', url: '/assets/corte-barba.webp' },
-  { label: 'Navalhado', url: '/assets/navalhado.webp' },
-  { label: 'Pezinho', url: '/assets/barba-pezinho.webp' },
-  { label: 'Social', url: '/assets/corte-social.webp' },
-  { label: 'Logo', url: '/assets/Logo.webp' }
-];
-
 export function ModalProduto({ produto, aoSalvar, aoFechar }) {
   const isEdicao = Boolean(produto && produto.id);
   const fileInputRef = useRef(null);
@@ -29,7 +20,7 @@ export function ModalProduto({ produto, aoSalvar, aoFechar }) {
   const [porcentagemDesconto, setPorcentagemDesconto] = useState(
     produto?.porcentagem_desconto !== undefined ? Number(produto.porcentagem_desconto) : 0
   );
-  const [foto, setFoto] = useState(produto?.foto || '/assets/degrade.webp');
+  const [foto, setFoto] = useState(produto?.foto || '');
   const [categoria, setCategoria] = useState(produto?.categoria || 'Cabelo & Penteado');
   const [ativo, setAtivo] = useState(produto?.ativo !== undefined ? Boolean(produto.ativo) : true);
 
@@ -299,23 +290,9 @@ export function ModalProduto({ produto, aoSalvar, aoFechar }) {
             </div>
           )}
 
-          {/* Imagem / Foto do Produto (Upload da Galeria / Presets / URL) */}
+          {/* Imagem / Foto do Produto (Upload da Galeria / URL) */}
           <div className="grupo-campo-modal">
-            <div className="linha-topo-label-presets">
-              <label className="label-campo-modal">FOTO DO PRODUTO</label>
-              <div className="grid-botoes-presets-foto-compact">
-                {PRESETS_FOTOS.map((preset) => (
-                  <button
-                    type="button"
-                    key={preset.label}
-                    onClick={() => setFoto(preset.url)}
-                    className={`btn-preset-foto ${foto === preset.url ? 'ativo' : ''}`}
-                  >
-                    {preset.label}
-                  </button>
-                ))}
-              </div>
-            </div>
+            <label className="label-campo-modal">FOTO DO PRODUTO</label>
 
             <div className="caixa-upload-imagem-flex">
               {/* Input oculto de arquivo */}
