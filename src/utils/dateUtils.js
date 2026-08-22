@@ -105,3 +105,16 @@ export function filtrarHorariosPassadosSeHoje(horarios, horaAtual, minutoAtual) 
     return false;
   });
 }
+
+/**
+ * Retorna o nome formatado do mês e ano (ex: "Agosto de 2026")
+ * @param {string} mesAnoStr - Formato YYYY-MM
+ * @returns {string}
+ */
+export function formatarMesAno(mesAnoStr) {
+  if (!mesAnoStr) return '';
+  const [ano, mes] = mesAnoStr.split('-').map(Number);
+  if (!ano || !mes) return mesAnoStr;
+  const d = new Date(ano, mes - 1, 1);
+  return d.toLocaleDateString('pt-BR', { month: 'long', year: 'numeric' });
+}

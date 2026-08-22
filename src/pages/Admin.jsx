@@ -9,7 +9,8 @@ import {
   getDataHojeString, 
   isDomingo, 
   normalizarDataISO, 
-  obterDetalhesData 
+  obterDetalhesData,
+  formatarMesAno
 } from '../utils/dateUtils';
 import { 
   ShieldCheck, 
@@ -40,6 +41,7 @@ export function Admin({ onLogout }) {
   const [buscaTexto, setBuscaTexto] = useState('');
   const [buscaData, setBuscaData] = useState('');
   const [buscaBarbeiro, setBuscaBarbeiro] = useState('');
+  const [mesConcluidos, setMesConcluidos] = useState(() => getDataHojeString().substring(0, 7));
 
   // Modais de Ações Rápidas
   const [modalNovoAgendamentoAberto, setModalNovoAgendamentoAberto] = useState(false);
@@ -57,7 +59,7 @@ export function Admin({ onLogout }) {
     try {
       setCarregando(true);
       const dataHoje = new Date();
-      dataHoje.setDate(dataHoje.getDate() - 15);
+      dataHoje.setDate(dataHoje.getDate() - 60);
       const dataLimite = dataHoje.toISOString().split('T')[0];
 
       const lista = await api.getAgendamentosAdmin({ dataLimite });
@@ -97,6 +99,7 @@ export function Admin({ onLogout }) {
   // Contadores por aba
   const contadores = useMemo(() => {
     const hoje = getDataHojeString();
+    const mesAtual = mesConcluidos || hoje.substring(0, 7);
     let pendentes = 0;
     let concluidos = 0;
     let bloqueios = 0;
@@ -107,16 +110,18 @@ export function Admin({ onLogout }) {
       if (item.status === 'confirmado' && !isBloqueio) {
         if (dataItem >= hoje) {
           pendentes++;
-        } else {
+        } else if (dataItem.startsWith(mesAtual)) {
           concluidos++;
         }
       }
-      if (item.status === 'concluido') concluidos++;
+      if (item.status === 'concluido' && dataItem.startsWith(mesAtual)) {
+        concluidos++;
+      }
       if (isBloqueio && dataItem >= hoje) bloqueios++;
     });
 
     return { pendentes, concluidos, bloqueios };
-  }, [agendamentos]);
+  }, [agendamentos, mesConcluidos]);
 
   // Filtragem dos registros conforme a aba e os inputs de busca
   const agendamentosFiltrados = useMemo(() => {
@@ -136,14 +141,16 @@ export function Admin({ onLogout }) {
       if (abaAtiva === 'pendentes') {
         matchAba = item.status === 'confirmado' && !isBloqueio && dataItem >= hoje;
       } else if (abaAtiva === 'concluidos') {
-        matchAba = (item.status === 'concluido') || (item.status === 'confirmado' && !isBloqueio && dataItem < hoje);
+        const isConcluidoStatus = (item.status === 'concluido') || (item.status === 'confirmado' && !isBloqueio && dataItem < hoje);
+        const matchMes = buscaDataNormalizada ? true : dataItem.startsWith(mesConcluidos);
+        matchAba = isConcluidoStatus && matchMes;
       } else if (abaAtiva === 'bloqueios') {
         matchAba = isBloqueio && dataItem >= hoje;
       }
 
       return matchTexto && matchData && matchBarbeiro && matchAba;
     });
-  }, [agendamentos, abaAtiva, buscaTexto, buscaData, buscaBarbeiro]);
+  }, [agendamentos, abaAtiva, buscaTexto, buscaData, buscaBarbeiro, mesConcluidos]);
 
   // Agrupamento por data para renderização do calendário
   const agendamentosAgrupados = useMemo(() => {
@@ -488,6 +495,43 @@ export function Admin({ onLogout }) {
               </button>
             </div>
           </div>
+
+          {/* Banner de Mês de Referência para Concluídos */}
+          {abaAtiva === 'concluidos' && (
+            <div className="painel-box-admin" style={{ padding: '14px 18px', background: '#121212', border: '1px solid #282828' }}>
+              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: '12px' }}>
+                <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
+                  <span style={{ fontSize: '0.86rem', fontWeight: '800', color: '#ffffff', textTransform: 'uppercase', display: 'flex', alignItems: 'center', gap: '6px' }}>
+                    <Calendar size={16} /> Mês:
+                  </span>
+                  <input 
+                    type="month" 
+                    value={mesConcluidos} 
+                    onChange={(e) => setMesConcluidos(e.target.value)} 
+                    style={{ background: '#000000', border: '1px solid #383838', borderRadius: '8px', color: '#ffffff', padding: '6px 12px', fontSize: '0.88rem', fontWeight: '700', fontFamily: 'monospace' }}
+                  />
+                  {mesConcluidos !== getDataHojeString().substring(0, 7) && (
+                    <button
+                      onClick={() => setMesConcluidos(getDataHojeString().substring(0, 7))}
+                      style={{ background: '#222222', border: '1px solid #3a3a3a', color: '#ffffff', borderRadius: '8px', padding: '6px 10px', fontSize: '0.78rem', cursor: 'pointer', fontWeight: '700' }}
+                    >
+                      Mês Atual
+                    </button>
+                  )}
+                </div>
+
+                <div style={{ display: 'flex', alignItems: 'center', gap: '12px', flexWrap: 'wrap' }}>
+                  <span style={{ fontSize: '0.84rem', color: '#9ca3af' }}>
+                    Atendimentos em <strong style={{ color: '#ffffff', textTransform: 'capitalize' }}>{formatarMesAno(mesConcluidos)}</strong>: <strong style={{ color: '#22c55e', fontSize: '0.95rem' }}>{agendamentosFiltrados.length}</strong>
+                  </span>
+                  <span style={{ color: '#444444' }}>•</span>
+                  <span style={{ fontSize: '0.84rem', color: '#9ca3af' }}>
+                    Faturamento: <strong style={{ color: '#ffffff', fontSize: '0.95rem' }}>R$ {agendamentosFiltrados.reduce((acc, curr) => acc + (Number(curr.valor) || 0), 0)}</strong>
+                  </span>
+                </div>
+              </div>
+            </div>
+          )}
 
           {/* 6. Listagem Agrupada de Agendamentos */}
           <div className="lista-agendamentos">

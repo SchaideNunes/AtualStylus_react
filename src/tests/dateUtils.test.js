@@ -5,7 +5,8 @@ import {
   formatarDataBR, 
   filtrarHorariosPassadosSeHoje,
   normalizarDataISO,
-  obterDetalhesData
+  obterDetalhesData,
+  formatarMesAno
 } from '../utils/dateUtils';
 
 describe('Date Utilities & Availability Rules (TDD)', () => {
@@ -44,5 +45,10 @@ describe('Date Utilities & Availability Rules (TDD)', () => {
     const minutoAtual = 15;
     const filtrados = filtrarHorariosPassadosSeHoje(slots, horaAtual, minutoAtual);
     expect(filtrados).toEqual(['17:30', '18:00']);
+  });
+
+  it('deve formatar mês e ano em português por extenso', () => {
+    expect(formatarMesAno('2026-08')).toMatch(/agosto de 2026/i);
+    expect(formatarMesAno('2026-01')).toMatch(/janeiro de 2026/i);
   });
 });
