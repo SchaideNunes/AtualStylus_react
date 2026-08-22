@@ -62,7 +62,7 @@ describe('Admin Component Revamp (TDD)', () => {
     expect(screen.getByRole('button', { name: /Concluídos/i })).toBeInTheDocument();
     expect(screen.getByRole('button', { name: /Bloqueios/i })).toBeInTheDocument();
     expect(screen.getByRole('button', { name: /Configuração/i })).toBeInTheDocument();
-    expect(screen.getByText(/Ações Rápidas/i)).toBeInTheDocument();
+    expect(screen.getByText(/^Ações$/i)).toBeInTheDocument();
 
     expect(screen.getByRole('button', { name: /Novo Agendamento/i })).toBeInTheDocument();
     expect(screen.getByRole('button', { name: /Clientes Fixos/i })).toBeInTheDocument();

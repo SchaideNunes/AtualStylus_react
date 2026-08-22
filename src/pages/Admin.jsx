@@ -272,7 +272,7 @@ export function Admin({ onLogout }) {
           onClick={() => setAbaAtiva('pendentes')} 
           className={`tab-btn-revamp ${abaAtiva === 'pendentes' ? 'ativo-pendentes' : ''}`}
         >
-          ⏳ Pendentes
+          <span className="tab-texto-com-icone">⏳ Pendentes</span>
           <span className="badge-contador-tab">{contadores.pendentes}</span>
         </button>
 
@@ -280,7 +280,7 @@ export function Admin({ onLogout }) {
           onClick={() => setAbaAtiva('concluidos')} 
           className={`tab-btn-revamp ${abaAtiva === 'concluidos' ? 'ativo-concluidos' : ''}`}
         >
-          ✅ Concluídos
+          <span className="tab-texto-com-icone">✅ Concluídos</span>
           <span className="badge-contador-tab">{contadores.concluidos}</span>
         </button>
 
@@ -288,7 +288,7 @@ export function Admin({ onLogout }) {
           onClick={() => setAbaAtiva('bloqueios')} 
           className={`tab-btn-revamp ${abaAtiva === 'bloqueios' ? 'ativo-bloqueios' : ''}`}
         >
-          🚫 Bloqueios
+          <span className="tab-texto-com-icone">🚫 Bloqueios</span>
           <span className="badge-contador-tab">{contadores.bloqueios}</span>
         </button>
 
@@ -296,7 +296,7 @@ export function Admin({ onLogout }) {
           onClick={() => setAbaAtiva('config')} 
           className={`tab-btn-revamp ${abaAtiva === 'config' ? 'ativo-config' : ''}`}
         >
-          ⚙️ Configuração
+          <span className="tab-texto-com-icone">⚙️ Configuração</span>
         </button>
       </nav>
 
@@ -390,7 +390,7 @@ export function Admin({ onLogout }) {
               <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
                 <Zap color="#ffffff" size={20} />
                 <span style={{ fontSize: '1.05rem', fontWeight: '800', color: '#ffffff', textTransform: 'uppercase', letterSpacing: '-0.01em' }}>
-                  Ações Rápidas
+                  Ações
                 </span>
               </div>
 
