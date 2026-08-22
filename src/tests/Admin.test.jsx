@@ -11,6 +11,7 @@ vi.mock('../services/api', () => ({
     getConfigHorariosBarbeiro: vi.fn(),
     salvarConfigHorariosBarbeiro: vi.fn(),
     criarAgendamentoAdmin: vi.fn(),
+    criarBloqueioLote: vi.fn(),
     concluirAgendamentoAdmin: vi.fn(),
     deletarAgendamentoAdmin: vi.fn()
   }
@@ -46,9 +47,23 @@ describe('Admin Component Revamp (TDD)', () => {
     expect(screen.getByRole('button', { name: /Configuração/i })).toBeInTheDocument();
     expect(screen.getByText(/Ações Rápidas/i)).toBeInTheDocument();
 
+    expect(screen.getByRole('button', { name: /Novo Agendamento/i })).toBeInTheDocument();
+    expect(screen.getByRole('button', { name: /Bloqueio em Lote/i })).toBeInTheDocument();
+    expect(screen.getByRole('button', { name: /Bloqueio Unitário/i })).toBeInTheDocument();
+
     await waitFor(() => {
       expect(screen.getByText('Carlos Eduardo')).toBeInTheDocument();
     });
+  });
+
+  it('deve abrir o modal de Novo Agendamento ao clicar no botão correspondente', async () => {
+    render(<Admin onLogout={vi.fn()} />);
+
+    const btnNovo = screen.getByRole('button', { name: /Novo Agendamento/i });
+    fireEvent.click(btnNovo);
+
+    expect(screen.getByText('NOME DO CLIENTE')).toBeInTheDocument();
+    expect(screen.getByText('CONFIRMAR AGENDAMENTO')).toBeInTheDocument();
   });
 
   it('deve alternar para a aba de Configuração e listar horários', async () => {
@@ -62,7 +77,8 @@ describe('Admin Component Revamp (TDD)', () => {
 
     await waitFor(() => {
       expect(screen.getByText(/Configurar Horários de Atendimento/i)).toBeInTheDocument();
-      expect(screen.getByText(/08:30/i)).toBeInTheDocument();
+      expect(screen.getByText('✕ 08:30')).toBeInTheDocument();
+      expect(screen.getByText('✕ 09:30')).toBeInTheDocument();
     });
   });
 });

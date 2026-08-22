@@ -1,7 +1,15 @@
 import React, { useState, useEffect, useMemo } from 'react';
 import { api } from '../services/api';
 import { ModalBloqueio } from '../components/ModalBloqueio';
-import { formatarDataBR, getDataHojeString, isDomingo, normalizarDataISO, obterDetalhesData } from '../utils/dateUtils';
+import { ModalNovoAgendamento } from '../components/ModalNovoAgendamento';
+import { ModalBloqueioUnitario } from '../components/ModalBloqueioUnitario';
+import { 
+  formatarDataBR, 
+  getDataHojeString, 
+  isDomingo, 
+  normalizarDataISO, 
+  obterDetalhesData 
+} from '../utils/dateUtils';
 import { 
   ShieldCheck, 
   LogOut, 
@@ -12,14 +20,12 @@ import {
   Filter, 
   Plus, 
   User, 
-  Phone, 
   Calendar, 
   Clock, 
   Scissors, 
   Lock, 
   Check, 
-  RotateCcw,
-  AlertTriangle
+  RotateCcw
 } from 'lucide-react';
 import '../styles/admin.css';
 
@@ -33,20 +39,10 @@ export function Admin({ onLogout }) {
   const [buscaData, setBuscaData] = useState('');
   const [buscaBarbeiro, setBuscaBarbeiro] = useState('');
 
-  // Ações Rápidas
-  const [adminNome, setAdminNome] = useState('');
-  const [adminTelefone, setAdminTelefone] = useState('');
-  const [adminData, setAdminData] = useState(getDataHojeString());
-  const [adminBarbeiro, setAdminBarbeiro] = useState('1');
-  const [adminHorario, setAdminHorario] = useState('');
-  const [adminServico, setAdminServico] = useState('Corte e Barba - R$ 35');
-  const [checkRecorrente, setCheckRecorrente] = useState(false);
-  const [horariosAdminLivres, setHorariosAdminLivres] = useState([]);
-
-  // Modal Bloqueio
-  const [modalBloqueioAberto, setModalBloqueioAberto] = useState(false);
-  const [horariosBarbeiroConfig, setHorariosBarbeiroConfig] = useState([]);
-  const [horariosOcupadosDia, setHorariosOcupadosDia] = useState([]);
+  // Modais de Ações Rápidas
+  const [modalNovoAgendamentoAberto, setModalNovoAgendamentoAberto] = useState(false);
+  const [modalBloqueioUnitarioAberto, setModalBloqueioUnitarioAberto] = useState(false);
+  const [modalBloqueioLoteAberto, setModalBloqueioLoteAberto] = useState(false);
 
   // Aba Config
   const [configBarbeiroId, setConfigBarbeiroId] = useState('1');
@@ -76,23 +72,6 @@ export function Admin({ onLogout }) {
   useEffect(() => {
     carregarAgendamentos();
   }, []);
-
-  // Carregar horários para criação de agendamento admin
-  useEffect(() => {
-    async function carregarSlots() {
-      if (!adminData || !adminBarbeiro) {
-        setHorariosAdminLivres([]);
-        return;
-      }
-      try {
-        const slots = await api.getHorariosDisponiveis(adminData, adminBarbeiro);
-        setHorariosAdminLivres(slots || []);
-      } catch (e) {
-        setHorariosAdminLivres([]);
-      }
-    }
-    carregarSlots();
-  }, [adminData, adminBarbeiro]);
 
   // Carregar horários na aba de Config
   useEffect(() => {
@@ -210,140 +189,23 @@ export function Admin({ onLogout }) {
     }
   };
 
-  const handleCriarAgendamentoAdmin = async () => {
-    if (!adminNome || !adminData || !adminHorario || !adminBarbeiro) {
-      alert('Por favor, preencha Nome, Data, Horário e Barbeiro!');
-      return;
-    }
-
-    const valorMatch = adminServico.match(/R\$ (\d+)/);
-    const valor = valorMatch ? parseInt(valorMatch[1]) : 0;
-    const barbeiroNome = adminBarbeiro === '1' ? 'Geilson' : 'Denilson';
-
-    try {
-      await api.criarAgendamentoAdmin({
-        nome: adminNome,
-        telefone: adminTelefone || 'Sem telefone',
-        servico: adminServico,
-        valor,
-        barbeiro_id: parseInt(adminBarbeiro),
-        barbeiro_nome: barbeiroNome,
-        data_agendamento: adminData,
-        horario: adminHorario,
-        recorrente: checkRecorrente
-      });
-
-      alert(checkRecorrente ? 'Cliente fixo cadastrado com sucesso (52 semanas)!' : 'Agendamento cadastrado com sucesso!');
-      setAdminNome('');
-      setAdminTelefone('');
-      carregarAgendamentos();
-    } catch (err) {
-      alert('Erro ao cadastrar: ' + err.message);
-    }
+  // Handlers dos Modais
+  const handleCriarAgendamentoAdmin = async (dados) => {
+    await api.criarAgendamentoAdmin(dados);
+    alert(dados.recorrente ? '✅ Cliente fixo cadastrado com sucesso (52 semanas)!' : '✅ Agendamento cadastrado com sucesso!');
+    await carregarAgendamentos();
   };
 
-  const handleCriarBloqueioUnitario = async () => {
-    if (!adminData || !adminHorario || !adminBarbeiro) {
-      alert('Preencha Data, Horário e Barbeiro para bloquear!');
-      return;
-    }
-    if (!confirm(`Bloquear horário ${adminHorario} do dia ${formatarDataBR(adminData)}?`)) return;
-
-    const barbeiroNome = adminBarbeiro === '1' ? 'Geilson' : 'Denilson';
-    try {
-      await api.criarAgendamentoAdmin({
-        nome: 'BLOQUEIO',
-        telefone: '',
-        servico: 'BLOQUEIO ADMIN',
-        valor: 0,
-        barbeiro_id: parseInt(adminBarbeiro),
-        barbeiro_nome: barbeiroNome,
-        data_agendamento: adminData,
-        horario: adminHorario,
-        status: 'bloqueado',
-        recorrente: false
-      });
-      alert('Horário bloqueado com sucesso!');
-      carregarAgendamentos();
-    } catch (err) {
-      alert('Erro ao criar bloqueio: ' + err.message);
-    }
+  const handleCriarBloqueioUnitario = async (dados) => {
+    await api.criarAgendamentoAdmin(dados);
+    alert('✅ Horário bloqueado com sucesso!');
+    await carregarAgendamentos();
   };
 
-  const [carregandoModalBloqueio, setCarregandoModalBloqueio] = useState(false);
-
-  const handleAbrirModalBloqueio = async () => {
-    if (!adminData || !adminBarbeiro) {
-      alert('Por favor, selecione Data e Barbeiro antes de abrir o bloqueio em lote.');
-      return;
-    }
-
-    try {
-      setCarregandoModalBloqueio(true);
-      
-      // 1. Obter horários cadastrados do barbeiro (com fallback seguro)
-      let horariosCfg = [];
-      try {
-        const cfg = await api.getConfigHorariosBarbeiro(adminBarbeiro);
-        if (cfg && Array.isArray(cfg.horarios) && cfg.horarios.length > 0) {
-          horariosCfg = cfg.horarios;
-        }
-      } catch (e) {
-        console.warn('Fallback para horários padrão do barbeiro:', e);
-      }
-
-      if (horariosCfg.length === 0) {
-        horariosCfg = adminBarbeiro === '1' 
-          ? ["08:30", "09:30", "10:00", "11:00", "14:00", "14:30", "15:30", "16:00", "17:00", "17:30", "18:00", "18:30"] 
-          : ["08:30", "09:30", "10:00", "11:00", "14:00", "14:30", "15:30", "16:00", "17:00"];
-      }
-
-      setHorariosBarbeiroConfig(horariosCfg);
-
-      // 2. Obter agendamentos ocupados no dia diretamente do banco SQL
-      let ocupados = [];
-      try {
-        const agsDoDia = await api.getAgendamentosAdmin({ 
-          data: adminData, 
-          barbeiroId: adminBarbeiro 
-        });
-        ocupados = (agsDoDia || [])
-          .filter(ag => ag.status !== 'cancelado')
-          .map(ag => ag.horario);
-      } catch (e) {
-        // Fallback para agendamentos locais em memória
-        ocupados = agendamentos
-          .filter(ag => ag.data_agendamento === adminData && 
-                        String(ag.barbeiro_id) === String(adminBarbeiro) && 
-                        ag.status !== 'cancelado')
-          .map(ag => ag.horario);
-      }
-
-      setHorariosOcupadosDia(ocupados);
-      setModalBloqueioAberto(true);
-    } catch (err) {
-      alert('Erro ao carregar dados do modal de bloqueio: ' + err.message);
-    } finally {
-      setCarregandoModalBloqueio(false);
-    }
-  };
-
-  const handleConfirmarBloqueioLote = async (slots) => {
-    if (!slots || slots.length === 0) return;
-    const barbeiroNome = adminBarbeiro === '1' ? 'Geilson' : 'Denilson';
-    try {
-      await api.criarBloqueioLote({
-        barbeiro_id: parseInt(adminBarbeiro),
-        barbeiro_nome: barbeiroNome,
-        data_agendamento: adminData,
-        horarios: slots
-      });
-      alert('✅ Horários bloqueados com sucesso!');
-      setModalBloqueioAberto(false);
-      await carregarAgendamentos();
-    } catch (err) {
-      alert('Erro ao salvar bloqueios em lote: ' + err.message);
-    }
+  const handleConfirmarBloqueioLote = async (dados) => {
+    await api.criarBloqueioLote(dados);
+    alert('✅ Bloqueios em lote salvos com sucesso!');
+    await carregarAgendamentos();
   };
 
   // Funções da Aba Config
@@ -513,145 +375,39 @@ export function Admin({ onLogout }) {
         </div>
       ) : (
         <>
-          {/* 4. Painel Ações Rápidas */}
-          <div className="painel-box-admin">
-            <div className="painel-header-titulo">
-              <h2 className="painel-titulo-texto">
-                <Zap color="#ffffff" size={20} /> Ações Rápidas
-              </h2>
-            </div>
-
-            <div className="grid-acoes-rapidas-revamp">
-              {/* Nome */}
-              <div className="campo-caixa-limpo">
-                <span className="rotulo-campo-limpo">NOME DO CLIENTE</span>
-                <div className="linha-input-limpo">
-                  <User size={18} className="icone-input-limpo" />
-                  <input 
-                    type="text" 
-                    placeholder="Ex: Gabriel Silva (Vazio p/ Bloqueio)"
-                    value={adminNome}
-                    onChange={(e) => setAdminNome(e.target.value)}
-                    className="input-limpo"
-                  />
-                </div>
+          {/* 4. Barra de Ações Rápidas (Abre modais popup) */}
+          <div className="painel-box-admin" style={{ padding: '20px 24px' }}>
+            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: '16px' }}>
+              <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
+                <Zap color="#ffffff" size={20} />
+                <span style={{ fontSize: '1.05rem', fontWeight: '800', color: '#ffffff', textTransform: 'uppercase', letterSpacing: '-0.01em' }}>
+                  Ações Rápidas
+                </span>
               </div>
-
-              {/* Telefone */}
-              <div className="campo-caixa-limpo">
-                <span className="rotulo-campo-limpo">WHATSAPP (OPCIONAL)</span>
-                <div className="linha-input-limpo">
-                  <Phone size={18} className="icone-input-limpo" />
-                  <input 
-                    type="tel" 
-                    placeholder="(00) 00000-0000"
-                    value={adminTelefone}
-                    onChange={(e) => setAdminTelefone(e.target.value)}
-                    className="input-limpo"
-                  />
-                </div>
-              </div>
-
-              {/* Data */}
-              <div className="campo-caixa-limpo">
-                <span className="rotulo-campo-limpo">DATA DO ATENDIMENTO</span>
-                <div className="linha-input-limpo">
-                  <Calendar size={18} className="icone-input-limpo" />
-                  <input 
-                    type="date" 
-                    value={adminData}
-                    onChange={(e) => setAdminData(e.target.value)}
-                    className="input-limpo"
-                  />
-                </div>
-              </div>
-
-              {/* Horário */}
-              <div className="campo-caixa-limpo">
-                <span className="rotulo-campo-limpo">HORÁRIO DISPONÍVEL</span>
-                <div className="linha-input-limpo">
-                  <Clock size={18} className="icone-input-limpo" />
-                  <select 
-                    value={adminHorario}
-                    onChange={(e) => setAdminHorario(e.target.value)}
-                    className="select-limpo"
-                  >
-                    <option value="">Selecione o Horário</option>
-                    {horariosAdminLivres.map(h => (
-                      <option key={h} value={h}>{h}</option>
-                    ))}
-                  </select>
-                </div>
-              </div>
-
-              {/* Barbeiro */}
-              <div className="campo-caixa-limpo">
-                <span className="rotulo-campo-limpo">PROFISSIONAL</span>
-                <div className="linha-input-limpo">
-                  <Scissors size={18} className="icone-input-limpo" />
-                  <select 
-                    value={adminBarbeiro}
-                    onChange={(e) => setAdminBarbeiro(e.target.value)}
-                    className="select-limpo"
-                  >
-                    <option value="1">Geilson</option>
-                    <option value="2">Denilson</option>
-                  </select>
-                </div>
-              </div>
-
-              {/* Serviço */}
-              <div className="campo-caixa-limpo">
-                <span className="rotulo-campo-limpo">SERVIÇO</span>
-                <div className="linha-input-limpo">
-                  <Scissors size={18} className="icone-input-limpo" />
-                  <select 
-                    value={adminServico}
-                    onChange={(e) => setAdminServico(e.target.value)}
-                    className="select-limpo"
-                  >
-                    <option value="Corte e Barba - R$ 35">Corte e Barba - R$ 35</option>
-                    <option value="Corte Social - R$ 25">Corte Social - R$ 25</option>
-                    <option value="Degradê - R$ 25">Degradê - R$ 25</option>
-                    <option value="Navalhado - R$ 25">Navalhado - R$ 25</option>
-                    <option value="Corte Raspado - R$ 20">Corte Raspado - R$ 20</option>
-                    <option value="Barba e Pezinho - R$ 15">Barba e Pezinho - R$ 15</option>
-                  </select>
-                </div>
-              </div>
-            </div>
-
-            <div className="barra-inferior-acoes">
-              <label className="label-checkbox-recorrente">
-                <input 
-                  type="checkbox" 
-                  checked={checkRecorrente}
-                  onChange={(e) => setCheckRecorrente(e.target.checked)}
-                />
-                <span>Cliente Fixo (Toda semana durante 1 ano / 52 semanas)</span>
-              </label>
 
               <div className="grupo-botoes-acoes">
                 <button 
-                  onClick={handleAbrirModalBloqueio}
-                  disabled={carregandoModalBloqueio}
-                  className="btn-acao-rapida btn-bloqueio-lote"
-                >
-                  <ShieldCheck size={16} /> {carregandoModalBloqueio ? 'Carregando...' : 'Bloqueio em Lote'}
-                </button>
-
-                <button 
-                  onClick={handleCriarBloqueioUnitario}
-                  className="btn-acao-rapida btn-bloqueio-unitario"
-                >
-                  <Lock size={16} /> Unitário
-                </button>
-
-                <button 
-                  onClick={handleCriarAgendamentoAdmin}
+                  onClick={() => setModalNovoAgendamentoAberto(true)}
                   className="btn-acao-rapida btn-cadastrar-principal"
+                  style={{ padding: '12px 20px', fontSize: '0.9rem' }}
                 >
-                  <Plus size={16} strokeWidth={3} /> Cadastrar
+                  <Plus size={18} strokeWidth={3} /> Novo Agendamento
+                </button>
+
+                <button 
+                  onClick={() => setModalBloqueioLoteAberto(true)}
+                  className="btn-acao-rapida btn-bloqueio-lote"
+                  style={{ padding: '12px 18px', fontSize: '0.9rem' }}
+                >
+                  <ShieldCheck size={18} /> Bloqueio em Lote
+                </button>
+
+                <button 
+                  onClick={() => setModalBloqueioUnitarioAberto(true)}
+                  className="btn-acao-rapida btn-bloqueio-unitario"
+                  style={{ padding: '12px 18px', fontSize: '0.9rem' }}
+                >
+                  <Lock size={18} /> Bloqueio Unitário
                 </button>
               </div>
             </div>
@@ -825,15 +581,24 @@ export function Admin({ onLogout }) {
         </>
       )}
 
-      {/* Modal de Bloqueio em Lote */}
+      {/* Modais de Ações Rápidas */}
+      <ModalNovoAgendamento 
+        isOpen={modalNovoAgendamentoAberto}
+        onClose={() => setModalNovoAgendamentoAberto(false)}
+        onSalvar={handleCriarAgendamentoAdmin}
+      />
+
+      <ModalBloqueioUnitario 
+        isOpen={modalBloqueioUnitarioAberto}
+        onClose={() => setModalBloqueioUnitarioAberto(false)}
+        onConfirmar={handleCriarBloqueioUnitario}
+      />
+
       <ModalBloqueio 
-        isOpen={modalBloqueioAberto}
-        onClose={() => setModalBloqueioAberto(false)}
-        data={adminData}
-        barbeiroId={adminBarbeiro}
-        barbeiroNome={adminBarbeiro === '1' ? 'Geilson' : 'Denilson'}
-        horariosBarbeiro={horariosBarbeiroConfig}
-        horariosOcupados={horariosOcupadosDia}
+        isOpen={modalBloqueioLoteAberto}
+        onClose={() => setModalBloqueioLoteAberto(false)}
+        dataInicial={getDataHojeString()}
+        barbeiroIdInicial="1"
         onConfirmar={handleConfirmarBloqueioLote}
       />
     </div>
