@@ -1433,57 +1433,67 @@ input:-webkit-autofill:active {
 .card-cta-sobre {
   background: linear-gradient(180deg, #181818 0%, #0e0e0e 100%);
   border: 1px solid var(--border-color);
-  border-radius: 24px;
-  padding: 36px 24px;
+  border-radius: 20px;
+  padding: 28px 20px;
   text-align: center;
   box-shadow: 0 15px 40px rgba(0, 0, 0, 0.8);
   display: flex;
   flex-direction: column;
   align-items: center;
+  max-width: 500px;
+  margin: 0 auto;
+  width: 100%;
+  box-sizing: border-box;
 }
 
 .icone-local-sobre {
-  width: 52px;
-  height: 52px;
-  background: #222222;
-  border: 1px solid #3a3a3a;
-  border-radius: 14px;
+  width: 46px;
+  height: 46px;
+  background: #202020;
+  border: 1px solid #333333;
+  border-radius: 12px;
   display: flex;
   align-items: center;
   justify-content: center;
-  margin-bottom: 14px;
+  margin-bottom: 12px;
 }
 
 .card-cta-sobre h3 {
-  font-size: 1.5rem;
+  font-size: clamp(1.15rem, 3.8vw, 1.35rem);
   font-weight: 800;
   color: #ffffff;
-  margin-bottom: 6px;
+  margin-bottom: 4px;
 }
 
 .endereco-cta-sobre {
   color: var(--text-muted);
-  font-size: 0.95rem;
-  margin-bottom: 24px;
+  font-size: 0.88rem;
+  margin-bottom: 18px;
+  line-height: 1.4;
 }
 
 .btn-agendar-cta-sobre {
   background: #ffffff;
   color: #000000;
   border: none;
-  font-size: 1.05rem;
+  font-size: 0.92rem;
   font-weight: 800;
-  padding: 16px 36px;
-  border-radius: 14px;
+  padding: 12px 24px;
+  border-radius: 12px;
   cursor: pointer;
-  transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
-  box-shadow: 0 4px 20px rgba(255, 255, 255, 0.25);
+  transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+  box-shadow: 0 4px 16px rgba(255, 255, 255, 0.2);
+  white-space: nowrap;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
 }
 
 .btn-agendar-cta-sobre:hover {
   background: #e5e5e5;
-  transform: translateY(-2px) scale(1.02);
-  box-shadow: 0 8px 30px rgba(255, 255, 255, 0.4);
+  transform: translateY(-2px);
+  box-shadow: 0 6px 22px rgba(255, 255, 255, 0.35);
 }
 
 /* ========================================================================= */

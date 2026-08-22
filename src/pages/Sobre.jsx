@@ -151,9 +151,9 @@ export function Sobre({ onNavegar }) {
           </p>
           <button 
             onClick={() => onNavegar && onNavegar('agendamento')}
-            className="btn-agendar-cta-sobre pulse"
+            className="btn-agendar-cta-sobre hover-lift"
           >
-            ✂️ Agendar Atendimento Agora
+            ✂️ Agendar Atendimento
           </button>
         </div>
       </section>
