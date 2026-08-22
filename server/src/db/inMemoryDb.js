@@ -29,8 +29,8 @@ export class InMemoryDatabase {
       {
         id: 1,
         nome: 'Administrador AtualEstilo',
-        email: 'admin@atualestilo.com.br',
-        password_hash: bcrypt.hashSync('admin123', 10)
+        email: 'admin@atualestilo.com',
+        password_hash: '$2a$10$Jdi8oFosfsbPK9nR4EEc4uL1V0O.uRSQ8IUmSjDSUsHu6x9UKHh6u' // 'admin123'
       }
     ];
   }

@@ -12,14 +12,14 @@ describe('Auth Service & Security (TDD)', () => {
   });
 
   it('deve realizar login com sucesso fornecendo credenciais válidas', async () => {
-    const res = await authService.login('admin@atualestilo.com.br', 'admin123');
+    const res = await authService.login('admin@atualestilo.com', 'admin123');
     expect(res).toBeDefined();
     expect(res.token).toBeDefined();
-    expect(res.user.email).toBe('admin@atualestilo.com.br');
+    expect(res.user.email).toBe('admin@atualestilo.com');
   });
 
   it('deve rejeitar login com senha incorreta', async () => {
-    await expect(authService.login('admin@atualestilo.com.br', 'senha_errada'))
+    await expect(authService.login('admin@atualestilo.com', 'senha_errada'))
       .rejects.toThrow('Credenciais inválidas');
   });
 
@@ -29,9 +29,9 @@ describe('Auth Service & Security (TDD)', () => {
   });
 
   it('deve validar token JWT gerado e retornar os dados do usuário', () => {
-    const { token } = authService.gerarToken({ id: 1, email: 'admin@atualestilo.com.br' });
+    const { token } = authService.gerarToken({ id: 1, email: 'admin@atualestilo.com' });
     const payload = authService.verificarToken(token);
-    expect(payload.email).toBe('admin@atualestilo.com.br');
+    expect(payload.email).toBe('admin@atualestilo.com');
     expect(payload.id).toBe(1);
   });
 });
