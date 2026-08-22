@@ -46,7 +46,7 @@ CREATE TABLE IF NOT EXISTS produtos (
     preco_promocional DECIMAL(10, 2) NULL DEFAULT NULL,
     porcentagem_desconto INT DEFAULT 0,
     em_promocao BOOLEAN NOT NULL DEFAULT FALSE,
-    foto VARCHAR(255) DEFAULT '',
+    foto MEDIUMTEXT,
     categoria VARCHAR(50) NOT NULL DEFAULT 'Geral',
     ativo BOOLEAN NOT NULL DEFAULT TRUE,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,

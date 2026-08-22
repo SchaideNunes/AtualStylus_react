@@ -1322,6 +1322,77 @@
   border-color: #666666;
 }
 
+/* Upload de Imagem do Dispositivo */
+.caixa-upload-imagem-flex {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.btn-upload-galeria-celular {
+  flex: 1;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 7px;
+  background: #1e1e1e;
+  border: 1px dashed #444444;
+  color: #f3f4f6;
+  font-size: 0.8rem;
+  font-weight: 800;
+  padding: 8px 12px;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.btn-upload-galeria-celular:hover {
+  background: #282828;
+  border-color: #ffffff;
+  color: #ffffff;
+}
+
+.preview-foto-produto-modal {
+  position: relative;
+  width: 44px;
+  height: 44px;
+  border-radius: 8px;
+  overflow: hidden;
+  border: 1px solid #3e3e3e;
+  background: #000000;
+  flex-shrink: 0;
+}
+
+.preview-foto-produto-modal img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.btn-remover-foto-thumb {
+  position: absolute;
+  top: 1px;
+  right: 1px;
+  background: rgba(0, 0, 0, 0.85);
+  color: #ef4444;
+  border: none;
+  font-size: 10px;
+  font-weight: 900;
+  width: 16px;
+  height: 16px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  padding: 0;
+}
+
+.btn-remover-foto-thumb:hover {
+  background: #ef4444;
+  color: #ffffff;
+}
+
 .textarea-modal-produto {
   resize: vertical;
   min-height: 52px;

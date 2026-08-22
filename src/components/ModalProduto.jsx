@@ -1,5 +1,5 @@
-import React, { useState, useEffect } from 'react';
-import { X, Tag, DollarSign, Percent, Image, AlignLeft, Check, AlertCircle, Eye, Sparkles } from 'lucide-react';
+import React, { useState, useEffect, useRef } from 'react';
+import { X, Tag, DollarSign, Percent, Image, AlignLeft, Check, AlertCircle, Eye, Sparkles, Upload, Camera } from 'lucide-react';
 
 const CATEGORIAS_PADRAO = [
   'Cabelo & Penteado',
@@ -20,6 +20,7 @@ const PRESETS_FOTOS = [
 
 export function ModalProduto({ produto, aoSalvar, aoFechar }) {
   const isEdicao = Boolean(produto && produto.id);
+  const fileInputRef = useRef(null);
 
   const [nome, setNome] = useState(produto?.nome || '');
   const [descricao, setDescricao] = useState(produto?.descricao || '');
@@ -33,6 +34,7 @@ export function ModalProduto({ produto, aoSalvar, aoFechar }) {
   const [ativo, setAtivo] = useState(produto?.ativo !== undefined ? Boolean(produto.ativo) : true);
 
   const [salvando, setSalvando] = useState(false);
+  const [processandoFoto, setProcessandoFoto] = useState(false);
   const [erro, setErro] = useState('');
 
   // Bloquear scroll do body enquanto o modal estiver aberto
@@ -53,6 +55,63 @@ export function ModalProduto({ produto, aoSalvar, aoFechar }) {
     window.addEventListener('keydown', handleKeyDown);
     return () => window.removeEventListener('keydown', handleKeyDown);
   }, [aoFechar]);
+
+  // Handler de seleção de arquivo da galeria / celular
+  const handleSelecionarArquivo = (e) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+
+    if (!file.type.startsWith('image/')) {
+      setErro('Por favor, selecione um arquivo de imagem válido (JPG, PNG, WebP).');
+      return;
+    }
+
+    setProcessandoFoto(true);
+    setErro('');
+    const reader = new FileReader();
+    reader.onload = (event) => {
+      const img = new window.Image();
+      img.onload = () => {
+        const canvas = document.createElement('canvas');
+        const MAX_WIDTH = 700;
+        const MAX_HEIGHT = 700;
+        let width = img.width;
+        let height = img.height;
+
+        if (width > height) {
+          if (width > MAX_WIDTH) {
+            height = Math.round((height * MAX_WIDTH) / width);
+            width = MAX_WIDTH;
+          }
+        } else {
+          if (height > MAX_HEIGHT) {
+            width = Math.round((width * MAX_HEIGHT) / height);
+            height = MAX_HEIGHT;
+          }
+        }
+
+        canvas.width = width;
+        canvas.height = height;
+        const ctx = canvas.getContext('2d');
+        ctx.drawImage(img, 0, 0, width, height);
+
+        // Converte para WebP / JPEG otimizado
+        const dataUrl = canvas.toDataURL('image/webp', 0.82) || canvas.toDataURL('image/jpeg', 0.82);
+        setFoto(dataUrl);
+        setProcessandoFoto(false);
+      };
+      img.onerror = () => {
+        setErro('Erro ao processar imagem.');
+        setProcessandoFoto(false);
+      };
+      img.src = event.target.result;
+    };
+    reader.onerror = () => {
+      setErro('Erro ao ler arquivo.');
+      setProcessandoFoto(false);
+    };
+    reader.readAsDataURL(file);
+  };
 
   // Cálculo automático do preço promocional baseado no preço base e na porcentagem
   const precoNum = parseFloat(preco) || 0;
@@ -240,10 +299,10 @@ export function ModalProduto({ produto, aoSalvar, aoFechar }) {
             </div>
           )}
 
-          {/* Imagem / Foto do Produto */}
+          {/* Imagem / Foto do Produto (Upload da Galeria / Presets / URL) */}
           <div className="grupo-campo-modal">
             <div className="linha-topo-label-presets">
-              <label className="label-campo-modal">IMAGEM DO PRODUTO</label>
+              <label className="label-campo-modal">FOTO DO PRODUTO</label>
               <div className="grid-botoes-presets-foto-compact">
                 {PRESETS_FOTOS.map((preset) => (
                   <button
@@ -257,12 +316,62 @@ export function ModalProduto({ produto, aoSalvar, aoFechar }) {
                 ))}
               </div>
             </div>
+
+            <div className="caixa-upload-imagem-flex">
+              {/* Input oculto de arquivo */}
+              <input 
+                type="file" 
+                ref={fileInputRef} 
+                onChange={handleSelecionarArquivo}
+                accept="image/*"
+                style={{ display: 'none' }}
+                id="input-arquivo-foto-produto"
+              />
+
+              <button
+                type="button"
+                onClick={() => fileInputRef.current?.click()}
+                className="btn-upload-galeria-celular"
+                disabled={processandoFoto}
+              >
+                <Upload size={15} />
+                <span>{processandoFoto ? 'Processando imagem...' : '📁 Escolher Foto da Galeria / Celular'}</span>
+              </button>
+
+              {foto && (
+                <div className="preview-foto-produto-modal">
+                  <img 
+                    src={foto} 
+                    alt="Preview" 
+                    onError={(e) => { e.target.src = '/assets/Logo.webp'; }}
+                  />
+                  <button
+                    type="button"
+                    onClick={() => setFoto('')}
+                    className="btn-remover-foto-thumb"
+                    title="Remover imagem"
+                  >
+                    ✕
+                  </button>
+                </div>
+              )}
+            </div>
+
             <input 
               type="text"
-              value={foto}
+              value={foto.startsWith('data:') ? '✓ Imagem selecionada do dispositivo' : foto}
               onChange={(e) => setFoto(e.target.value)}
-              placeholder="URL da imagem (ex: /assets/degrade.webp)"
+              placeholder="Ou digite a URL da imagem (ex: /assets/degrade.webp)"
               className="input-modal-produto"
+              style={{ fontSize: '0.8rem', color: foto.startsWith('data:') ? '#4ade80' : '#ffffff' }}
+              readOnly={foto.startsWith('data:')}
+              onClick={() => {
+                if (foto.startsWith('data:')) {
+                  if (confirm('Deseja limpar a foto carregada para digitar uma URL?')) {
+                    setFoto('');
+                  }
+                }
+              }}
             />
           </div>
 
