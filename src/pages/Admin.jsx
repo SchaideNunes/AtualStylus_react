@@ -311,20 +311,20 @@ export function Admin({ onLogout }) {
       {abaAtiva === 'config' ? (
         <div className="painel-box-admin scale-in">
           <div className="painel-header-titulo">
-            <h2 className="painel-titulo-texto">
-              <Settings color="#ffffff" size={20} /> Configurar Horários de Atendimento
+            <h2 className="painel-titulo-texto" style={{ fontSize: 'clamp(0.95rem, 3.8vw, 1.15rem)', whiteSpace: 'nowrap' }}>
+              <Settings color="#ffffff" size={18} /> Configurar Horários de Atendimento
             </h2>
           </div>
 
-          <p style={{ color: '#9ca3af', fontSize: '0.92rem', margin: 0 }}>
-            Selecione o profissional para gerenciar os horários de atendimento que ficam disponíveis para agendamento online.
+          <p style={{ color: '#9ca3af', fontSize: '0.86rem', margin: 0, lineHeight: '1.4' }}>
+            Selecione o profissional para gerenciar os horários que ficam disponíveis para agendamento online.
           </p>
 
-          <div className="config-barbeiro-seletor-box">
-            <div className="campo-caixa-limpo" style={{ minWidth: '220px' }}>
+          <div className="box-controles-config-linha">
+            <div className="campo-caixa-limpo" style={{ flex: '1 1 180px' }}>
               <span className="rotulo-campo-limpo">PROFISSIONAL</span>
               <div className="linha-input-limpo">
-                <Scissors size={18} className="icone-input-limpo" />
+                <Scissors size={16} className="icone-input-limpo" />
                 <select 
                   value={configBarbeiroId} 
                   onChange={(e) => setConfigBarbeiroId(e.target.value)}
@@ -335,13 +335,11 @@ export function Admin({ onLogout }) {
                 </select>
               </div>
             </div>
-          </div>
 
-          <div className="box-adicionar-horario-config">
-            <div className="campo-caixa-limpo" style={{ width: '180px' }}>
+            <div className="campo-caixa-limpo" style={{ flex: '1 1 140px' }}>
               <span className="rotulo-campo-limpo">NOVO HORÁRIO</span>
               <div className="linha-input-limpo">
-                <Clock size={18} className="icone-input-limpo" />
+                <Clock size={16} className="icone-input-limpo" />
                 <input 
                   type="time" 
                   value={novoHorarioInput}
@@ -354,14 +352,14 @@ export function Admin({ onLogout }) {
             <button 
               onClick={handleAdicionarHorarioConfig}
               className="btn-acao-rapida btn-cadastrar-principal"
-              style={{ padding: '14px 22px', borderRadius: '14px' }}
+              style={{ minHeight: '40px', padding: '8px 16px', fontSize: '0.82rem', borderRadius: '10px', alignSelf: 'flex-end', whiteSpace: 'nowrap' }}
             >
-              <Plus size={18} /> Adicionar Horário
+              <Plus size={16} strokeWidth={3} /> Adicionar
             </button>
           </div>
 
           <div>
-            <span style={{ color: '#9ca3af', fontSize: '0.85rem', fontWeight: '700', textTransform: 'uppercase', display: 'block', marginBottom: '12px' }}>
+            <span style={{ color: '#9ca3af', fontSize: '0.78rem', fontWeight: '800', textTransform: 'uppercase', display: 'block', marginBottom: '10px' }}>
               Horários Cadastrados (Clique para remover):
             </span>
 
@@ -370,7 +368,7 @@ export function Admin({ onLogout }) {
                 <button 
                   key={h} 
                   onClick={() => handleRemoverHorarioConfig(h)}
-                  className="chip-horario-config-revamp hover-lift"
+                  className="chip-horario-config-revamp"
                   title="Clique para remover este horário"
                 >
                   ✕ {h}
@@ -379,13 +377,13 @@ export function Admin({ onLogout }) {
             </div>
           </div>
 
-          <div style={{ borderTop: '1px solid #222222', paddingTop: '20px', display: 'flex', justifyContent: 'flex-end' }}>
+          <div style={{ borderTop: '1px solid #222222', paddingTop: '16px', display: 'flex', justifyContent: 'flex-end' }}>
             <button 
               onClick={handleSalvarConfig}
               className="btn-acao-rapida btn-cadastrar-principal"
-              style={{ padding: '14px 28px', fontSize: '0.95rem' }}
+              style={{ padding: '10px 24px', fontSize: '0.88rem', borderRadius: '10px' }}
             >
-              <Check size={18} /> Salvar Horários no Banco SQL
+              <Check size={16} /> Salvar
             </button>
           </div>
         </div>
