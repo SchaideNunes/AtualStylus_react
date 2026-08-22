@@ -527,36 +527,34 @@ export function Admin({ onLogout }) {
                             key={ag.id} 
                             className={`item-agendamento-row-revamp ${statusClasse}`}
                           >
-                            <div style={{ display: 'flex', alignItems: 'center', gap: '16px' }}>
+                            <div className="bloco-info-agendamento-linha">
                               <div className="hora-badge-revamp">
                                 {ag.horario}
                               </div>
 
                               <div className="detalhes-agendamento-cliente">
-                                <h4 className="nome-cliente-admin">
-                                  {ag.nome}
+                                <div className="nome-cliente-admin">
+                                  <span className="nome-texto-clamp">{ag.nome}</span>
                                   {isBloqueio && (
-                                    <span style={{ fontSize: '0.72rem', background: 'rgba(239, 68, 68, 0.15)', color: '#ef4444', padding: '3px 8px', borderRadius: '6px', border: '1px solid rgba(239, 68, 68, 0.4)', textTransform: 'uppercase', fontWeight: '800' }}>
+                                    <span className="badge-bloqueio-tag">
                                       Bloqueado
                                     </span>
                                   )}
-                                </h4>
+                                </div>
 
                                 <div className="meta-info-agendamento">
                                   {ag.telefone && (
-                                    <span>
-                                      📱 <a 
-                                           href={`https://wa.me/55${ag.telefone.replace(/\D/g, '')}`} 
-                                           target="_blank" 
-                                           rel="noopener noreferrer"
-                                           className="link-whats-admin"
-                                         >
-                                           {ag.telefone}
-                                         </a>
-                                    </span>
+                                    <a 
+                                      href={`https://wa.me/55${ag.telefone.replace(/\D/g, '')}`} 
+                                      target="_blank" 
+                                      rel="noopener noreferrer"
+                                      className="link-whats-admin"
+                                    >
+                                      📱 {ag.telefone}
+                                    </a>
                                   )}
-                                  <span>✂️ <strong>{ag.barbeiro_nome}</strong></span>
-                                  {ag.servico && <span style={{ color: '#ffffff', fontWeight: '700' }}>• {ag.servico}</span>}
+                                  <span className="tag-barbeiro-info">✂️ {ag.barbeiro_nome}</span>
+                                  {ag.servico && <span className="tag-servico-info">• {ag.servico}</span>}
                                 </div>
                               </div>
                             </div>
@@ -568,7 +566,7 @@ export function Admin({ onLogout }) {
                                   className="btn-linha-acao btn-linha-concluir"
                                   title="Marcar como realizado"
                                 >
-                                  <CheckCircle size={16} /> Concluir
+                                  <CheckCircle size={14} /> <span>Concluir</span>
                                 </button>
                               )}
 
@@ -577,7 +575,7 @@ export function Admin({ onLogout }) {
                                 className="btn-linha-acao btn-linha-liberar"
                                 title={ag.status === 'concluido' ? 'Excluir histórico' : 'Cancelar e liberar horário'}
                               >
-                                <Trash2 size={16} /> {ag.status === 'concluido' ? 'Apagar' : 'Liberar'}
+                                <Trash2 size={14} /> <span>{ag.status === 'concluido' ? 'Apagar' : 'Liberar'}</span>
                               </button>
                             </div>
                           </div>
