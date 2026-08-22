@@ -63,6 +63,7 @@ export class AgendamentoService {
 
   async buscarPorTelefone(telefone, dataMinima) {
     if (!telefone) return [];
+    await this.concluirAgendamentosPassados();
     const min = dataMinima || getDataHojeString();
     return await this.db.getAgendamentosPorTelefone(telefone, min);
   }
@@ -85,7 +86,16 @@ export class AgendamentoService {
     return await this.db.deleteAgendamento(id);
   }
 
-  async listarAdmin(filtros) {
+  async concluirAgendamentosPassados(dataReferencia) {
+    const hoje = dataReferencia || getDataHojeString();
+    if (this.db.concluirAgendamentosPassados) {
+      return await this.db.concluirAgendamentosPassados(hoje);
+    }
+    return 0;
+  }
+
+  async listarAdmin(filtros = {}) {
+    await this.concluirAgendamentosPassados();
     const dataLimite = filtros.dataLimite;
     return await this.db.listAgendamentosAdmin({
       dataLimite,

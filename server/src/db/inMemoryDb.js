@@ -136,6 +136,17 @@ export class InMemoryDatabase {
     }).sort((a, b) => a.data_agendamento.localeCompare(b.data_agendamento) || a.horario.localeCompare(b.horario));
   }
 
+  async concluirAgendamentosPassados(dataHoje) {
+    let afetados = 0;
+    this.agendamentos.forEach(ag => {
+      if (ag.status === 'confirmado' && ag.data_agendamento < dataHoje && ag.nome !== 'BLOQUEIO') {
+        ag.status = 'concluido';
+        afetados++;
+      }
+    });
+    return afetados;
+  }
+
   async findAdminByEmail(email) {
     return this.admin_users.find(u => u.email.toLowerCase() === email.toLowerCase()) || null;
   }

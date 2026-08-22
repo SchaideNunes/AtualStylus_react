@@ -125,4 +125,39 @@ describe('Agendamento Service & SQL Business Rules (TDD)', () => {
     const config = await service.obterConfigHorarios(1);
     expect(config.horarios).toEqual(novosHorarios);
   });
+
+  it('deve concluir automaticamente agendamentos de dias que já passaram', async () => {
+    await db.insertAgendamento({
+      nome: 'Cliente Passado',
+      telefone: '(75) 99999-0000',
+      servico: 'Corte Social - R$ 25',
+      valor: 25,
+      barbeiro_id: 1,
+      barbeiro_nome: 'Geilson',
+      data_agendamento: '2026-08-20',
+      horario: '10:00',
+      status: 'confirmado'
+    });
+
+    await db.insertAgendamento({
+      nome: 'Cliente Futuro',
+      telefone: '(75) 99999-1111',
+      servico: 'Degradê - R$ 25',
+      valor: 25,
+      barbeiro_id: 1,
+      barbeiro_nome: 'Geilson',
+      data_agendamento: '2026-08-25',
+      horario: '14:00',
+      status: 'confirmado'
+    });
+
+    await service.concluirAgendamentosPassados('2026-08-22');
+
+    const listaAdmin = await service.listarAdmin({});
+    const agPassado = listaAdmin.find(a => a.nome === 'Cliente Passado');
+    const agFuturo = listaAdmin.find(a => a.nome === 'Cliente Futuro');
+
+    expect(agPassado.status).toBe('concluido');
+    expect(agFuturo.status).toBe('confirmado');
+  });
 });

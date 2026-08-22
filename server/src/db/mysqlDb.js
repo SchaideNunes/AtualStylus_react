@@ -182,6 +182,18 @@ export class MysqlDatabase {
     return rows.map(r => ({ ...r, data_agendamento: normalizarDataISO(r.data_agendamento) }));
   }
 
+  async concluirAgendamentosPassados(dataHoje) {
+    const [result] = await this.pool.execute(
+      `UPDATE agendamentos 
+       SET status = 'concluido' 
+       WHERE status = 'confirmado' 
+         AND nome != 'BLOQUEIO'
+         AND data_agendamento < ?`,
+      [dataHoje]
+    );
+    return result.affectedRows || 0;
+  }
+
   async findAdminByEmail(email) {
     const [rows] = await this.pool.execute(
       'SELECT * FROM admin_users WHERE email = ? LIMIT 1',

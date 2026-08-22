@@ -101,7 +101,13 @@ export function Admin({ onLogout }) {
     agendamentos.forEach((item) => {
       const isBloqueio = item.status === 'bloqueado' || item.nome === 'BLOQUEIO';
       const dataItem = normalizarDataISO(item.data_agendamento);
-      if (item.status === 'confirmado' && !isBloqueio) pendentes++;
+      if (item.status === 'confirmado' && !isBloqueio) {
+        if (dataItem >= hoje) {
+          pendentes++;
+        } else {
+          concluidos++;
+        }
+      }
       if (item.status === 'concluido') concluidos++;
       if (isBloqueio && dataItem >= hoje) bloqueios++;
     });
@@ -125,9 +131,9 @@ export function Admin({ onLogout }) {
       const isBloqueio = item.status === 'bloqueado' || item.nome === 'BLOQUEIO';
 
       if (abaAtiva === 'pendentes') {
-        matchAba = item.status === 'confirmado' && !isBloqueio;
+        matchAba = item.status === 'confirmado' && !isBloqueio && dataItem >= hoje;
       } else if (abaAtiva === 'concluidos') {
-        matchAba = item.status === 'concluido';
+        matchAba = (item.status === 'concluido') || (item.status === 'confirmado' && !isBloqueio && dataItem < hoje);
       } else if (abaAtiva === 'bloqueios') {
         matchAba = isBloqueio && dataItem >= hoje;
       }
