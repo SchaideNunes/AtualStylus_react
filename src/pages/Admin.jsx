@@ -4,7 +4,6 @@ import { ModalBloqueio } from '../components/ModalBloqueio';
 import { ModalNovoAgendamento } from '../components/ModalNovoAgendamento';
 import { ModalBloqueioUnitario } from '../components/ModalBloqueioUnitario';
 import { ModalClientesFixos } from '../components/ModalClientesFixos';
-import { ModalProduto } from '../components/ModalProduto';
 import { 
   formatarDataBR, 
   getDataHojeString, 
@@ -33,28 +32,14 @@ import {
   Repeat,
   ChevronLeft,
   ChevronRight,
-  History,
-  ShoppingBag,
-  Edit3,
-  PlusCircle,
-  Tag,
-  Percent
+  History
 } from 'lucide-react';
 import '../styles/admin.css';
 
 export function Admin({ onLogout }) {
-  const [abaAtiva, setAbaAtiva] = useState('pendentes'); // 'pendentes' | 'concluidos' | 'bloqueios' | 'produtos' | 'config'
+  const [abaAtiva, setAbaAtiva] = useState('pendentes'); // 'pendentes' | 'concluidos' | 'bloqueios' | 'config'
   const [agendamentos, setAgendamentos] = useState([]);
   const [carregando, setCarregando] = useState(true);
-
-  // Produtos Admin State
-  const [produtosAdmin, setProdutosAdmin] = useState([]);
-  const [carregandoProdutos, setCarregandoProdutos] = useState(false);
-  const [modalProdutoAberto, setModalProdutoAberto] = useState(false);
-  const [produtoParaEditar, setProdutoParaEditar] = useState(null);
-  const [filtroProdutoBusca, setFiltroProdutoBusca] = useState('');
-  const [filtroProdutoCategoria, setFiltroProdutoCategoria] = useState('Todos');
-  const [filtroProdutoPromocao, setFiltroProdutoPromocao] = useState(false);
 
   // Filtros
   const [buscaTexto, setBuscaTexto] = useState('');
@@ -89,22 +74,8 @@ export function Admin({ onLogout }) {
     }
   };
 
-  // Carregar produtos da loja
-  const carregarProdutosAdmin = async () => {
-    try {
-      setCarregandoProdutos(true);
-      const lista = await api.getProdutosAdmin();
-      setProdutosAdmin(lista || []);
-    } catch (err) {
-      console.error('Erro ao carregar produtos:', err);
-    } finally {
-      setCarregandoProdutos(false);
-    }
-  };
-
   useEffect(() => {
     carregarAgendamentos();
-    carregarProdutosAdmin();
   }, []);
 
   // Carregar horários na aba de Config
@@ -123,40 +94,7 @@ export function Admin({ onLogout }) {
     if (abaAtiva === 'config') {
       carregarConfig();
     }
-    if (abaAtiva === 'produtos') {
-      carregarProdutosAdmin();
-    }
   }, [abaAtiva, configBarbeiroId]);
-
-  const handleSalvarProduto = async (dados) => {
-    if (dados.id) {
-      await api.atualizarProdutoAdmin(dados.id, dados);
-    } else {
-      await api.criarProdutoAdmin(dados);
-    }
-    await carregarProdutosAdmin();
-  };
-
-  const handleExcluirProduto = async (id, nome) => {
-    if (confirm(`Deseja realmente excluir o produto "${nome}"?`)) {
-      try {
-        await api.deletarProdutoAdmin(id);
-        await carregarProdutosAdmin();
-      } catch (err) {
-        alert('Erro ao excluir produto: ' + err.message);
-      }
-    }
-  };
-
-  const handleAbrirNovoProduto = () => {
-    setProdutoParaEditar(null);
-    setModalProdutoAberto(true);
-  };
-
-  const handleAbrirEditarProduto = (produto) => {
-    setProdutoParaEditar(produto);
-    setModalProdutoAberto(true);
-  };
 
   // Contadores
   const contadores = useMemo(() => {
@@ -382,183 +320,12 @@ export function Admin({ onLogout }) {
         </button>
 
         <button 
-          onClick={() => setAbaAtiva('produtos')} 
-          className={`tab-btn-revamp ${abaAtiva === 'produtos' ? 'ativo-produtos' : ''}`}
-        >
-          <span className="tab-texto-com-icone">🛍️ Produtos</span>
-          <span className="badge-contador-tab">{produtosAdmin.length}</span>
-        </button>
-
-        <button 
           onClick={() => setAbaAtiva('config')} 
           className={`tab-btn-revamp ${abaAtiva === 'config' ? 'ativo-config' : ''}`}
         >
           <span className="tab-texto-com-icone">⚙️ Configuração</span>
         </button>
       </nav>
-
-      {/* 3. Conteúdo da Aba Produtos */}
-      {abaAtiva === 'produtos' ? (
-        <div className="painel-box-admin scale-in">
-          <div className="painel-header-titulo" style={{ justifyContent: 'space-between', flexWrap: 'wrap', gap: '12px' }}>
-            <h2 className="painel-titulo-texto" style={{ fontSize: 'clamp(0.95rem, 3.8vw, 1.15rem)', margin: 0 }}>
-              <ShoppingBag color="#ffffff" size={18} /> Gestão de Produtos & Vitrine
-            </h2>
-            <button 
-              onClick={handleAbrirNovoProduto}
-              className="btn-acao-rapida btn-cadastrar-principal"
-              style={{ padding: '8px 18px', fontSize: '0.85rem', borderRadius: '10px' }}
-            >
-              <Plus size={16} strokeWidth={3} /> Novo Produto
-            </button>
-          </div>
-
-          {/* Métricas Rápidas de Produtos */}
-          <div className="metricas-produtos-admin-grid">
-            <div className="card-metrica-prod-mini">
-              <span className="rotulo-prod-mini">Total de Itens</span>
-              <span className="valor-prod-mini">{produtosAdmin.length}</span>
-            </div>
-            <div className="card-metrica-prod-mini">
-              <span className="rotulo-prod-mini">Em Promoção</span>
-              <span className="valor-prod-mini" style={{ color: '#f59e0b' }}>
-                {produtosAdmin.filter(p => p.em_promocao).length}
-              </span>
-            </div>
-            <div className="card-metrica-prod-mini">
-              <span className="rotulo-prod-mini">Visíveis na Vitrine</span>
-              <span className="valor-prod-mini" style={{ color: '#22c55e' }}>
-                {produtosAdmin.filter(p => p.ativo).length}
-              </span>
-            </div>
-          </div>
-
-          {/* Filtros de Produtos */}
-          <div className="filtros-produtos-admin-linha">
-            <div className="campo-caixa-limpo" style={{ flex: '2 1 200px' }}>
-              <span className="rotulo-campo-limpo">BUSCA POR NOME OU DESCRIÇÃO</span>
-              <div className="linha-input-limpo">
-                <input 
-                  type="text" 
-                  value={filtroProdutoBusca}
-                  onChange={(e) => setFiltroProdutoBusca(e.target.value)}
-                  placeholder="Ex: Pomada, Óleo, Shampoo..."
-                  className="input-limpo"
-                />
-              </div>
-            </div>
-
-            <div className="campo-caixa-limpo" style={{ flex: '1 1 160px' }}>
-              <span className="rotulo-campo-limpo">CATEGORIA</span>
-              <div className="linha-input-limpo">
-                <select 
-                  value={filtroProdutoCategoria}
-                  onChange={(e) => setFiltroProdutoCategoria(e.target.value)}
-                  className="select-limpo"
-                >
-                  {categoriasAdmin.map(c => (
-                    <option key={c} value={c}>{c}</option>
-                  ))}
-                </select>
-              </div>
-            </div>
-
-            <div className="filtro-check-promo-box">
-              <label className="checkbox-label-promo">
-                <input 
-                  type="checkbox"
-                  checked={filtroProdutoPromocao}
-                  onChange={(e) => setFiltroProdutoPromocao(e.target.checked)}
-                />
-                <span>🔥 Apenas Promoções</span>
-              </label>
-            </div>
-          </div>
-
-          {/* Grid de Cards de Produtos no Admin */}
-          {carregandoProdutos ? (
-            <div className="estado-vazio-admin">
-              <p>Carregando produtos...</p>
-            </div>
-          ) : produtosAdminFiltrados.length === 0 ? (
-            <div className="estado-vazio-admin">
-              <ShoppingBag size={36} color="#555555" />
-              <p>Nenhum produto cadastrado com esses filtros.</p>
-              <button 
-                onClick={handleAbrirNovoProduto}
-                className="btn-acao-rapida btn-cadastrar-principal"
-                style={{ marginTop: '12px', padding: '8px 16px', fontSize: '0.82rem' }}
-              >
-                <Plus size={14} /> Cadastrar Primeiro Produto
-              </button>
-            </div>
-          ) : (
-            <div className="grid-admin-produtos-cards">
-              {produtosAdminFiltrados.map(prod => (
-                <div key={prod.id} className="card-admin-produto-item hover-lift">
-                  <div className="foto-thumb-admin-prod">
-                    <img 
-                      src={prod.foto || '/assets/Logo.webp'} 
-                      alt={prod.nome} 
-                      onError={(e) => { e.target.src = '/assets/Logo.webp'; }}
-                    />
-                    {prod.em_promocao && (
-                      <span className="badge-promo-admin-chip">
-                        🔥 -{prod.porcentagem_desconto || 0}%
-                      </span>
-                    )}
-                  </div>
-
-                  <div className="dados-admin-prod-item">
-                    <div className="cabecalho-prod-item-linha">
-                      <h4 className="nome-admin-prod">{prod.nome}</h4>
-                      <span className={`badge-status-prod-chip ${prod.ativo ? 'ativo' : 'oculto'}`}>
-                        {prod.ativo ? '🟢 Visível' : '⚪ Oculto'}
-                      </span>
-                    </div>
-
-                    <span className="categoria-admin-prod-tag">
-                      <Tag size={11} /> {prod.categoria || 'Geral'}
-                    </span>
-
-                    {prod.descricao && (
-                      <p className="desc-admin-prod-curta">{prod.descricao}</p>
-                    )}
-
-                    <div className="precos-admin-prod-linha">
-                      {prod.em_promocao && prod.preco_promocional ? (
-                        <>
-                          <span className="preco-riscado-admin">R$ {Number(prod.preco).toFixed(2)}</span>
-                          <span className="preco-promo-admin">R$ {Number(prod.preco_promocional).toFixed(2)}</span>
-                        </>
-                      ) : (
-                        <span className="preco-normal-admin">R$ {Number(prod.preco).toFixed(2)}</span>
-                      )}
-                    </div>
-                  </div>
-
-                  <div className="acoes-admin-prod-botoes">
-                    <button 
-                      onClick={() => handleAbrirEditarProduto(prod)}
-                      className="btn-acao-prod btn-editar-prod"
-                      title="Editar Produto"
-                    >
-                      <Edit3 size={15} /> Editar
-                    </button>
-                    <button 
-                      onClick={() => handleExcluirProduto(prod.id, prod.nome)}
-                      className="btn-acao-prod btn-excluir-prod"
-                      title="Excluir Produto"
-                    >
-                      <Trash2 size={15} /> Excluir
-                    </button>
-                  </div>
-                </div>
-              ))}
-            </div>
-          )}
-        </div>
-      ) : null}
 
       {/* 3. Conteúdo da Aba Configuração */}
       {abaAtiva === 'config' ? (
@@ -965,17 +732,6 @@ export function Admin({ onLogout }) {
         onClose={() => setModalClientesFixosAberto(false)}
         onAtualizarGeral={carregarAgendamentos}
       />
-
-      {modalProdutoAberto && (
-        <ModalProduto 
-          produto={produtoParaEditar}
-          aoSalvar={handleSalvarProduto}
-          aoFechar={() => {
-            setModalProdutoAberto(false);
-            setProdutoParaEditar(null);
-          }}
-        />
-      )}
     </div>
   );
 }

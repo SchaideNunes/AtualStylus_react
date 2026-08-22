@@ -33,58 +33,6 @@ export class InMemoryDatabase {
         password_hash: '$2a$10$Jdi8oFosfsbPK9nR4EEc4uL1V0O.uRSQ8IUmSjDSUsHu6x9UKHh6u' // 'admin123'
       }
     ];
-
-    this.produtos = [
-      {
-        id: 1,
-        nome: 'Pomada Modeladora Efeito Matte',
-        descricao: 'Alta fixação sem brilho, ideal para penteados estruturados e durabilidade o dia todo.',
-        preco: 35.00,
-        preco_promocional: 28.00,
-        porcentagem_desconto: 20,
-        em_promocao: true,
-        foto: '/assets/degrade.webp',
-        categoria: 'Cabelo & Penteado',
-        ativo: true
-      },
-      {
-        id: 2,
-        nome: 'Óleo para Barba Hidratação Profunda',
-        descricao: 'Fórmula nutritiva com óleos essenciais que amaciam os fios e perfumam com toque amadeirado.',
-        preco: 40.00,
-        preco_promocional: null,
-        porcentagem_desconto: 0,
-        em_promocao: false,
-        foto: '/assets/corte-barba.webp',
-        categoria: 'Barba & Cuidados',
-        ativo: true
-      },
-      {
-        id: 3,
-        nome: 'Shampoo Anticaspa Refrescante Mentol',
-        descricao: 'Limpeza profunda do couro cabeludo com sensação refrescante e controle de oleosidade.',
-        preco: 30.00,
-        preco_promocional: 24.00,
-        porcentagem_desconto: 20,
-        em_promocao: true,
-        foto: '/assets/navalhado.webp',
-        categoria: 'Shampoos & Tratamentos',
-        ativo: true
-      },
-      {
-        id: 4,
-        nome: 'Balm Alinhador e Modelador de Barba',
-        descricao: 'Reduz o frizz dos fios da barba, modela e hidrata sem deixar resíduos oleosos.',
-        preco: 32.00,
-        preco_promocional: null,
-        porcentagem_desconto: 0,
-        em_promocao: false,
-        foto: '/assets/barba-pezinho.webp',
-        categoria: 'Barba & Cuidados',
-        ativo: true
-      }
-    ];
-    this.nextProdutoId = 5;
   }
 
   async getBarbeiroConfig(id) {
@@ -201,61 +149,5 @@ export class InMemoryDatabase {
 
   async findAdminByEmail(email) {
     return this.admin_users.find(u => u.email.toLowerCase() === email.toLowerCase()) || null;
-  }
-
-  async getProdutosPublicos() {
-    return this.produtos
-      .filter(p => Boolean(p.ativo))
-      .map(p => ({ ...p }));
-  }
-
-  async listProdutosAdmin(filtros = {}) {
-    return this.produtos.filter(p => {
-      if (filtros.categoria && filtros.categoria !== 'Todos' && p.categoria !== filtros.categoria) return false;
-      if (filtros.busca) {
-        const q = filtros.busca.toLowerCase();
-        const matchNome = p.nome.toLowerCase().includes(q);
-        const matchDesc = p.descricao?.toLowerCase().includes(q);
-        if (!matchNome && !matchDesc) return false;
-      }
-      if (filtros.em_promocao !== undefined && Boolean(p.em_promocao) !== Boolean(filtros.em_promocao)) return false;
-      return true;
-    }).map(p => ({ ...p }));
-  }
-
-  async getProdutoById(id) {
-    const item = this.produtos.find(p => p.id === parseInt(id));
-    return item ? { ...item } : null;
-  }
-
-  async insertProduto(dados) {
-    const novoProduto = {
-      id: this.nextProdutoId++,
-      ...dados
-    };
-    this.produtos.push(novoProduto);
-    return { ...novoProduto };
-  }
-
-  async updateProduto(id, dados) {
-    const idx = this.produtos.findIndex(p => p.id === parseInt(id));
-    if (idx !== -1) {
-      this.produtos[idx] = {
-        ...this.produtos[idx],
-        ...dados,
-        id: parseInt(id)
-      };
-      return { ...this.produtos[idx] };
-    }
-    return null;
-  }
-
-  async deleteProduto(id) {
-    const idx = this.produtos.findIndex(p => p.id === parseInt(id));
-    if (idx !== -1) {
-      const removido = this.produtos.splice(idx, 1)[0];
-      return { ...removido };
-    }
-    return null;
   }
 }

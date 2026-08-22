@@ -5,7 +5,6 @@ import { Home } from './pages/Home';
 import { Agendamento } from './pages/Agendamento';
 import { MeusAgendamentos } from './pages/MeusAgendamentos';
 import { Sobre } from './pages/Sobre';
-import { Produtos } from './pages/Produtos';
 import { Login } from './pages/Login';
 import { Admin } from './pages/Admin';
 import { api } from './services/api';
@@ -27,8 +26,6 @@ export function App() {
         setPaginaAtiva('meusAgendamentos');
       } else if (rota === 'agendamento' || rota === 'agendar') {
         setPaginaAtiva('agendamento');
-      } else if (rota === 'produtos' || rota === 'loja' || rota === 'vitrine') {
-        setPaginaAtiva('produtos');
       } else if (rota === 'sobre' || rota === 'sobre-nos') {
         setPaginaAtiva('sobre');
       } else if (rota === 'admin') {
@@ -81,8 +78,6 @@ export function App() {
         return <Home onNavegar={handleNavegar} onSelecionarServico={handleSelecionarServico} />;
       case 'agendamento':
         return <Agendamento servicoPreSelecionado={servicoPreSelecionado} onAgendamentoConcluido={() => handleNavegar('meusAgendamentos')} />;
-      case 'produtos':
-        return <Produtos />;
       case 'meusAgendamentos':
         return <MeusAgendamentos />;
       case 'sobre':
