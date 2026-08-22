@@ -128,7 +128,7 @@ export class AgendamentoService {
     return await this.db.insertBatchAgendamentos(lista);
   }
 
-  async criarClienteRecorrente(dados, semanas = 52) {
+  async criarClienteRecorrente(dados, totalRepeticoes) {
     const {
       nome,
       telefone,
@@ -138,7 +138,8 @@ export class AgendamentoService {
       barbeiro_nome,
       data_inicial,
       data_agendamento,
-      horario
+      horario,
+      frequencia = 'semanal'
     } = dados;
 
     const dataBase = normalizarDataISO(data_inicial || data_agendamento);
@@ -153,7 +154,14 @@ export class AgendamentoService {
     const [ano, mes, dia] = dataBase.split('-').map(Number);
     let dataAtual = new Date(ano, mes - 1, dia);
 
-    for (let i = 0; i < semanas; i++) {
+    let repeticoes = totalRepeticoes;
+    if (!repeticoes) {
+      if (frequencia === 'quinzenal') repeticoes = 26;
+      else if (frequencia === 'mensal') repeticoes = 12;
+      else repeticoes = 52; // semanal
+    }
+
+    for (let i = 0; i < repeticoes; i++) {
       const y = dataAtual.getFullYear();
       const m = String(dataAtual.getMonth() + 1).padStart(2, '0');
       const d = String(dataAtual.getDate()).padStart(2, '0');
@@ -171,11 +179,59 @@ export class AgendamentoService {
         status: (nome === 'BLOQUEIO' || dados.status === 'bloqueado') ? 'bloqueado' : 'confirmado'
       });
 
-      // Adiciona 7 dias
-      dataAtual.setDate(dataAtual.getDate() + 7);
+      if (frequencia === 'quinzenal') {
+        dataAtual.setDate(dataAtual.getDate() + 14);
+      } else if (frequencia === 'mensal') {
+        dataAtual = new Date(ano, mes - 1 + (i + 1), dia);
+      } else {
+        dataAtual.setDate(dataAtual.getDate() + 7);
+      }
     }
 
     return await this.db.insertBatchAgendamentos(inserts);
+  }
+
+  async listarClientesFixos() {
+    const hoje = getDataHojeString();
+    await this.concluirAgendamentosPassados(hoje);
+
+    const agendamentos = await this.db.listAgendamentosAdmin({ dataLimite: hoje });
+
+    const grupos = {};
+    for (const ag of agendamentos) {
+      if (ag.status === 'cancelado' || ag.status === 'bloqueado' || ag.nome === 'BLOQUEIO') continue;
+      const chave = `${ag.nome.toLowerCase().trim()}_${String(ag.telefone || '').replace(/\D/g, '')}_${ag.barbeiro_id}_${ag.horario}`;
+      if (!grupos[chave]) {
+        grupos[chave] = {
+          chave,
+          nome: ag.nome,
+          telefone: ag.telefone,
+          barbeiro_id: ag.barbeiro_id,
+          barbeiro_nome: ag.barbeiro_nome,
+          servico: ag.servico,
+          horario: ag.horario,
+          datas: []
+        };
+      }
+      grupos[chave].datas.push({
+        id: ag.id,
+        data_agendamento: normalizarDataISO(ag.data_agendamento),
+        horario: ag.horario,
+        status: ag.status
+      });
+    }
+
+    return Object.values(grupos).filter(g => g.datas.length >= 2 || g.nome.toUpperCase().includes('FIXO'));
+  }
+
+  async deletarLoteAgendamentos(ids) {
+    if (!ids || !Array.isArray(ids) || ids.length === 0) return 0;
+    let count = 0;
+    for (const id of ids) {
+      await this.db.deleteAgendamento(id);
+      count++;
+    }
+    return count;
   }
 
   async obterConfigHorarios(barbeiroId) {

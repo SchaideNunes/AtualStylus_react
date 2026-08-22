@@ -13,7 +13,9 @@ vi.mock('../services/api', () => ({
     criarAgendamentoAdmin: vi.fn(),
     criarBloqueioLote: vi.fn(),
     concluirAgendamentoAdmin: vi.fn(),
-    deletarAgendamentoAdmin: vi.fn()
+    deletarAgendamentoAdmin: vi.fn(),
+    getClientesFixos: vi.fn(),
+    deletarLoteClientesFixos: vi.fn()
   }
 }));
 
@@ -35,6 +37,21 @@ describe('Admin Component Revamp (TDD)', () => {
       }
     ]);
     api.getHorariosDisponiveis.mockResolvedValue(['08:30', '14:00', '16:00']);
+    api.getClientesFixos.mockResolvedValue([
+      {
+        chave: 'carlos_75991309594_1_14:00',
+        nome: 'Carlos Eduardo',
+        telefone: '(75) 99130-9594',
+        barbeiro_id: 1,
+        barbeiro_nome: 'Geilson',
+        servico: 'Corte e Barba - R$ 35',
+        horario: '14:00',
+        datas: [
+          { id: 1, data_agendamento: '2026-08-25', horario: '14:00', status: 'confirmado' },
+          { id: 2, data_agendamento: '2026-09-01', horario: '14:00', status: 'confirmado' }
+        ]
+      }
+    ]);
   });
 
   it('deve renderizar o cabeçalho, abas e ações rápidas com design renovado', async () => {
@@ -48,6 +65,7 @@ describe('Admin Component Revamp (TDD)', () => {
     expect(screen.getByText(/Ações Rápidas/i)).toBeInTheDocument();
 
     expect(screen.getByRole('button', { name: /Novo Agendamento/i })).toBeInTheDocument();
+    expect(screen.getByRole('button', { name: /Clientes Fixos/i })).toBeInTheDocument();
     expect(screen.getByRole('button', { name: /Bloqueio em Lote/i })).toBeInTheDocument();
     expect(screen.getByRole('button', { name: /Bloqueio Unitário/i })).toBeInTheDocument();
 
@@ -64,6 +82,18 @@ describe('Admin Component Revamp (TDD)', () => {
 
     expect(screen.getByText('NOME DO CLIENTE')).toBeInTheDocument();
     expect(screen.getByText(/Confirmar Agendamento/i)).toBeInTheDocument();
+  });
+
+  it('deve abrir o modal de Gestão de Clientes Fixos ao clicar em Clientes Fixos', async () => {
+    render(<Admin onLogout={vi.fn()} />);
+
+    const btnFixos = screen.getByRole('button', { name: /Clientes Fixos/i });
+    fireEvent.click(btnFixos);
+
+    expect(screen.getByText(/Gestão de Clientes Fixos/i)).toBeInTheDocument();
+    await waitFor(() => {
+      expect(screen.getByText(/Clientes Cadastrados/i)).toBeInTheDocument();
+    });
   });
 
   it('deve alternar para a aba de Configuração e listar horários', async () => {

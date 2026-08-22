@@ -142,6 +142,29 @@ export const api = {
     return json;
   },
 
+  async getClientesFixos() {
+    const res = await fetch(`${API_BASE}/admin/clientes-fixos`, {
+      headers: getAuthHeaders()
+    });
+    const json = await res.json();
+    if (!res.ok) throw new Error(json.error || 'Erro ao carregar clientes fixos');
+    return json;
+  },
+
+  async deletarLoteClientesFixos(ids) {
+    const res = await fetch(`${API_BASE}/admin/clientes-fixos/deletar-lote`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        ...getAuthHeaders()
+      },
+      body: JSON.stringify({ ids })
+    });
+    const json = await res.json();
+    if (!res.ok) throw new Error(json.error || 'Erro ao remover agendamentos fixos');
+    return json;
+  },
+
   async getConfigHorariosBarbeiro(id) {
     const res = await fetch(`${API_BASE}/admin/config/barbeiro/${id}`, {
       headers: getAuthHeaders()

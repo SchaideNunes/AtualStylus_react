@@ -163,20 +163,80 @@ describe('Agendamento Service & SQL Business Rules (TDD)', () => {
 
   it('deve criar 52 agendamentos semanais para cliente fixo anual', async () => {
     const criados = await service.criarClienteRecorrente({
-      nome: 'Cliente Fixo Anual',
+      nome: 'Cliente Semanal',
       telefone: '(75) 99999-8888',
       servico: 'Corte e Barba - R$ 35',
       valor: 35,
       barbeiro_id: 1,
       barbeiro_nome: 'Geilson',
       data_agendamento: '2026-08-25',
-      horario: '08:30'
-    }, 52);
+      horario: '08:30',
+      frequencia: 'semanal'
+    });
 
     expect(criados.length).toBe(52);
     expect(criados[0].data_agendamento).toBe('2026-08-25');
     expect(criados[1].data_agendamento).toBe('2026-09-01');
     expect(criados[51].horario).toBe('08:30');
-    expect(criados[51].nome).toBe('Cliente Fixo Anual');
+  });
+
+  it('deve criar 26 agendamentos quinzenais (de 15 em 15 dias)', async () => {
+    const criados = await service.criarClienteRecorrente({
+      nome: 'Cliente Quinzenal',
+      telefone: '(75) 99999-7777',
+      servico: 'Degradê - R$ 25',
+      valor: 25,
+      barbeiro_id: 2,
+      barbeiro_nome: 'Denilson',
+      data_agendamento: '2026-08-25',
+      horario: '10:00',
+      frequencia: 'quinzenal'
+    });
+
+    expect(criados.length).toBe(26);
+    expect(criados[0].data_agendamento).toBe('2026-08-25');
+    expect(criados[1].data_agendamento).toBe('2026-09-08'); // +14 dias (2 semanas exatas)
+  });
+
+  it('deve criar 12 agendamentos mensais (1 vez no mês)', async () => {
+    const criados = await service.criarClienteRecorrente({
+      nome: 'Cliente Mensal',
+      telefone: '(75) 99999-6666',
+      servico: 'Corte Social - R$ 25',
+      valor: 25,
+      barbeiro_id: 1,
+      barbeiro_nome: 'Geilson',
+      data_agendamento: '2026-08-25',
+      horario: '14:00',
+      frequencia: 'mensal'
+    });
+
+    expect(criados.length).toBe(12);
+    expect(criados[0].data_agendamento).toBe('2026-08-25');
+    expect(criados[1].data_agendamento).toBe('2026-09-25');
+    expect(criados[2].data_agendamento).toBe('2026-10-25');
+  });
+
+  it('deve listar clientes fixos agrupados e permitir ver os dias ocupados', async () => {
+    await service.criarClienteRecorrente({
+      nome: 'Lucas Silva',
+      telefone: '(75) 99123-4567',
+      servico: 'Corte e Barba - R$ 35',
+      valor: 35,
+      barbeiro_id: 1,
+      barbeiro_nome: 'Geilson',
+      data_agendamento: '2026-08-25',
+      horario: '09:30',
+      frequencia: 'quinzenal'
+    });
+
+    const fixos = await service.listarClientesFixos();
+    expect(fixos.length).toBeGreaterThanOrEqual(1);
+
+    const lucas = fixos.find(f => f.nome === 'Lucas Silva');
+    expect(lucas).toBeDefined();
+    expect(lucas.telefone).toBe('(75) 99123-4567');
+    expect(lucas.horario).toBe('09:30');
+    expect(lucas.datas.length).toBe(26);
   });
 });

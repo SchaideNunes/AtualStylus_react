@@ -157,6 +157,29 @@ apiRouter.post('/admin/agendamentos', authMiddleware, async (req, res) => {
   }
 });
 
+// Listar clientes fixos com seus dias ocupados (Admin)
+apiRouter.get('/admin/clientes-fixos', authMiddleware, async (req, res) => {
+  try {
+    const { agendamentoService } = getServices();
+    const fixos = await agendamentoService.listarClientesFixos();
+    return res.json(fixos);
+  } catch (err) {
+    return res.status(500).json({ error: err.message });
+  }
+});
+
+// Excluir lote de agendamentos de cliente fixo (Admin)
+apiRouter.post('/admin/clientes-fixos/deletar-lote', authMiddleware, async (req, res) => {
+  try {
+    const { ids } = req.body;
+    const { agendamentoService } = getServices();
+    const count = await agendamentoService.deletarLoteAgendamentos(ids);
+    return res.json({ message: `${count} agendamentos removidos com sucesso` });
+  } catch (err) {
+    return res.status(400).json({ error: err.message });
+  }
+});
+
 // Criar bloqueio em lote (Admin)
 apiRouter.post('/admin/bloqueios/lote', authMiddleware, async (req, res) => {
   try {

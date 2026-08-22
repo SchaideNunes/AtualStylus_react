@@ -13,6 +13,7 @@ export function ModalNovoAgendamento({ isOpen, onClose, onSalvar }) {
   const [horario, setHorario] = useState('');
   const [servico, setServico] = useState('Corte e Barba - R$ 35');
   const [recorrente, setRecorrente] = useState(false);
+  const [frequencia, setFrequencia] = useState('semanal');
 
   const [horariosLivres, setHorariosLivres] = useState([]);
   const [carregandoHorarios, setCarregandoHorarios] = useState(false);
@@ -106,7 +107,8 @@ export function ModalNovoAgendamento({ isOpen, onClose, onSalvar }) {
         barbeiro_nome: barbeiroNome,
         data_agendamento: data,
         horario,
-        recorrente
+        recorrente,
+        frequencia
       });
       setNome('');
       setTelefone('');
@@ -257,14 +259,34 @@ export function ModalNovoAgendamento({ isOpen, onClose, onSalvar }) {
             </div>
           </div>
 
-          <label className="label-checkbox-recorrente" style={{ marginTop: '6px' }}>
-            <input 
-              type="checkbox" 
-              checked={recorrente}
-              onChange={(e) => setRecorrente(e.target.checked)}
-            />
-            <span>Cliente Fixo (Toda semana durante 1 ano / 52 semanas)</span>
-          </label>
+          <div style={{ marginTop: '4px' }}>
+            <label className="label-checkbox-recorrente">
+              <input 
+                type="checkbox" 
+                checked={recorrente}
+                onChange={(e) => setRecorrente(e.target.checked)}
+              />
+              <span>Cliente Fixo Recorrente</span>
+            </label>
+
+            {recorrente && (
+              <div className="campo-caixa-limpo scale-in" style={{ marginTop: '10px' }}>
+                <span className="rotulo-campo-limpo">FREQUÊNCIA DE REPETIÇÃO</span>
+                <div className="linha-input-limpo">
+                  <Scissors size={18} className="icone-input-limpo" />
+                  <select 
+                    value={frequencia} 
+                    onChange={(e) => setFrequencia(e.target.value)}
+                    className="select-limpo"
+                  >
+                    <option value="semanal">📅 Semanal (De 7 em 7 dias - 52 semanas / 1 ano)</option>
+                    <option value="quinzenal">🌓 Quinzenal (De 15 em 15 dias - 26 quinzenas / 1 ano)</option>
+                    <option value="mensal">🌕 Mensal (1 vez por mês - 12 meses / 1 ano)</option>
+                  </select>
+                </div>
+              </div>
+            )}
+          </div>
 
           <div style={{ display: 'flex', justifyContent: 'flex-end', gap: '10px', borderTop: '1px solid #242424', paddingTop: '16px', marginTop: '6px' }}>
             <button

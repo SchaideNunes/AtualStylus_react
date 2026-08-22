@@ -3,6 +3,7 @@ import { api } from '../services/api';
 import { ModalBloqueio } from '../components/ModalBloqueio';
 import { ModalNovoAgendamento } from '../components/ModalNovoAgendamento';
 import { ModalBloqueioUnitario } from '../components/ModalBloqueioUnitario';
+import { ModalClientesFixos } from '../components/ModalClientesFixos';
 import { 
   formatarDataBR, 
   getDataHojeString, 
@@ -25,7 +26,8 @@ import {
   Scissors, 
   Lock, 
   Check, 
-  RotateCcw
+  RotateCcw,
+  Repeat
 } from 'lucide-react';
 import '../styles/admin.css';
 
@@ -43,6 +45,7 @@ export function Admin({ onLogout }) {
   const [modalNovoAgendamentoAberto, setModalNovoAgendamentoAberto] = useState(false);
   const [modalBloqueioUnitarioAberto, setModalBloqueioUnitarioAberto] = useState(false);
   const [modalBloqueioLoteAberto, setModalBloqueioLoteAberto] = useState(false);
+  const [modalClientesFixosAberto, setModalClientesFixosAberto] = useState(false);
 
   // Aba Config
   const [configBarbeiroId, setConfigBarbeiroId] = useState('1');
@@ -401,6 +404,14 @@ export function Admin({ onLogout }) {
                 </button>
 
                 <button 
+                  onClick={() => setModalClientesFixosAberto(true)}
+                  className="btn-acao-rapida btn-bloqueio-unitario"
+                  style={{ padding: '12px 18px', fontSize: '0.9rem' }}
+                >
+                  <Repeat size={18} /> Clientes Fixos
+                </button>
+
+                <button 
                   onClick={() => setModalBloqueioLoteAberto(true)}
                   className="btn-acao-rapida btn-bloqueio-lote"
                   style={{ padding: '12px 18px', fontSize: '0.9rem' }}
@@ -606,6 +617,12 @@ export function Admin({ onLogout }) {
         dataInicial={getDataHojeString()}
         barbeiroIdInicial="1"
         onConfirmar={handleConfirmarBloqueioLote}
+      />
+
+      <ModalClientesFixos 
+        isOpen={modalClientesFixosAberto}
+        onClose={() => setModalClientesFixosAberto(false)}
+        onAtualizarGeral={carregarAgendamentos}
       />
     </div>
   );
