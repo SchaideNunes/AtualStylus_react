@@ -58,9 +58,33 @@ export class InMemoryDatabase {
         foto: '/assets/corte-barba.webp',
         categoria: 'Barba & Cuidados',
         ativo: true
+      },
+      {
+        id: 3,
+        nome: 'Shampoo Anticaspa Refrescante Mentol',
+        descricao: 'Limpeza profunda do couro cabeludo com sensação refrescante e controle de oleosidade.',
+        preco: 30.00,
+        preco_promocional: 24.00,
+        porcentagem_desconto: 20,
+        em_promocao: true,
+        foto: '/assets/navalhado.webp',
+        categoria: 'Shampoos & Tratamentos',
+        ativo: true
+      },
+      {
+        id: 4,
+        nome: 'Balm Alinhador e Modelador de Barba',
+        descricao: 'Reduz o frizz dos fios da barba, modela e hidrata sem deixar resíduos oleosos.',
+        preco: 32.00,
+        preco_promocional: null,
+        porcentagem_desconto: 0,
+        em_promocao: false,
+        foto: '/assets/barba-pezinho.webp',
+        categoria: 'Barba & Cuidados',
+        ativo: true
       }
     ];
-    this.nextProdutoId = 3;
+    this.nextProdutoId = 5;
   }
 
   async getBarbeiroConfig(id) {
