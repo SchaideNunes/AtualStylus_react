@@ -160,4 +160,23 @@ describe('Agendamento Service & SQL Business Rules (TDD)', () => {
     expect(agPassado.status).toBe('concluido');
     expect(agFuturo.status).toBe('confirmado');
   });
+
+  it('deve criar 52 agendamentos semanais para cliente fixo anual', async () => {
+    const criados = await service.criarClienteRecorrente({
+      nome: 'Cliente Fixo Anual',
+      telefone: '(75) 99999-8888',
+      servico: 'Corte e Barba - R$ 35',
+      valor: 35,
+      barbeiro_id: 1,
+      barbeiro_nome: 'Geilson',
+      data_agendamento: '2026-08-25',
+      horario: '08:30'
+    }, 52);
+
+    expect(criados.length).toBe(52);
+    expect(criados[0].data_agendamento).toBe('2026-08-25');
+    expect(criados[1].data_agendamento).toBe('2026-09-01');
+    expect(criados[51].horario).toBe('08:30');
+    expect(criados[51].nome).toBe('Cliente Fixo Anual');
+  });
 });

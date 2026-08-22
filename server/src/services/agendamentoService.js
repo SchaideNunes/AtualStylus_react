@@ -137,14 +137,20 @@ export class AgendamentoService {
       barbeiro_id,
       barbeiro_nome,
       data_inicial,
+      data_agendamento,
       horario
     } = dados;
 
-    const bId = parseInt(barbeiro_id);
+    const dataBase = normalizarDataISO(data_inicial || data_agendamento);
+    if (!dataBase) {
+      throw new Error('Data inicial é obrigatória para cliente recorrente');
+    }
+
+    const bId = parseInt(barbeiro_id) || 1;
     const bNome = barbeiro_nome || (bId === 1 ? 'Geilson' : 'Denilson');
     const inserts = [];
 
-    let [ano, mes, dia] = data_inicial.split('-').map(Number);
+    const [ano, mes, dia] = dataBase.split('-').map(Number);
     let dataAtual = new Date(ano, mes - 1, dia);
 
     for (let i = 0; i < semanas; i++) {
@@ -154,15 +160,15 @@ export class AgendamentoService {
       const dataStr = `${y}-${m}-${d}`;
 
       inserts.push({
-        nome: String(nome).trim(),
+        nome: String(nome || 'CLIENTE FIXO').trim(),
         telefone: String(telefone || '').trim(),
-        servico,
+        servico: servico || 'Corte e Barba - R$ 35',
         valor: Number(valor) || 0,
         barbeiro_id: bId,
         barbeiro_nome: bNome,
         data_agendamento: dataStr,
         horario,
-        status: nome === 'BLOQUEIO' ? 'bloqueado' : 'confirmado'
+        status: (nome === 'BLOQUEIO' || dados.status === 'bloqueado') ? 'bloqueado' : 'confirmado'
       });
 
       // Adiciona 7 dias

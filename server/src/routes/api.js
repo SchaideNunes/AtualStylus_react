@@ -140,16 +140,16 @@ apiRouter.get('/admin/agendamentos', authMiddleware, async (req, res) => {
 apiRouter.post('/admin/agendamentos', authMiddleware, async (req, res) => {
   try {
     const { agendamentoService } = getServices();
-    const { recorrente, ...dados } = req.body;
+    const isRecorrente = Boolean(req.body.recorrente === true || req.body.recorrente === 'true' || req.body.isRecorrente);
 
-    if (recorrente) {
+    if (isRecorrente) {
       const criados = await agendamentoService.criarClienteRecorrente({
-        ...dados,
-        data_inicial: dados.data_agendamento
+        ...req.body,
+        data_inicial: req.body.data_agendamento || req.body.data_inicial
       });
       return res.status(201).json(criados);
     } else {
-      const ag = await agendamentoService.criarAgendamento(dados);
+      const ag = await agendamentoService.criarAgendamento(req.body);
       return res.status(201).json(ag);
     }
   } catch (err) {
