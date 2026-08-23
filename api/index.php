@@ -287,7 +287,8 @@ if ($method === 'POST' && $rota === 'admin/agendamentos') {
     $barbeiroId = isset($input['barbeiroId']) ? (int)$input['barbeiroId'] : (isset($input['barbeiro_id']) ? (int)$input['barbeiro_id'] : 1);
     $dataAgendamento = isset($input['data']) ? trim($input['data']) : (isset($input['data_agendamento']) ? trim($input['data_agendamento']) : '');
     $horario = isset($input['horario']) ? trim($input['horario']) : '';
-    $isFixo = isset($input['isFixo']) ? (bool)$input['isFixo'] : false;
+    $isFixo = isset($input['isFixo']) ? (bool)$input['isFixo'] : (isset($input['recorrente']) ? (bool)$input['recorrente'] : false);
+    $status = isset($input['status']) && in_array($input['status'], ['confirmado', 'bloqueado', 'concluido', 'cancelado']) ? $input['status'] : 'confirmado';
 
     if (empty($nome) || !$barbeiroId || empty($dataAgendamento) || empty($horario)) {
         http_response_code(400);
@@ -304,7 +305,7 @@ if ($method === 'POST' && $rota === 'admin/agendamentos') {
 
     // Se for cliente fixo, agendar para as próximas 52 semanas
     if ($isFixo) {
-        $stmtInsert = $db->prepare("INSERT INTO agendamentos (nome, telefone, servico, valor, barbeiro_id, barbeiro_nome, data_agendamento, horario, status) VALUES (?, ?, ?, ?, ?, ?, ?, ?, 'confirmado')");
+        $stmtInsert = $db->prepare("INSERT INTO agendamentos (nome, telefone, servico, valor, barbeiro_id, barbeiro_nome, data_agendamento, horario, status) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)");
         $stmtCheck = $db->prepare("SELECT id FROM agendamentos WHERE data_agendamento = ? AND horario = ? AND barbeiro_id = ? AND status != 'cancelado'");
         
         $criados = 0;
@@ -313,7 +314,7 @@ if ($method === 'POST' && $rota === 'admin/agendamentos') {
             $dataAtualStr = $dataRef->format('Y-m-d');
             $stmtCheck->execute([$dataAtualStr, $horario, $barbeiroId]);
             if (!$stmtCheck->fetch()) {
-                $stmtInsert->execute([$nome, $telefone, $servico, $valor, $barbeiroId, $barbeiroNome, $dataAtualStr, $horario]);
+                $stmtInsert->execute([$nome, $telefone, $servico, $valor, $barbeiroId, $barbeiroNome, $dataAtualStr, $horario, $status]);
                 $criados++;
             }
             $dataRef->modify('+7 days');
@@ -332,8 +333,8 @@ if ($method === 'POST' && $rota === 'admin/agendamentos') {
         exit;
     }
 
-    $stmtInsert = $db->prepare("INSERT INTO agendamentos (nome, telefone, servico, valor, barbeiro_id, barbeiro_nome, data_agendamento, horario, status) VALUES (?, ?, ?, ?, ?, ?, ?, ?, 'confirmado')");
-    $stmtInsert->execute([$nome, $telefone, $servico, $valor, $barbeiroId, $barbeiroNome, $dataAgendamento, $horario]);
+    $stmtInsert = $db->prepare("INSERT INTO agendamentos (nome, telefone, servico, valor, barbeiro_id, barbeiro_nome, data_agendamento, horario, status) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)");
+    $stmtInsert->execute([$nome, $telefone, $servico, $valor, $barbeiroId, $barbeiroNome, $dataAgendamento, $horario, $status]);
 
     $id = $db->lastInsertId();
     $stmtNovo = $db->prepare('SELECT * FROM agendamentos WHERE id = ?');
@@ -349,7 +350,7 @@ if ($method === 'POST' && $rota === 'admin/bloqueios/lote') {
     exigirAuthAdmin();
 
     $barbeiroId = isset($input['barbeiroId']) ? (int)$input['barbeiroId'] : (isset($input['barbeiro_id']) ? (int)$input['barbeiro_id'] : 0);
-    $data = isset($input['data']) ? trim($input['data']) : '';
+    $data = isset($input['data']) ? trim($input['data']) : (isset($input['data_agendamento']) ? trim($input['data_agendamento']) : (isset($input['dataAgendamento']) ? trim($input['dataAgendamento']) : ''));
     $horarios = isset($input['horarios']) && is_array($input['horarios']) ? $input['horarios'] : [];
 
     if (!$barbeiroId || empty($data) || empty($horarios)) {

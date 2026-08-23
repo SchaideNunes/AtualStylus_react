@@ -123,8 +123,11 @@ export function ModalBloqueio({ isOpen, onClose, dataInicial, barbeiroIdInicial 
     try {
       setSalvando(true);
       await onConfirmar({
+        barbeiroId: parseInt(barbeiroId),
         barbeiro_id: parseInt(barbeiroId),
+        barbeiroNome: barbeiroNome,
         barbeiro_nome: barbeiroNome,
+        data: data,
         data_agendamento: data,
         horarios: slotsSelecionados
       });
