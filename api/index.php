@@ -303,21 +303,30 @@ if ($method === 'POST' && $rota === 'admin/agendamentos') {
 
     $barbeiroNome = $barbeiroId === 1 ? 'Geilson' : 'Denilson';
 
-    // Se for cliente fixo, agendar para as próximas 52 semanas
+    // Se for cliente fixo, agendar com a frequência escolhida
     if ($isFixo) {
+        $frequencia = isset($input['frequencia']) ? strtolower($input['frequencia']) : 'semanal';
+        $repeticoes = isset($input['totalRepeticoes']) ? (int)$input['totalRepeticoes'] : ($frequencia === 'quinzenal' ? 26 : ($frequencia === 'mensal' ? 12 : 52));
+        
         $stmtInsert = $db->prepare("INSERT INTO agendamentos (nome, telefone, servico, valor, barbeiro_id, barbeiro_nome, data_agendamento, horario, status) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)");
         $stmtCheck = $db->prepare("SELECT id FROM agendamentos WHERE data_agendamento = ? AND horario = ? AND barbeiro_id = ? AND status != 'cancelado'");
         
         $criados = 0;
         $dataRef = new DateTime($dataAgendamento);
-        for ($i = 0; $i < 52; $i++) {
+        for ($i = 0; $i < $repeticoes; $i++) {
             $dataAtualStr = $dataRef->format('Y-m-d');
             $stmtCheck->execute([$dataAtualStr, $horario, $barbeiroId]);
             if (!$stmtCheck->fetch()) {
                 $stmtInsert->execute([$nome, $telefone, $servico, $valor, $barbeiroId, $barbeiroNome, $dataAtualStr, $horario, $status]);
                 $criados++;
             }
-            $dataRef->modify('+7 days');
+            if ($frequencia === 'quinzenal') {
+                $dataRef->modify('+14 days');
+            } elseif ($frequencia === 'mensal') {
+                $dataRef->modify('+1 month');
+            } else {
+                $dataRef->modify('+7 days');
+            }
         }
 
         echo json_encode(['message' => "Cliente fixo agendado com sucesso ($criados datas criadas)."], JSON_UNESCAPED_UNICODE);
@@ -403,8 +412,71 @@ if ($method === 'DELETE' && preg_match('#^admin/agendamentos/(\d+)$#', $rota, $m
     exit;
 }
 
-// GET /api/admin/barbeiros/{id}/config
-if ($method === 'GET' && preg_match('#^admin/barbeiros/(\d+)/config$#', $rota, $m)) {
+// GET /api/admin/clientes-fixos
+if ($method === 'GET' && $rota === 'admin/clientes-fixos') {
+    exigirAuthAdmin();
+
+    $hojeStr = date('Y-m-d');
+    $stmt = $db->prepare("SELECT * FROM agendamentos WHERE data_agendamento >= ? AND status != 'cancelado' AND status != 'bloqueado' AND nome != 'BLOQUEIO' ORDER BY data_agendamento ASC, horario ASC");
+    $stmt->execute([$hojeStr]);
+    $agendamentos = $stmt->fetchAll();
+
+    $grupos = [];
+    foreach ($agendamentos as $ag) {
+        $telLimpo = preg_replace('/\D/', '', $ag['telefone'] ?: '');
+        $chave = strtolower(trim($ag['nome'])) . '_' . $telLimpo . '_' . $ag['barbeiro_id'] . '_' . $ag['horario'];
+
+        if (!isset($grupos[$chave])) {
+            $grupos[$chave] = [
+                'chave' => $chave,
+                'nome' => $ag['nome'],
+                'telefone' => $ag['telefone'],
+                'barbeiro_id' => (int)$ag['barbeiro_id'],
+                'barbeiro_nome' => $ag['barbeiro_nome'],
+                'servico' => $ag['servico'],
+                'horario' => $ag['horario'],
+                'datas' => []
+            ];
+        }
+
+        $grupos[$chave]['datas'][] = [
+            'id' => (int)$ag['id'],
+            'data_agendamento' => $ag['data_agendamento'],
+            'horario' => $ag['horario'],
+            'status' => $ag['status']
+        ];
+    }
+
+    $resultado = array_values(array_filter($grupos, function($g) {
+        return count($g['datas']) >= 2 || stripos($g['nome'], 'FIXO') !== false;
+    }));
+
+    echo json_encode($resultado, JSON_UNESCAPED_UNICODE);
+    exit;
+}
+
+// POST /api/admin/clientes-fixos/deletar-lote
+if ($method === 'POST' && $rota === 'admin/clientes-fixos/deletar-lote') {
+    exigirAuthAdmin();
+
+    $ids = isset($input['ids']) && is_array($input['ids']) ? $input['ids'] : [];
+    if (empty($ids)) {
+        http_response_code(400);
+        echo json_encode(['error' => 'Lista de IDs para exclusão é obrigatória.'], JSON_UNESCAPED_UNICODE);
+        exit;
+    }
+
+    $inPlaceholders = implode(',', array_fill(0, count($ids), '?'));
+    $stmt = $db->prepare("DELETE FROM agendamentos WHERE id IN ($inPlaceholders)");
+    $stmt->execute(array_map('intval', $ids));
+    $count = $stmt->rowCount();
+
+    echo json_encode(['message' => "$count agendamentos removidos com sucesso."], JSON_UNESCAPED_UNICODE);
+    exit;
+}
+
+// GET /api/admin/barbeiros/{id}/config OU /api/admin/config/barbeiro/{id}
+if ($method === 'GET' && (preg_match('#^admin/barbeiros/(\d+)/config$#', $rota, $m) || preg_match('#^admin/config/barbeiro/(\d+)$#', $rota, $m))) {
     exigirAuthAdmin();
     $id = (int)$m[1];
 
@@ -423,8 +495,8 @@ if ($method === 'GET' && preg_match('#^admin/barbeiros/(\d+)/config$#', $rota, $
     exit;
 }
 
-// PUT /api/admin/barbeiros/{id}/config
-if ($method === 'PUT' && preg_match('#^admin/barbeiros/(\d+)/config$#', $rota, $m)) {
+// PUT /api/admin/barbeiros/{id}/config OU /api/admin/config/barbeiro/{id}
+if ($method === 'PUT' && (preg_match('#^admin/barbeiros/(\d+)/config$#', $rota, $m) || preg_match('#^admin/config/barbeiro/(\d+)$#', $rota, $m))) {
     exigirAuthAdmin();
     $id = (int)$m[1];
     $horarios = isset($input['horarios']) && is_array($input['horarios']) ? $input['horarios'] : [];
