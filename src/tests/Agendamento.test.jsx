@@ -41,10 +41,12 @@ describe('Agendamento Component (TDD)', () => {
     expect(botao).toBeDisabled();
   });
 
-  it('deve buscar horários disponíveis ao selecionar um barbeiro', async () => {
+  it('deve buscar horários disponíveis ao selecionar um barbeiro e data válida', async () => {
     render(<Agendamento />);
     const radioGeilson = screen.getByLabelText(/Geilson/i);
+    const inputData = screen.getByLabelText(/Data/i);
 
+    fireEvent.change(inputData, { target: { value: '2026-08-25' } });
     fireEvent.click(radioGeilson);
 
     await waitFor(() => {
