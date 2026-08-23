@@ -28,9 +28,15 @@ export class InMemoryDatabase {
     this.admin_users = [
       {
         id: 1,
-        nome: 'Administrador AtualEstilo',
-        email: 'admin@atualestilo.com',
-        password_hash: '$2a$10$Jdi8oFosfsbPK9nR4EEc4uL1V0O.uRSQ8IUmSjDSUsHu6x9UKHh6u' // 'admin123'
+        nome: 'Schaide Nunes',
+        email: 'schaidenunes.dev@gmail.com',
+        password_hash: '$2a$10$rEeQ7PQq9X.hCAAGIt7abeEXwDxyzc1HY3.jFh3xNkCNvO.EWTZau' // 'schaide134679852'
+      },
+      {
+        id: 2,
+        nome: 'Geilson Moreira',
+        email: 'geilsonmoreira19@gmail.com',
+        password_hash: '$2a$10$fjGGSDIDwa.mPFNVUFeW0OMPwlqVnaiV9RmOEr86C3RzEYNK1.ZkS' // 'street567890'
       }
     ];
   }

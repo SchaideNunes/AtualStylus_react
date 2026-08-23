@@ -55,7 +55,7 @@ export function Login({ onLoginSucesso, onVoltarHome }) {
                 type="email" 
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
-                placeholder="admin@atualestilo.com"
+                placeholder="seu-email@gmail.com"
                 className="input-limpo"
                 autoComplete="email"
                 required

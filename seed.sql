@@ -25,14 +25,24 @@ ON DUPLICATE KEY UPDATE
     foto = VALUES(foto),
     horarios = VALUES(horarios);
 
--- 2. Administrador Padrão (Email: admin@atualestilo.com / Senha padrão: admin123)
--- Hash bcrypt de 'admin123' com 10 rounds: $2a$10$Jdi8oFosfsbPK9nR4EEc4uL1V0O.uRSQ8IUmSjDSUsHu6x9UKHh6u
+-- 2. Administradores do Sistema
+-- Usuário 1: Schaidenunes.dev@gmail.com / schaide134679852
+-- Usuário 2: geilsonMoreira19@gmail.com / street567890
+DELETE FROM admin_users;
+
 INSERT INTO admin_users (id, nome, email, password_hash)
-VALUES (
+VALUES 
+(
     1,
-    'Administrador AtualEstilo',
-    'admin@atualestilo.com',
-    '$2a$10$Jdi8oFosfsbPK9nR4EEc4uL1V0O.uRSQ8IUmSjDSUsHu6x9UKHh6u'
+    'Schaide Nunes',
+    'schaidenunes.dev@gmail.com',
+    '$2a$10$rEeQ7PQq9X.hCAAGIt7abeEXwDxyzc1HY3.jFh3xNkCNvO.EWTZau'
+),
+(
+    2,
+    'Geilson Moreira',
+    'geilsonmoreira19@gmail.com',
+    '$2a$10$fjGGSDIDwa.mPFNVUFeW0OMPwlqVnaiV9RmOEr86C3RzEYNK1.ZkS'
 )
 ON DUPLICATE KEY UPDATE
     nome = VALUES(nome),

@@ -46,9 +46,14 @@ CREATE TABLE IF NOT EXISTS admin_users (
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
--- 2. USUÁRIO ADMINISTRADOR PADRÃO (admin@atualestilo.com / admin123)
+-- 2. USUÁRIOS ADMINISTRADORES
+-- 1. schaidenunes.dev@gmail.com / schaide134679852
+-- 2. geilsonmoreira19@gmail.com / street567890
+DELETE FROM admin_users;
 INSERT INTO admin_users (id, nome, email, password_hash)
-VALUES (1, 'Administrador AtualEstilo', 'admin@atualestilo.com', '$2a$10$Jdi8oFosfsbPK9nR4EEc4uL1V0O.uRSQ8IUmSjDSUsHu6x9UKHh6u')
+VALUES 
+(1, 'Schaide Nunes', 'schaidenunes.dev@gmail.com', '$2a$10$rEeQ7PQq9X.hCAAGIt7abeEXwDxyzc1HY3.jFh3xNkCNvO.EWTZau'),
+(2, 'Geilson Moreira', 'geilsonmoreira19@gmail.com', '$2a$10$fjGGSDIDwa.mPFNVUFeW0OMPwlqVnaiV9RmOEr86C3RzEYNK1.ZkS')
 ON DUPLICATE KEY UPDATE nome = VALUES(nome), password_hash = VALUES(password_hash);
 
 -- 3. CONFIGURAÇÃO DOS BARBEIROS (Com os horários reais do Supabase)
