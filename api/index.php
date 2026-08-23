@@ -23,9 +23,19 @@ if ($_SERVER['REQUEST_METHOD'] === 'OPTIONS') {
 $method = $_SERVER['REQUEST_METHOD'];
 $uri = parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH);
 
-// Normalizar rota removendo prefixos se existirem (ex: /api ou /public_html/api)
-$rota = preg_replace('#^.*?/api/#i', '', $uri);
+// Normalizar rota removendo prefixos se existirem (ex: /api ou /public_html/api ou /api/index.php)
+$rota = preg_replace('#^.*?/api(?:/index\.php)?/?#i', '', $uri);
 $rota = trim($rota, '/');
+
+if (empty($rota) || $rota === 'status' || $rota === 'health') {
+    echo json_encode([
+        'status' => 'online',
+        'service' => 'AtualEstilo Barbearia API',
+        'version' => '2.0.0',
+        'timestamp' => date('Y-m-d H:i:s')
+    ], JSON_UNESCAPED_UNICODE);
+    exit;
+}
 
 $input = json_decode(file_get_contents('php://input'), true) ?: [];
 $db = getDbConnection();
