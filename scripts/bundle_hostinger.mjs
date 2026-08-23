@@ -1,7 +1,10 @@
 import fs from 'fs';
 import path from 'path';
-import archiver from 'archiver';
+import { createRequire } from 'module';
 import { execSync } from 'child_process';
+
+const require = createRequire(import.meta.url);
+const { ZipArchive } = require('archiver');
 
 console.log("1. Compilando o frontend React para produção...");
 execSync('npm run build', { stdio: 'inherit' });
@@ -9,7 +12,7 @@ execSync('npm run build', { stdio: 'inherit' });
 console.log("2. Gerando o pacote deploy_hostinger.zip...");
 
 const output = fs.createWriteStream(path.resolve('deploy_hostinger.zip'));
-const archive = archiver('zip', { zlib: { level: 9 } });
+const archive = new ZipArchive({ zlib: { level: 9 } });
 
 output.on('close', function () {
   console.log(`\n🎉 Pacote criado com sucesso: deploy_hostinger.zip (${(archive.pointer() / 1024 / 1024).toFixed(2)} MB)`);
