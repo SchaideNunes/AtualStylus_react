@@ -210,8 +210,8 @@ if ($method === 'POST' && $rota === 'agendamentos') {
     exit;
 }
 
-// GET /api/meus-agendamentos?telefone=(XX) XXXXX-XXXX
-if ($method === 'GET' && $rota === 'meus-agendamentos') {
+// GET /api/agendamentos/cliente OU /api/meus-agendamentos?telefone=(XX) XXXXX-XXXX
+if ($method === 'GET' && ($rota === 'agendamentos/cliente' || $rota === 'meus-agendamentos')) {
     $telefone = isset($_GET['telefone']) ? trim($_GET['telefone']) : '';
     if (empty($telefone)) {
         http_response_code(400);
@@ -220,8 +220,11 @@ if ($method === 'GET' && $rota === 'meus-agendamentos') {
     }
 
     $hojeStr = date('Y-m-d');
-    $stmt = $db->prepare("SELECT * FROM agendamentos WHERE telefone = ? AND status = 'confirmado' AND data_agendamento >= ? ORDER BY data_agendamento ASC, horario ASC");
-    $stmt->execute([$telefone, $hojeStr]);
+    $telefoneDigitos = preg_replace('/\D/', '', $telefone);
+
+    // Buscar tanto por string exata quanto por dígitos limpos para não perder agendamentos
+    $stmt = $db->prepare("SELECT * FROM agendamentos WHERE (telefone = ? OR REPLACE(REPLACE(REPLACE(REPLACE(telefone, '(', ''), ')', ''), '-', ''), ' ', '') = ?) AND status = 'confirmado' AND data_agendamento >= ? ORDER BY data_agendamento ASC, horario ASC");
+    $stmt->execute([$telefone, $telefoneDigitos, $hojeStr]);
 
     echo json_encode($stmt->fetchAll(), JSON_UNESCAPED_UNICODE);
     exit;
