@@ -10,33 +10,46 @@
     RewriteCond %{HTTPS} off
     RewriteRule ^(.*)$ https://%{HTTP_HOST}%{REQUEST_URI} [L,R=301]
 
-    # 2. Roteamento da API PHP (/api/* -> api/index.php)
+    # 2. Redirecionar arquivos legados do site antigo para a raiz do React
+    RewriteRule ^(?:admin\.html|login\.html|script\.js|supabase-config\.js|style\.css)$ / [R=301,L]
+
+    # 3. Roteamento da API PHP (/api/* -> api/index.php)
     RewriteRule ^api/(.*)$ api/index.php [QSA,L]
     RewriteRule ^api$ api/index.php [QSA,L]
 
-    # 3. Roteamento do React SPA (Qualquer rota vai para index.html exceto arquivos reais)
+    # 4. Roteamento do React SPA (Qualquer rota vai para index.html exceto arquivos reais)
     RewriteCond %{REQUEST_FILENAME} !-f
     RewriteCond %{REQUEST_FILENAME} !-d
     RewriteRule ^ index.html [L]
 </IfModule>
 
-# 4. Proteger arquivos sensíveis
+# 5. Proteger arquivos sensíveis
 <FilesMatch "^\.env|\.git|composer\.json|package\.json|schema\.sql|seed\.sql">
     Order allow,deny
     Deny from all
 </FilesMatch>
 
-# 5. Compressão Gzip para Carregamento Ultrarrápido
+# 6. Forçar que o index.html NUNCA seja cacheado pelo navegador
+# Isso garante que qualquer cliente sempre carregue a versão React mais recente
+<FilesMatch "index\.html$">
+    <IfModule mod_headers.c>
+        Header set Cache-Control "no-cache, no-store, must-revalidate, max-age=0"
+        Header set Pragma "no-cache"
+        Header set Expires "Wed, 11 Jan 1984 05:00:00 GMT"
+    </IfModule>
+</FilesMatch>
+
+# 7. Compressão Gzip para Carregamento Ultrarrápido
 <IfModule mod_deflate.c>
     AddOutputFilterByType DEFLATE text/html text/plain text/xml text/css application/javascript application/json image/svg+xml
 </IfModule>
 
-# 6. Cache de Ativos Estáticos (Imagens, Fontes, JS, CSS)
+# 8. Cache de Ativos Estáticos com Hash (Assets)
 <IfModule mod_expires.c>
     ExpiresActive On
-    ExpiresByType image/webp "access plus 1 month"
-    ExpiresByType image/jpeg "access plus 1 month"
-    ExpiresByType image/png "access plus 1 month"
-    ExpiresByType text/css "access plus 1 month"
-    ExpiresByType application/javascript "access plus 1 month"
+    ExpiresByType image/webp "access plus 1 year"
+    ExpiresByType image/jpeg "access plus 1 year"
+    ExpiresByType image/png "access plus 1 year"
+    ExpiresByType text/css "access plus 1 year"
+    ExpiresByType application/javascript "access plus 1 year"
 </IfModule>

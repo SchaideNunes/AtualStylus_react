@@ -189,25 +189,39 @@ if ($method === 'POST' && $rota === 'agendamentos') {
 
     $barbeiroNome = $barbeiroId === 1 ? 'Geilson' : 'Denilson';
 
-    // Validação atômica de concorrência
-    $stmtCheck = $db->prepare("SELECT id FROM agendamentos WHERE data_agendamento = ? AND horario = ? AND barbeiro_id = ? AND status != 'cancelado' LIMIT 1");
-    $stmtCheck->execute([$dataAgendamento, $horario, $barbeiroId]);
-    if ($stmtCheck->fetch()) {
-        http_response_code(409);
-        echo json_encode(['error' => 'Este horário acabou de ser preenchido por outro cliente. Por favor, escolha outro.'], JSON_UNESCAPED_UNICODE);
+    // Transação atômica com bloqueio FOR UPDATE contra concorrência
+    $db->beginTransaction();
+    try {
+        $stmtCheck = $db->prepare("SELECT id FROM agendamentos WHERE data_agendamento = ? AND horario = ? AND barbeiro_id = ? AND status != 'cancelado' FOR UPDATE");
+        $stmtCheck->execute([$dataAgendamento, $horario, $barbeiroId]);
+        if ($stmtCheck->fetch()) {
+            $db->rollBack();
+            http_response_code(409);
+            echo json_encode(['error' => 'Este horário acabou de ser preenchido por outro cliente. Por favor, escolha outro.'], JSON_UNESCAPED_UNICODE);
+            exit;
+        }
+
+        $stmtInsert = $db->prepare("INSERT INTO agendamentos (nome, telefone, servico, valor, barbeiro_id, barbeiro_nome, data_agendamento, horario, status) VALUES (?, ?, ?, ?, ?, ?, ?, ?, 'confirmado')");
+        $stmtInsert->execute([$nome, $telefone, $servico, $valor, $barbeiroId, $barbeiroNome, $dataAgendamento, $horario]);
+
+        $id = $db->lastInsertId();
+        $stmtNovo = $db->prepare('SELECT * FROM agendamentos WHERE id = ?');
+        $stmtNovo->execute([$id]);
+        $agendamentoCriado = $stmtNovo->fetch();
+
+        $db->commit();
+
+        http_response_code(201);
+        echo json_encode($agendamentoCriado, JSON_UNESCAPED_UNICODE);
+        exit;
+    } catch (Exception $e) {
+        if ($db->inTransaction()) {
+            $db->rollBack();
+        }
+        http_response_code(500);
+        echo json_encode(['error' => 'Erro interno ao processar agendamento: ' . $e->getMessage()], JSON_UNESCAPED_UNICODE);
         exit;
     }
-
-    $stmtInsert = $db->prepare("INSERT INTO agendamentos (nome, telefone, servico, valor, barbeiro_id, barbeiro_nome, data_agendamento, horario, status) VALUES (?, ?, ?, ?, ?, ?, ?, ?, 'confirmado')");
-    $stmtInsert->execute([$nome, $telefone, $servico, $valor, $barbeiroId, $barbeiroNome, $dataAgendamento, $horario]);
-
-    $id = $db->lastInsertId();
-    $stmtNovo = $db->prepare('SELECT * FROM agendamentos WHERE id = ?');
-    $stmtNovo->execute([$id]);
-
-    http_response_code(201);
-    echo json_encode($stmtNovo->fetch(), JSON_UNESCAPED_UNICODE);
-    exit;
 }
 
 // GET /api/agendamentos/cliente OU /api/meus-agendamentos?telefone=(XX) XXXXX-XXXX

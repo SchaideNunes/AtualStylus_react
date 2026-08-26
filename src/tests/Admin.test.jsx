@@ -31,7 +31,7 @@ describe('Admin Component Revamp (TDD)', () => {
         valor: 35,
         barbeiro_id: 1,
         barbeiro_nome: 'Geilson',
-        data_agendamento: '2026-08-25',
+        data_agendamento: '2029-08-25',
         horario: '14:00',
         status: 'confirmado'
       }
@@ -47,8 +47,8 @@ describe('Admin Component Revamp (TDD)', () => {
         servico: 'Corte e Barba - R$ 35',
         horario: '14:00',
         datas: [
-          { id: 1, data_agendamento: '2026-08-25', horario: '14:00', status: 'confirmado' },
-          { id: 2, data_agendamento: '2026-09-01', horario: '14:00', status: 'confirmado' }
+          { id: 1, data_agendamento: '2029-08-25', horario: '14:00', status: 'confirmado' },
+          { id: 2, data_agendamento: '2029-09-01', horario: '14:00', status: 'confirmado' }
         ]
       }
     ]);
