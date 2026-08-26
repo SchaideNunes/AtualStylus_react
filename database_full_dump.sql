@@ -1,5 +1,5 @@
 -- ==============================================================================
--- ATUALESTILO BARBEARIA - MIGRAÇÃO COMPLETA DE DADOS (SUPABASE -> MYSQL HOSTINGER)
+-- ATUALESTILO BARBEARIA - BASE DE DADOS COMPLETA MYSQL (HOSTINGER / PRODUÇÃO)
 -- Total de Agendamentos: 3130
 -- Data da Exportação: 2026-08-23T16:30:02.342Z
 -- ==============================================================================
@@ -56,7 +56,7 @@ VALUES
 (2, 'Geilson Moreira', 'geilsonmoreira19@gmail.com', '$2a$10$fjGGSDIDwa.mPFNVUFeW0OMPwlqVnaiV9RmOEr86C3RzEYNK1.ZkS')
 ON DUPLICATE KEY UPDATE nome = VALUES(nome), password_hash = VALUES(password_hash);
 
--- 3. CONFIGURAÇÃO DOS BARBEIROS (Com os horários reais do Supabase)
+-- 3. CONFIGURAÇÃO DOS BARBEIROS (Horários de atendimento)
 INSERT INTO barbeiros_config (id, nome, telefone_whatsapp, foto, horarios)
 VALUES (1, 'Geilson', '5575991309594', 'assets/Geilson.webp', '["09:30","10:00","11:00","14:00","14:30","15:30","16:00","16:30","17:30"]')
 ON DUPLICATE KEY UPDATE horarios = VALUES(horarios);

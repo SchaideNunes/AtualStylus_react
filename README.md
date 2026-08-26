@@ -126,7 +126,7 @@ Atual_Stylus_React/
 ├── docker-compose.yml         # Orquestração de containers locais (App + MySQL + phpMyAdmin)
 ├── schema.sql                 # Estrutura DDL do banco de dados relacional
 ├── seed.sql                   # Carga inicial com barbeiros e credenciais de admin
-└── migration_supabase_to_mysql.sql # Script completo de migração histórica
+└── database_full_dump.sql     # Base completa com histórico de agendamentos para MySQL
 ```
 
 ---
@@ -169,7 +169,7 @@ docker compose up --build -d
 
 ### 🌐 3. Implantação na Hostinger (Hospedagem Web)
 
-1. No **hPanel da Hostinger**, crie um banco de dados MySQL e importe o arquivo `migration_supabase_to_mysql.sql`.
+1. No **hPanel da Hostinger**, crie um banco de dados MySQL e importe o arquivo `database_full_dump.sql` (ou `schema.sql`).
 2. Configure o arquivo `.env` na pasta `public_html` com os dados de conexão do banco.
 3. Envie os arquivos compilados da pasta `dist`, a pasta `api` e o `.htaccess` para a `public_html`.
 4. O site estará instantaneamente online com HTTPS e integração completa!
