@@ -13,7 +13,7 @@ describe('Home Component Revamp (TDD)', () => {
     expect(screen.getByAltText(/Logo AtualEstilo/i)).toBeInTheDocument();
     expect(screen.getByText(/ESTILO & PRECISÃO/i)).toBeInTheDocument();
     expect(screen.getByText(/08:30 às 18:30/i)).toBeInTheDocument();
-    expect(screen.getByText(/Barrocas - BA/i)).toBeInTheDocument();
+    expect(screen.getAllByText(/Barrocas - BA/i)[0]).toBeInTheDocument();
   });
 
   it('deve navegar para a tela de agendamento ao clicar no botão CTA principal', () => {

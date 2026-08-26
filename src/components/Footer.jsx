@@ -15,7 +15,7 @@ function WhatsAppLogo({ size = 20 }) {
   );
 }
 
-export function Footer({ onNavegar }) {
+export function Footer({ onNavegar, onAbrirPrivacidade }) {
   return (
     <footer className="rodape">
       <div className="container-rodape">
@@ -23,7 +23,7 @@ export function Footer({ onNavegar }) {
           <div className="coluna-rodape">
             <h3>AtualEstilo</h3>
             <p className="texto-coluna">
-              Tradição e estilo em cada corte. Sua barbearia de confiança com atendimento de excelência e profissionais dedicados.
+              Tradição e estilo em cada corte. Sua barbearia de confiança com atendimento de excelência e profissionais dedicados em Barrocas - BA.
             </p>
           </div>
 
@@ -42,6 +42,11 @@ export function Footer({ onNavegar }) {
               <li>
                 <button onClick={() => onNavegar('meusAgendamentos')} className="link-rodape">Meus Agendamentos</button>
               </li>
+              {onAbrirPrivacidade && (
+                <li>
+                  <button onClick={onAbrirPrivacidade} className="link-rodape">Política de Privacidade (LGPD)</button>
+                </li>
+              )}
             </ul>
           </div>
 
@@ -77,8 +82,15 @@ export function Footer({ onNavegar }) {
                 <span>contato@atualestilo.com.br</span>
               </li>
               <li className="item-contato">
-                <MapPin className="icone-contato" size={18} />
-                <span>Rua Monsenhor Carlos Olimpio, 31, Barrocas-BA</span>
+                <a 
+                  href="https://www.google.com/maps/search/?api=1&query=Barbearia+atual+estilo+Barrocas+BA"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="link-endereco-rodape"
+                >
+                  <MapPin className="icone-contato" size={18} />
+                  <span>Rua Monsenhor Carlos Olímpio, 31, Barrocas-BA</span>
+                </a>
               </li>
             </ul>
           </div>

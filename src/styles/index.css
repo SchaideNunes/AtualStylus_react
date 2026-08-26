@@ -1822,5 +1822,826 @@ html.modal-aberto {
   opacity: 0.6;
 }
 
+/* ============================================================================== */
+/* ESTILOS DE DESTAQUE: FAQ, DEPOIMENTOS, MAPA, STICKY CTA & MODAIS */
+/* ============================================================================== */
 
+/* Seções Globais */
+.badge-secao-tag {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  background: rgba(255, 255, 255, 0.08);
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  color: #e5e7eb;
+  padding: 6px 14px;
+  border-radius: 999px;
+  font-size: 0.85rem;
+  font-weight: 600;
+  letter-spacing: 0.5px;
+  text-transform: uppercase;
+  margin-bottom: 12px;
+}
 
+.titulo-secao-principal {
+  font-size: clamp(1.8rem, 3.5vw, 2.6rem);
+  font-weight: 900;
+  color: #ffffff;
+  letter-spacing: -0.5px;
+  margin-bottom: 10px;
+}
+
+.subtitulo-secao-principal {
+  font-size: 1.05rem;
+  color: var(--text-muted);
+  max-width: 600px;
+  margin: 0 auto;
+  line-height: 1.6;
+}
+
+/* ============================================================================== */
+/* 1. DEPOIMENTOS REAIS (GOOGLE REVIEWS) */
+/* ============================================================================== */
+.secao-depoimentos-container {
+  padding: 80px 20px;
+  max-width: 1200px;
+  margin: 0 auto;
+  text-align: center;
+}
+
+.depoimentos-cabecalho {
+  margin-bottom: 40px;
+}
+
+.card-score-google {
+  display: inline-block;
+  background: #111111;
+  border: 1px solid #262626;
+  border-radius: 20px;
+  padding: 16px 28px;
+  margin-top: 24px;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+}
+
+.google-logo-wrapper {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  text-align: left;
+}
+
+.info-google-score {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.linha-score-estrelas {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.numero-score {
+  font-size: 1.6rem;
+  font-weight: 900;
+  color: #ffffff;
+  line-height: 1;
+}
+
+.estrelas-score {
+  display: flex;
+  gap: 3px;
+}
+
+.subtexto-score {
+  font-size: 0.85rem;
+  color: #9ca3af;
+  font-weight: 500;
+}
+
+.grid-cards-depoimentos {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+  gap: 20px;
+  text-align: left;
+}
+
+.card-depoimento-individual {
+  background: #141414;
+  border: 1px solid #222222;
+  border-radius: 20px;
+  padding: 24px;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  transition: all 0.3s ease;
+}
+
+.card-depoimento-individual:hover {
+  border-color: #444444;
+  transform: translateY(-4px);
+  box-shadow: 0 12px 30px rgba(0, 0, 0, 0.6);
+}
+
+.card-depoimento-topo {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.avatar-cliente-wrapper {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.avatar-cliente-foto {
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  object-fit: cover;
+  border: 2px solid #2a2a2a;
+}
+
+.nome-cliente-depoimento {
+  font-size: 1rem;
+  font-weight: 700;
+  color: #ffffff;
+  margin: 0;
+}
+
+.status-cliente-depoimento {
+  font-size: 0.75rem;
+  color: #9ca3af;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  margin-top: 2px;
+}
+
+.badge-tag-depoimento {
+  font-size: 0.72rem;
+  background: rgba(255, 255, 255, 0.08);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  color: #d1d5db;
+  padding: 4px 10px;
+  border-radius: 999px;
+  font-weight: 600;
+}
+
+.estrelas-card-depoimento {
+  display: flex;
+  gap: 2px;
+}
+
+.texto-depoimento-cliente {
+  font-size: 0.95rem;
+  color: #e5e7eb;
+  line-height: 1.6;
+  font-style: italic;
+  margin: 0;
+}
+
+/* ============================================================================== */
+/* 2. PERGUNTAS FREQUENTES (FAQ) */
+/* ============================================================================== */
+.secao-faq-container {
+  padding: 60px 20px 80px;
+  max-width: 900px;
+  margin: 0 auto;
+}
+
+.faq-cabecalho-secao {
+  text-align: center;
+  margin-bottom: 36px;
+}
+
+.faq-lista-acordeao {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.faq-item-card {
+  background: #121212;
+  border: 1px solid #242424;
+  border-radius: 16px;
+  overflow: hidden;
+  transition: all 0.3s ease;
+}
+
+.faq-item-card.aberto {
+  border-color: #4f4f4f;
+  background: #171717;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.4);
+}
+
+.faq-pergunta-btn {
+  width: 100%;
+  padding: 20px 24px;
+  background: transparent;
+  border: none;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  text-align: left;
+  cursor: pointer;
+  gap: 16px;
+  color: #ffffff;
+}
+
+.faq-pergunta-texto {
+  font-size: 1.05rem;
+  font-weight: 700;
+  color: #ffffff;
+  line-height: 1.4;
+}
+
+.faq-icone-seta {
+  color: #9ca3af;
+  transition: transform 0.3s ease;
+  flex-shrink: 0;
+}
+
+.faq-icone-seta.girar {
+  transform: rotate(180deg);
+  color: #ffffff;
+}
+
+.faq-resposta-container {
+  padding: 0 24px 22px 24px;
+  border-top: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+.faq-resposta-texto {
+  font-size: 0.95rem;
+  color: #d1d5db;
+  line-height: 1.65;
+  margin: 14px 0 0 0;
+}
+
+/* ============================================================================== */
+/* 3. MAPA DE LOCALIZAÇÃO & ROTAS */
+/* ============================================================================== */
+.secao-mapa-container {
+  padding: 40px 20px 80px;
+  max-width: 1100px;
+  margin: 0 auto;
+}
+
+.mapa-cabecalho {
+  text-align: center;
+  margin-bottom: 36px;
+}
+
+.card-mapa-wrapper {
+  background: #121212;
+  border: 1px solid #242424;
+  border-radius: 24px;
+  overflow: hidden;
+  box-shadow: 0 16px 40px rgba(0, 0, 0, 0.6);
+}
+
+.container-iframe-mapa {
+  width: 100%;
+  height: 360px;
+  background: #1c1c1c;
+}
+
+.container-iframe-mapa iframe {
+  display: block;
+  width: 100%;
+  height: 100%;
+  filter: contrast(1.1) brightness(0.9);
+}
+
+.info-rotas-box {
+  padding: 26px 30px;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  background: #151515;
+}
+
+@media (min-width: 768px) {
+  .info-rotas-box {
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+  }
+}
+
+.linha-endereco-destaque {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+
+.icone-mapa-destaque {
+  padding: 10px;
+  background: #222222;
+  border-radius: 12px;
+  box-sizing: content-box;
+  flex-shrink: 0;
+}
+
+.titulo-local-mapa {
+  font-size: 1.15rem;
+  font-weight: 800;
+  color: #ffffff;
+  margin: 0 0 4px 0;
+}
+
+.texto-endereco-mapa {
+  font-size: 0.9rem;
+  color: #9ca3af;
+  margin: 0;
+}
+
+.grupo-botoes-rotas {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  align-items: center;
+}
+
+.btn-rota-mapa {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 12px 18px;
+  border-radius: 12px;
+  font-size: 0.9rem;
+  font-weight: 700;
+  text-decoration: none;
+  transition: all 0.2s ease;
+}
+
+.btn-google-maps {
+  background: #ffffff;
+  color: #000000;
+}
+
+.btn-google-maps:hover {
+  background: #e5e7eb;
+  transform: translateY(-2px);
+}
+
+.btn-waze {
+  background: #1e293b;
+  color: #38bdf8;
+  border: 1px solid #334155;
+}
+
+.btn-waze:hover {
+  background: #334155;
+  color: #ffffff;
+  transform: translateY(-2px);
+}
+
+.btn-copiar-endereco {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 12px 16px;
+  border-radius: 12px;
+  background: #1f1f1f;
+  border: 1px solid #333333;
+  color: #d1d5db;
+  font-size: 0.9rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.btn-copiar-endereco:hover {
+  background: #2a2a2a;
+  color: #ffffff;
+}
+
+.icone-link-externo {
+  opacity: 0.6;
+}
+
+/* Link de endereço no rodapé */
+.link-endereco-rodape {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  color: inherit;
+  text-decoration: none;
+  transition: color 0.2s ease;
+}
+
+.link-endereco-rodape:hover {
+  color: #ffffff;
+}
+
+/* ============================================================================== */
+/* 4. STICKY MOBILE CTA (BOTÃO FIXO NO CELULAR) */
+/* ============================================================================== */
+.sticky-mobile-cta-wrapper {
+  position: fixed;
+  bottom: 20px;
+  left: 16px;
+  right: 16px;
+  z-index: 999;
+  display: flex;
+  justify-content: center;
+  pointer-events: none;
+  opacity: 0;
+  transform: translateY(30px);
+  transition: all 0.35s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.sticky-mobile-cta-wrapper.visivel {
+  opacity: 1;
+  transform: translateY(0);
+  pointer-events: auto;
+}
+
+.btn-sticky-mobile {
+  width: 100%;
+  max-width: 440px;
+  background: #ffffff;
+  color: #000000;
+  border: none;
+  border-radius: 16px;
+  padding: 15px 24px;
+  font-size: 1.05rem;
+  font-weight: 800;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.8), 0 0 20px rgba(255, 255, 255, 0.25);
+  cursor: pointer;
+  transition: transform 0.2s ease;
+}
+
+.btn-sticky-mobile:active {
+  transform: scale(0.97);
+}
+
+@media (min-width: 769px) {
+  .sticky-mobile-cta-wrapper {
+    display: none !important;
+  }
+}
+
+/* ============================================================================== */
+/* 5. MODAIS CUSTOMIZADOS (LGPD & CONFIRMAÇÃO COM PRÓXIMOS PASSOS) */
+/* ============================================================================== */
+.modal-backdrop-custom {
+  position: fixed;
+  inset: 0;
+  width: 100vw;
+  height: 100vh;
+  background: rgba(0, 0, 0, 0.88);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 99999;
+  padding: 16px;
+  overflow-y: auto;
+}
+
+.modal-conteudo-custom {
+  background: #141414;
+  border: 1px solid #2a2a2a;
+  border-radius: 24px;
+  width: 100%;
+  padding: 28px;
+  box-shadow: 0 25px 60px rgba(0, 0, 0, 0.95);
+  margin: auto;
+  position: relative;
+}
+
+/* Modal Privacidade LGPD */
+.modal-privacidade-box {
+  max-width: 580px;
+}
+
+.modal-cabecalho-custom {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 20px;
+  padding-bottom: 16px;
+  border-bottom: 1px solid #222222;
+}
+
+.titulo-com-icone-modal {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+}
+
+.icone-escudo-privacidade {
+  padding: 10px;
+  background: #202020;
+  border-radius: 12px;
+}
+
+.modal-titulo-texto {
+  font-size: 1.25rem;
+  font-weight: 800;
+  color: #ffffff;
+  margin: 0;
+}
+
+.modal-subtitulo-texto {
+  font-size: 0.8rem;
+  color: #9ca3af;
+}
+
+.btn-fechar-modal {
+  background: #1f1f1f;
+  border: 1px solid #333333;
+  color: #9ca3af;
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.btn-fechar-modal:hover {
+  background: #333333;
+  color: #ffffff;
+}
+
+.modal-corpo-scroll {
+  max-height: 55vh;
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  padding-right: 6px;
+}
+
+.bloco-privacidade p {
+  font-size: 0.92rem;
+  color: #d1d5db;
+  line-height: 1.6;
+  margin: 6px 0;
+}
+
+.titulo-bloco-privacidade {
+  font-size: 1rem;
+  font-weight: 700;
+  color: #ffffff;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin: 0 0 8px 0;
+}
+
+.lista-privacidade {
+  margin: 8px 0 0 16px;
+  padding: 0;
+  color: #d1d5db;
+  font-size: 0.9rem;
+  line-height: 1.6;
+}
+
+.modal-rodape-acoes {
+  margin-top: 24px;
+  padding-top: 16px;
+  border-top: 1px solid #222222;
+}
+
+.btn-confirmar-modal-acao {
+  background: #ffffff;
+  color: #000000;
+  border: none;
+  padding: 14px 20px;
+  border-radius: 12px;
+  font-size: 1rem;
+  font-weight: 800;
+  cursor: pointer;
+  transition: background 0.2s ease;
+}
+
+.btn-confirmar-modal-acao.full-width {
+  width: 100%;
+}
+
+.btn-confirmar-modal-acao:hover {
+  background: #e5e7eb;
+}
+
+/* Nota de privacidade no formulário de agendamento */
+.nota-privacidade-agendamento {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  background: rgba(34, 197, 94, 0.08);
+  border: 1px solid rgba(34, 197, 94, 0.2);
+  padding: 10px 14px;
+  border-radius: 10px;
+  font-size: 0.8rem;
+  color: #d1d5db;
+  margin-top: -6px;
+  margin-bottom: 6px;
+  line-height: 1.4;
+}
+
+.link-privacidade-inline {
+  background: transparent;
+  border: none;
+  color: #ffffff;
+  text-decoration: underline;
+  cursor: pointer;
+  padding: 0;
+  font-size: inherit;
+  font-weight: 600;
+}
+
+/* Modal de Confirmação & Próximos Passos (Thank You) */
+.modal-confirmacao-box {
+  max-width: 520px;
+  text-align: center;
+}
+
+.topo-sucesso-animado {
+  margin-bottom: 24px;
+}
+
+.circulo-icone-sucesso {
+  width: 72px;
+  height: 72px;
+  border-radius: 50%;
+  background: rgba(34, 197, 94, 0.12);
+  border: 2px solid rgba(34, 197, 94, 0.3);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 0 auto 16px auto;
+  box-shadow: 0 0 25px rgba(34, 197, 94, 0.25);
+}
+
+.titulo-sucesso-agendamento {
+  font-size: 1.55rem;
+  font-weight: 900;
+  color: #ffffff;
+  margin: 0 0 6px 0;
+}
+
+.subtitulo-sucesso-agendamento {
+  font-size: 0.95rem;
+  color: #9ca3af;
+  margin: 0;
+}
+
+.card-resumo-detalhado {
+  background: #1a1a1a;
+  border: 1px solid #292929;
+  border-radius: 18px;
+  padding: 18px 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  text-align: left;
+  margin-bottom: 20px;
+}
+
+.item-resumo-linha {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+}
+
+.icone-resumo {
+  color: #9ca3af;
+  flex-shrink: 0;
+}
+
+.resumo-coluna {
+  display: flex;
+  flex-direction: column;
+}
+
+.resumo-label {
+  font-size: 0.75rem;
+  color: #888888;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  font-weight: 600;
+}
+
+.resumo-valor {
+  font-size: 0.98rem;
+  color: #ffffff;
+  font-weight: 700;
+}
+
+.resumo-valor.destaque-horario {
+  font-size: 1.15rem;
+  color: #ffffff;
+  background: rgba(255, 255, 255, 0.1);
+  padding: 2px 8px;
+  border-radius: 6px;
+  display: inline-block;
+  margin-top: 2px;
+}
+
+.bloco-orientacoes-atendimento {
+  background: rgba(255, 255, 255, 0.03);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 14px;
+  padding: 14px 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  text-align: left;
+  font-size: 0.85rem;
+  color: #d1d5db;
+  margin-bottom: 24px;
+}
+
+.linha-dica-orientacao {
+  display: flex;
+  align-items: flex-start;
+  gap: 8px;
+  line-height: 1.45;
+}
+
+.ponto-dica-verde {
+  color: #22c55e;
+  font-weight: bold;
+}
+
+.grupo-botoes-confirmacao-modal {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+.btn-whatsapp-confirmacao-modal {
+  background: #22c55e;
+  color: #ffffff;
+  border: none;
+  padding: 16px 24px;
+  border-radius: 14px;
+  font-size: 1.05rem;
+  font-weight: 800;
+  text-decoration: none;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  box-shadow: 0 6px 25px rgba(34, 197, 94, 0.4);
+  transition: all 0.2s ease;
+  cursor: pointer;
+}
+
+.btn-whatsapp-confirmacao-modal:hover {
+  background: #16a34a;
+  transform: translateY(-2px);
+  box-shadow: 0 8px 30px rgba(34, 197, 94, 0.5);
+}
+
+.linha-botoes-secundarios-modal {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.btn-secundario-modal-link {
+  background: transparent;
+  border: none;
+  color: #d1d5db;
+  font-size: 0.9rem;
+  font-weight: 600;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  cursor: pointer;
+  transition: color 0.2s ease;
+}
+
+.btn-secundario-modal-link:hover {
+  color: #ffffff;
+  text-decoration: underline;
+}
+
+.btn-fechar-modal-discreto {
+  background: transparent;
+  border: none;
+  color: #888888;
+  font-size: 0.85rem;
+  cursor: pointer;
+  transition: color 0.2s ease;
+}
+
+.btn-fechar-modal-discreto:hover {
+  color: #d1d5db;
+}

@@ -5,12 +5,15 @@ import {
   Scissors, 
   User, 
   Phone, 
-  Check 
+  Check,
+  ShieldCheck
 } from 'lucide-react';
 import { api } from '../services/api';
 import { formatarTelefone, isTelefoneValido } from '../utils/phoneMask';
 import { isDomingo, getDataHojeString } from '../utils/dateUtils';
 import { gerarLinkWhatsAppAgendamento } from '../utils/whatsapp';
+import { ModalConfirmacaoAgendamento } from '../components/ModalConfirmacaoAgendamento';
+import { ModalPrivacidade } from '../components/ModalPrivacidade';
 
 export const BARBEIROS_DEFAULT = [
   { id: 1, nome: 'Geilson', foto: '/assets/Geilson.webp' },
@@ -26,7 +29,7 @@ export const OPCOES_SERVICOS = [
   { id: 6, nome: 'Barba e Pezinho', valor: 15 }
 ];
 
-export function Agendamento({ servicoPreSelecionado, onAgendamentoConcluido }) {
+export function Agendamento({ servicoPreSelecionado, onAgendamentoConcluido, onIrParaMeusAgendamentos }) {
   const [barbeiroId, setBarbeiroId] = useState(null);
   const [data, setData] = useState(getDataHojeString());
   const [horario, setHorario] = useState('');
@@ -37,6 +40,10 @@ export function Agendamento({ servicoPreSelecionado, onAgendamentoConcluido }) {
   const [horariosDisponiveis, setHorariosDisponiveis] = useState([]);
   const [carregandoHorarios, setCarregandoHorarios] = useState(false);
   const [salvando, setSalvando] = useState(false);
+
+  // Estados dos Modais
+  const [dadosConfirmacao, setDadosConfirmacao] = useState(null);
+  const [modalPrivacidadeAberto, setModalPrivacidadeAberto] = useState(false);
 
   // Carregar dados salvos no localStorage
   useEffect(() => {
@@ -153,12 +160,18 @@ export function Agendamento({ servicoPreSelecionado, onAgendamentoConcluido }) {
         valor
       });
 
-      alert('✅ Agendamento realizado com sucesso!');
-      window.location.href = urlWhats;
+      setDadosConfirmacao({
+        nome,
+        telefone,
+        barbeiroNome,
+        data,
+        horario,
+        servico,
+        valor,
+        urlWhatsApp: urlWhats,
+        novoAgendamento
+      });
 
-      if (onAgendamentoConcluido) {
-        onAgendamentoConcluido(novoAgendamento);
-      }
     } catch (err) {
       alert('Erro ao agendar: ' + err.message);
       try {
@@ -167,6 +180,23 @@ export function Agendamento({ servicoPreSelecionado, onAgendamentoConcluido }) {
       } catch (e) {}
     } finally {
       setSalvando(false);
+    }
+  };
+
+  const handleFecharModalConfirmacao = () => {
+    const ag = dadosConfirmacao?.novoAgendamento;
+    setDadosConfirmacao(null);
+    if (onAgendamentoConcluido) {
+      onAgendamentoConcluido(ag);
+    }
+  };
+
+  const handleIrMeusAgendamentos = () => {
+    setDadosConfirmacao(null);
+    if (onIrParaMeusAgendamentos) {
+      onIrParaMeusAgendamentos();
+    } else if (onAgendamentoConcluido) {
+      onAgendamentoConcluido();
     }
   };
 
@@ -198,12 +228,11 @@ export function Agendamento({ servicoPreSelecionado, onAgendamentoConcluido }) {
                       onError={(e) => { e.target.src = '/assets/Logo.webp'; }}
                     />
                     {selecionado && (
-                      <div className="badge-check-barbeiro">
-                        <Check size={16} strokeWidth={3} color="#000000" />
+                      <div className="badge-selecao-limpa">
+                        <Check size={14} color="#000000" />
                       </div>
                     )}
                   </div>
-
                   <span className="nome-barbeiro-limpo">{b.nome}</span>
                 </div>
               );
@@ -213,68 +242,68 @@ export function Agendamento({ servicoPreSelecionado, onAgendamentoConcluido }) {
 
         {/* 2. Data */}
         <div className="campo-caixa-limpo">
-          <span className="rotulo-campo-limpo">DATA</span>
+          <span className="rotulo-campo-limpo">DATA DO CORTE</span>
           <div className="linha-input-limpo">
             <Calendar size={18} className="icone-input-limpo" />
             <input 
               type="date" 
               id="campoData"
-              aria-label="Data"
-              min={getDataHojeString()}
+              aria-label="Data do Agendamento"
               value={data}
+              min={getDataHojeString()}
               onChange={handleDataChange}
               className="input-limpo"
             />
           </div>
         </div>
 
-        {/* 3. Horário */}
+        {/* 3. Horários */}
         <div className="campo-caixa-limpo">
-          <span className="rotulo-campo-limpo">HORÁRIO</span>
+          <span className="rotulo-campo-limpo">HORÁRIO DISPONÍVEL</span>
           <div className="linha-input-limpo">
             <Clock size={18} className="icone-input-limpo" />
-            <select 
+            <select
               id="campoHorario"
               aria-label="Horário"
               value={horario}
               onChange={(e) => setHorario(e.target.value)}
-              disabled={!data || !barbeiroId || carregandoHorarios}
+              disabled={!barbeiroId || !data || carregandoHorarios || horariosDisponiveis.length === 0}
               className="select-limpo"
             >
-              {!barbeiroId || !data ? (
-                <option value="">Selecione o profissional e a data</option>
-              ) : carregandoHorarios ? (
-                <option value="">Carregando horários...</option>
-              ) : horariosDisponiveis.length === 0 ? (
-                <option value="">Dia cheio! Sem horários disponíveis</option>
-              ) : (
-                <>
-                  <option value="">Escolha um horário</option>
-                  {horariosDisponiveis.map((h) => (
-                    <option key={h} value={h}>{h}</option>
-                  ))}
-                </>
-              )}
+              <option value="">
+                {carregandoHorarios 
+                  ? 'Consultando horários livres...' 
+                  : !barbeiroId 
+                    ? 'Selecione um barbeiro acima' 
+                    : horariosDisponiveis.length === 0 
+                      ? 'Dia cheio! Sem horários disponíveis.' 
+                      : 'Selecione o melhor horário'}
+              </option>
+              {horariosDisponiveis.map((h) => (
+                <option key={h} value={h}>
+                  {h}
+                </option>
+              ))}
             </select>
           </div>
         </div>
 
         {/* 4. Serviço */}
         <div className="campo-caixa-limpo">
-          <span className="rotulo-campo-limpo">SERVIÇO</span>
+          <span className="rotulo-campo-limpo">SERVIÇO DESEJADO</span>
           <div className="linha-input-limpo">
             <Scissors size={18} className="icone-input-limpo" />
-            <select 
+            <select
               id="campoServico"
               aria-label="Serviço"
               value={servico}
               onChange={(e) => setServico(e.target.value)}
               className="select-limpo"
             >
-              <option value="">Selecione o serviço...</option>
+              <option value="">Selecione o serviço</option>
               {OPCOES_SERVICOS.map((s) => (
                 <option key={s.id} value={`${s.nome} - R$ ${s.valor}`}>
-                  {s.nome} — R$ {s.valor},00
+                  {s.nome} - R$ {s.valor},00
                 </option>
               ))}
             </select>
@@ -292,7 +321,7 @@ export function Agendamento({ servicoPreSelecionado, onAgendamentoConcluido }) {
               aria-label="Seu Nome"
               value={nome}
               onChange={(e) => setNome(e.target.value)}
-              placeholder="Digite seu nome"
+              placeholder="Digite seu nome completo"
               className="input-limpo"
             />
           </div>
@@ -300,7 +329,7 @@ export function Agendamento({ servicoPreSelecionado, onAgendamentoConcluido }) {
 
         {/* 6. WhatsApp */}
         <div className="campo-caixa-limpo">
-          <span className="rotulo-campo-limpo">WHATSAPP</span>
+          <span className="rotulo-campo-limpo">SEU WHATSAPP</span>
           <div className="linha-input-limpo">
             <Phone size={18} className="icone-input-limpo" />
             <input 
@@ -316,6 +345,21 @@ export function Agendamento({ servicoPreSelecionado, onAgendamentoConcluido }) {
           </div>
         </div>
 
+        {/* Aviso LGPD */}
+        <div className="nota-privacidade-agendamento">
+          <ShieldCheck size={14} color="#22c55e" />
+          <span>
+            Seus dados são protegidos e usados apenas para confirmação do horário.{' '}
+            <button 
+              type="button" 
+              onClick={() => setModalPrivacidadeAberto(true)} 
+              className="link-privacidade-inline"
+            >
+              Política de Privacidade (LGPD)
+            </button>
+          </span>
+        </div>
+
         {/* Botão de Confirmação */}
         <button 
           onClick={handleConfirmar}
@@ -325,6 +369,20 @@ export function Agendamento({ servicoPreSelecionado, onAgendamentoConcluido }) {
           {salvando ? 'Confirmando...' : 'Confirmar Agendamento'}
         </button>
       </div>
+
+      {/* Modal de Confirmação & Próximos Passos */}
+      <ModalConfirmacaoAgendamento 
+        isOpen={Boolean(dadosConfirmacao)}
+        dados={dadosConfirmacao}
+        onConcluir={handleFecharModalConfirmacao}
+        onIrParaMeusAgendamentos={handleIrMeusAgendamentos}
+      />
+
+      {/* Modal de Política de Privacidade */}
+      <ModalPrivacidade 
+        isOpen={modalPrivacidadeAberto}
+        onClose={() => setModalPrivacidadeAberto(false)}
+      />
     </div>
   );
 }

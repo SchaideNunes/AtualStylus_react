@@ -1,6 +1,9 @@
 import React, { useMemo } from 'react';
-import { Clock, MapPin, Scissors, ChevronDown, CheckCircle2 } from 'lucide-react';
+import { Clock, MapPin, Scissors, ChevronDown } from 'lucide-react';
 import { ServiceCard } from '../components/ServiceCard';
+import { Depoimentos } from '../components/Depoimentos';
+import { FAQ } from '../components/FAQ';
+import { MapaLocalizacao } from '../components/MapaLocalizacao';
 
 export const SERVICOS_LISTA = [
   { id: 1, nome: 'Corte e Barba', valor: 35, foto: '/assets/corte-barba.webp' },
@@ -178,6 +181,21 @@ export function Home({ onNavegar, onSelecionarServico }) {
           </button>
         </div>
       </section>
+
+      {/* ========================================================================= */}
+      {/* DEPOIMENTOS REAIS (GOOGLE REVIEWS 5.0 ESTRELAS) */}
+      {/* ========================================================================= */}
+      <Depoimentos />
+
+      {/* ========================================================================= */}
+      {/* PERGUNTAS FREQUENTES (FAQ) */}
+      {/* ========================================================================= */}
+      <FAQ />
+
+      {/* ========================================================================= */}
+      {/* MAPA INTERATIVO & ROTAS */}
+      {/* ========================================================================= */}
+      <MapaLocalizacao />
     </div>
   );
 }

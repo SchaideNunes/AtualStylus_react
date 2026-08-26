@@ -7,6 +7,8 @@ import { MeusAgendamentos } from './pages/MeusAgendamentos';
 import { Sobre } from './pages/Sobre';
 import { Login } from './pages/Login';
 import { Admin } from './pages/Admin';
+import { StickyMobileCTA } from './components/StickyMobileCTA';
+import { ModalPrivacidade } from './components/ModalPrivacidade';
 import { api } from './services/api';
 import './styles/index.css';
 
@@ -14,6 +16,7 @@ export function App() {
   const [paginaAtiva, setPaginaAtiva] = useState('inicio');
   const [servicoPreSelecionado, setServicoPreSelecionado] = useState('');
   const [usuarioAdmin, setUsuarioAdmin] = useState(null);
+  const [modalPrivacidadeAberto, setModalPrivacidadeAberto] = useState(false);
 
   // Lê rota da URL tanto por Pathname (/admin) quanto por Hash (#admin)
   useEffect(() => {
@@ -77,7 +80,13 @@ export function App() {
       case 'inicio':
         return <Home onNavegar={handleNavegar} onSelecionarServico={handleSelecionarServico} />;
       case 'agendamento':
-        return <Agendamento servicoPreSelecionado={servicoPreSelecionado} onAgendamentoConcluido={() => handleNavegar('meusAgendamentos')} />;
+        return (
+          <Agendamento 
+            servicoPreSelecionado={servicoPreSelecionado} 
+            onAgendamentoConcluido={() => handleNavegar('meusAgendamentos')}
+            onIrParaMeusAgendamentos={() => handleNavegar('meusAgendamentos')}
+          />
+        );
       case 'meusAgendamentos':
         return <MeusAgendamentos />;
       case 'sobre':
@@ -101,7 +110,24 @@ export function App() {
         {renderPagina()}
       </main>
 
-      {!isPainelAdmin && <Footer onNavegar={handleNavegar} />}
+      {!isPainelAdmin && (
+        <Footer 
+          onNavegar={handleNavegar} 
+          onAbrirPrivacidade={() => setModalPrivacidadeAberto(true)}
+        />
+      )}
+
+      {/* Botão Fixo no Celular (Sticky Mobile CTA) */}
+      <StickyMobileCTA 
+        onAgendar={() => handleNavegar('agendamento')} 
+        paginaAtiva={paginaAtiva} 
+      />
+
+      {/* Modal de Política de Privacidade Global */}
+      <ModalPrivacidade 
+        isOpen={modalPrivacidadeAberto}
+        onClose={() => setModalPrivacidadeAberto(false)}
+      />
     </div>
   );
 }
